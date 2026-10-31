@@ -1,58 +1,79 @@
-/* CIT Smart Scheduling Platform - Minimalist App Design Tokens */
+/* CIT Smart Scheduling Platform - Techzephyr 4.0 Booklet Design Tokens */
 
 :root {
-  /* Canvas & Surfaces */
-  --app-outer-bg: #f8fafc;
-  --bg-canvas: #f8fafc;
+  /* Techzephyr 4.0 Warm Paper Canvas & Surfaces */
+  --app-outer-bg: #faf7f2;
+  --bg-canvas: #faf7f2;
   --bg-sidebar: #ffffff;
-  --bg-sidebar-hover: #f1f5f9;
+  --bg-sidebar-hover: #f5efe6;
   --bg-card: #ffffff;
-  --bg-card-subtle: #f9fafb;
+  --bg-card-subtle: #fbf9f6;
   --bg-card-elevated: #ffffff;
 
-  /* Signature Lime / Chartreuse Accent */
-  --accent-lime: #d2f857;
-  --accent-lime-hover: #c4eb46;
-  --accent-lime-light: #f4fdcf;
-  --accent-lime-text: #13151f;
+  /* Techzephyr Signature Terracotta / Rust (From Booklet Pattern & 4 Logo) */
+  --accent-terracotta: #c2542d;
+  --accent-terracotta-hover: #ad4723;
+  --accent-terracotta-light: #fdf2ed;
+  --accent-terracotta-border: #f7d6c8;
+  --accent-terracotta-text: #ffffff;
 
-  /* Card Feature Background - Clean Light */
+  /* Warm Ochre / Amber Gold (From Booklet Pattern) */
+  --accent-ochre: #d9822b;
+  --accent-ochre-hover: #c47221;
+  --accent-ochre-light: #fef7ee;
+  --accent-ochre-border: #fae1be;
+  --accent-ochre-text: #ffffff;
+
+  /* Architectural Sage Green (From Booklet Building & Palms) */
+  --accent-sage: #4e7c67;
+  --accent-sage-hover: #406856;
+  --accent-sage-light: #eff6f2;
+  --accent-sage-border: #c8dfd4;
+  --accent-sage-text: #ffffff;
+
+  /* Primary Accent Mapping (Replaces neon lime with Techzephyr Terracotta) */
+  --accent-lime: #c2542d;
+  --accent-lime-hover: #ad4723;
+  --accent-lime-light: #fdf2ed;
+  --accent-lime-text: #ffffff;
+
+  /* Card Feature Background - Warm White */
   --bg-dark-card: #ffffff;
-  --text-dark-card: #0f172a;
+  --text-dark-card: #1f1c1a;
 
-  /* Text Colors */
-  --text-primary: #0f172a;
-  --text-secondary: #64748b;
-  --text-muted: #94a3b8;
-  --text-on-dark: #0f172a;
-  --text-on-lime: #13151f;
+  /* Text Colors - Deep Espresso, Warm Slate, Muted Taupe */
+  --text-primary: #1f1c1a;
+  --text-secondary: #6e645c;
+  --text-muted: #9e948a;
+  --text-on-dark: #1f1c1a;
+  --text-on-lime: #ffffff;
 
-  /* Borders & Dividers */
-  --border-subtle: #f1f5f9;
-  --border-default: #e2e8f0;
-  --border-strong: #cbd5e1;
+  /* Borders & Dividers - Warm Parchment Lines */
+  --border-subtle: #f3ede4;
+  --border-default: #e7e0d5;
+  --border-strong: #d4cbc0;
 
-  /* Soft Pastel Colors for Class/Schedule Tiles */
-  --pastel-peach-bg: #fff7ed;
-  --pastel-peach-text: #c2410c;
-  --pastel-lime-bg: #f7fee7;
-  --pastel-lime-text: #3f6212;
-  --pastel-lavender-bg: #faf5ff;
-  --pastel-lavender-text: #6b21a8;
-  --pastel-pink-bg: #fdf2f8;
-  --pastel-pink-text: #be185d;
-  --pastel-mint-bg: #f0fdf4;
-  --pastel-mint-text: #15803d;
-  --pastel-blue-bg: #f0f9ff;
-  --pastel-blue-text: #0369a1;
+  /* Soft Tile Colors for Schedule & Badges (Matching Booklet Pattern) */
+  --pastel-peach-bg: #fdf2ed;
+  --pastel-peach-text: #c2542d;
+  --pastel-lime-bg: #eff6f2;
+  --pastel-lime-text: #4e7c67;
+  --pastel-lavender-bg: #fef7ee;
+  --pastel-lavender-text: #b86716;
+  --pastel-pink-bg: #faeaed;
+  --pastel-pink-text: #9c3247;
+  --pastel-mint-bg: #eff6f2;
+  --pastel-mint-text: #4e7c67;
+  --pastel-blue-bg: #f0f5f7;
+  --pastel-blue-text: #376579;
 
   /* Functional Status Colors */
-  --status-completed-bg: #f0fdf4;
-  --status-completed-text: #15803d;
-  --status-progress-bg: #faf5ff;
-  --status-progress-text: #6b21a8;
-  --status-upcoming-bg: #fff7ed;
-  --status-upcoming-text: #c2410c;
+  --status-completed-bg: #eff6f2;
+  --status-completed-text: #4e7c67;
+  --status-progress-bg: #fef7ee;
+  --status-progress-text: #b86716;
+  --status-upcoming-bg: #fdf2ed;
+  --status-upcoming-text: #c2542d;
 
   /* Typography */
   --font-sans: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
@@ -67,11 +88,11 @@
   --radius-2xl: 24px;
   --radius-full: 9999px;
 
-  /* Shadows */
-  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.03);
-  --shadow-card: 0 2px 10px rgba(0, 0, 0, 0.03);
-  --shadow-dropdown: 0 10px 25px -4px rgba(18, 22, 36, 0.08);
-  --shadow-lime: 0 4px 14px rgba(210, 248, 87, 0.3);
+  /* Shadows - Warm & Soft */
+  --shadow-sm: 0 1px 3px rgba(31, 28, 26, 0.04);
+  --shadow-card: 0 2px 10px rgba(31, 28, 26, 0.04);
+  --shadow-dropdown: 0 10px 25px -4px rgba(31, 28, 26, 0.08);
+  --shadow-lime: 0 4px 14px rgba(194, 84, 45, 0.25);
 
   /* Transitions */
   --transition-fast: 150ms ease;
@@ -143,7 +164,7 @@ button:disabled {
 }
 
 :focus-visible {
-  outline: 2px solid var(--accent-lime);
+  outline: 2px solid var(--accent-terracotta);
   outline-offset: 2px;
 }
 
@@ -164,11 +185,6 @@ button:disabled {
   }
 }
 
-@keyframes modalEnter {
-  from { opacity: 0; transform: scale(0.96) translateY(8px); }
-  to { opacity: 1; transform: scale(1) translateY(0); }
-}
-
 .animate-fade-in {
   animation: fadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1) forwards;
 }
@@ -183,7 +199,7 @@ button:disabled {
 
 .animate-card-lift:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+  box-shadow: 0 6px 18px rgba(31, 28, 26, 0.06);
 }
 
 /* Scrollbars */
@@ -195,9 +211,9 @@ button:disabled {
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #cbd5e1;
+  background: #d4cbc0;
   border-radius: var(--radius-full);
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #94a3b8;
+  background: #b5a99c;
 }

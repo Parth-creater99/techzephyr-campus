@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { User, Menu, X, ChevronsRight, ShieldCheck, CheckCircle2, Sparkles, Clock, Calendar, ArrowRight, ArrowLeft } from 'lucide-react';
+import { Menu, X, ChevronsRight, ShieldCheck, CheckCircle2, Clock, Calendar, ArrowRight, ArrowLeft } from 'lucide-react';
 import './LandingPage.css';
 
 export function LandingPage({ currentUser, onEnterPortal, onNavigate }) {
@@ -28,7 +28,7 @@ export function LandingPage({ currentUser, onEnterPortal, onNavigate }) {
 
   return (
     <div className="landing-root animate-fade-in">
-      {/* Hand-coded background wave contours */}
+      {/* Background wave contours with warm aesthetic */}
       <div className="landing-bg-waves" aria-hidden="true">
         <svg
           viewBox="0 0 1440 900"
@@ -39,33 +39,23 @@ export function LandingPage({ currentUser, onEnterPortal, onNavigate }) {
         >
           <path
             d="M-50,150 C250,120 380,320 620,280 C860,240 1020,400 1280,360 C1400,340 1480,420 1520,460"
-            stroke="rgba(210, 248, 87, 0.22)"
+            stroke="rgba(194, 84, 45, 0.2)"
             strokeWidth="1.2"
           />
           <path
             d="M-50,180 C260,150 390,350 630,310 C870,270 1030,430 1290,390 C1410,370 1490,450 1520,490"
-            stroke="rgba(210, 248, 87, 0.18)"
+            stroke="rgba(217, 130, 43, 0.18)"
             strokeWidth="1.2"
           />
           <path
             d="M-50,210 C270,180 400,380 640,340 C880,300 1040,460 1300,420 C1420,400 1500,480 1520,520"
-            stroke="rgba(210, 248, 87, 0.14)"
+            stroke="rgba(78, 124, 103, 0.18)"
             strokeWidth="1.2"
           />
           <path
             d="M-20,400 C300,360 450,560 700,520 C950,480 1100,640 1350,600 C1450,580 1500,620 1520,650"
-            stroke="rgba(255, 255, 255, 0.12)"
+            stroke="rgba(194, 84, 45, 0.12)"
             strokeWidth="1.2"
-          />
-          <path
-            d="M720,-40 C750,200 680,380 780,600 C830,720 890,840 920,950"
-            stroke="rgba(210, 248, 87, 0.12)"
-            strokeWidth="1"
-          />
-          <path
-            d="M840,-40 C870,200 800,380 900,600 C950,720 1010,840 1040,950"
-            stroke="rgba(255, 255, 255, 0.07)"
-            strokeWidth="1"
           />
         </svg>
       </div>
@@ -81,7 +71,7 @@ export function LandingPage({ currentUser, onEnterPortal, onNavigate }) {
             style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8 }}
           >
             <span>CIT Campus</span>
-            <span style={{ fontSize: 13, padding: '2px 8px', borderRadius: 9999, background: 'rgba(210,248,87,0.18)', color: '#d2f857', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+            <span className="landing-back-pill">
               <ArrowLeft size={12} /> Back
             </span>
           </div>
@@ -94,15 +84,11 @@ export function LandingPage({ currentUser, onEnterPortal, onNavigate }) {
             <button type="button" className="landing-nav-link" onClick={() => scrollToSection('features')}>
               Core Capabilities
             </button>
-            <button type="button" className="landing-nav-link" onClick={() => scrollToSection('protocol')}>
-              Permission Protocol
-            </button>
 
             {/* Direct Portal Entrance Button */}
             <button
               type="button"
               className="landing-login-btn"
-              style={{ padding: '8px 22px', fontSize: 13.5 }}
               onClick={() => handleEnter('dashboard')}
             >
               <span>Enter Campus Portal</span>
@@ -130,9 +116,6 @@ export function LandingPage({ currentUser, onEnterPortal, onNavigate }) {
             <button type="button" className="mobile-nav-link" onClick={() => scrollToSection('features')}>
               Core Capabilities
             </button>
-            <button type="button" className="mobile-nav-link" onClick={() => scrollToSection('protocol')}>
-              Permission Protocol
-            </button>
             <div className="mobile-action-wrap">
               <button
                 type="button"
@@ -150,14 +133,14 @@ export function LandingPage({ currentUser, onEnterPortal, onNavigate }) {
         )}
       </header>
 
-      {/* Main Hero Section: Clean Minimalist Intro */}
+      {/* Main Hero Section */}
       <main id="home" className="landing-hero-section">
         <div className="landing-hero-content">
           <div className="hero-kicker">CIT Academic Scheduling &amp; Venue Intelligence</div>
 
           <h1 className="hero-heading">
-            <span className="hero-line-yellow">CIT Campus</span>
-            <span className="hero-line-white">Smart Scheduler</span>
+            <span className="hero-line-terracotta">CIT Campus</span>
+            <span className="hero-line-dark">Smart Scheduler</span>
           </h1>
 
           <p className="hero-description">
@@ -231,54 +214,13 @@ export function LandingPage({ currentUser, onEnterPortal, onNavigate }) {
               </p>
             </div>
           </div>
-        </div>
-      </section>
 
-      {/* Permission Protocol & Priority Section */}
-      <section id="protocol" className="landing-section">
-        <div className="section-container">
-          <span className="section-label">Security &amp; Rules</span>
-          <h2 className="section-title">6-Tier Priority Tie-Breakers</h2>
-          <p className="section-lead">
-            When multiple events request the same room at the same time, priority order strictly governs allocation:
-          </p>
-
-          <div className="unboxed-list">
-            <div className="unboxed-item">
-              <span className="unboxed-num">1</span>
-              <div>
-                <h3 className="unboxed-heading">Exams (Midsem &amp; Endsem)</h3>
-                <p className="unboxed-text">Highest academic priority. Supercedes all regular lectures and campus events.</p>
-              </div>
-            </div>
-
-            <div className="unboxed-item">
-              <span className="unboxed-num">2</span>
-              <div>
-                <h3 className="unboxed-heading">Regular Classes, Labs &amp; Tutorials</h3>
-                <p className="unboxed-text">Scheduled curriculum hours across 14 student cohorts and 40 faculty members.</p>
-              </div>
-            </div>
-
-            <div className="unboxed-item">
-              <span className="unboxed-num">3</span>
-              <div>
-                <h3 className="unboxed-heading">Institute Events (Spectra Fest &amp; Convocations)</h3>
-                <p className="unboxed-text">Official institute-wide gatherings evaluated with alternative venue suggestions.</p>
-              </div>
-            </div>
-
-            <div className="unboxed-item">
-              <span className="unboxed-num">4–6</span>
-              <div>
-                <h3 className="unboxed-heading">Guest Lectures, Department Events &amp; Club Gatherings</h3>
-                <p className="unboxed-text">Scheduled during evening periods P10–P13 at Central Auditorium, Seminar Halls, and OAT.</p>
-              </div>
-            </div>
-          </div>
-
-          <div style={{ marginTop: 40, textAlign: 'center' }}>
-            <button type="button" className="hero-btn-solid" onClick={() => handleEnter('dashboard')}>
+          <div style={{ marginTop: 44, textAlign: 'center' }}>
+            <button
+              type="button"
+              className="hero-btn-solid"
+              onClick={() => handleEnter('dashboard')}
+            >
               <span>Enter Campus Portal</span>
               <ArrowRight size={16} style={{ marginLeft: 8 }} />
             </button>

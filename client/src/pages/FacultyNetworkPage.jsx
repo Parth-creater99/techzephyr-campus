@@ -104,33 +104,25 @@ export function FacultyNetworkPage({ currentUser, onNavigate, onStartChat }) {
 
   return (
     <div className="subpage-container animate-fade-in-up">
-      {/* Network Header Banner */}
-      <div className="faculty-hero-banner">
-        <div className="faculty-hero-left">
-          <div className="faculty-badge-chip">
-            <Users size={15} />
-            <span>CIT Academic Faculty Network</span>
-          </div>
-          <h1 className="faculty-main-title">
+      {/* Clean Subpage Header */}
+      <div className="subpage-header-card">
+        <div>
+          <h2 className="section-title" style={{ fontSize: 20 }}>
             Faculty Directory & Collaborative Mesh
-          </h1>
-          <p className="faculty-hero-sub">
-            Real network of <strong>{facultyList.length} educators</strong> across CIT engineering,
-            basic science, and humanities departments. Connect, coordinate lecture swaps, and
-            collaborate in real-time.
-          </p>
+          </h2>
+          <span style={{ fontSize: 13, color: 'var(--text-secondary)' }}>
+            Network of {facultyList.length} educators across CIT engineering, basic science, and humanities departments
+          </span>
         </div>
 
-        <div className="faculty-hero-right">
-          <button
-            type="button"
-            className="app-btn-lime add-teacher-btn"
-            onClick={() => setIsAddModalOpen(true)}
-          >
-            <UserPlus size={16} />
-            <span>Add New Teacher</span>
-          </button>
-        </div>
+        <button
+          type="button"
+          className="app-btn-lime add-teacher-btn"
+          onClick={() => setIsAddModalOpen(true)}
+        >
+          <UserPlus size={16} />
+          <span>Add New Teacher</span>
+        </button>
       </div>
 
       {/* Filter and Search Bar */}

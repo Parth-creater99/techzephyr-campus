@@ -195,17 +195,7 @@ export function SpectraApprovalsPage() {
         </div>
       )}
 
-      {/* Section 4 Priority Rules Reference Banner */}
-      <div className="priority-tie-breaker-bar" style={{ marginTop: 16 }}>
-        <span className="priority-bar-title">Section 4 Priority Rules (Room Tie-Breaker):</span>
-        <div className="priority-chips-list">
-          {PRIORITY_LEVELS.map((p) => (
-            <span key={p.level} className="priority-chip-item">
-              <strong>{p.level}.</strong> {p.name}
-            </span>
-          ))}
-        </div>
-      </div>
+      
 
       {/* Filter Tabs */}
       <div style={{ display: 'flex', gap: 8, marginTop: 18 }}>

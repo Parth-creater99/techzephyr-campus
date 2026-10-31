@@ -1,18 +1,7 @@
-import React, { useState } from 'react';
-import { Save, CheckCircle2, LogOut, User, Shield, Bell, Check } from 'lucide-react';
+import React from 'react';
+import { LogOut, User, Shield, Lock } from 'lucide-react';
 
 export function SettingsPage({ currentUser, onLogout, onNavigate }) {
-  const [academicTerm, setAcademicTerm] = useState('2026-odd');
-  const [saveStatus, setSaveStatus] = useState(null);
-  const [fullName, setFullName] = useState(currentUser?.name || 'Dr. A. Sharma');
-  const [email, setEmail] = useState(currentUser?.email || 'a.sharma@cit.edu.in');
-  const [cabin, setCabin] = useState('Faculty Block B • Cabin 204');
-
-  const handleSave = () => {
-    setSaveStatus('Settings updated successfully.');
-    setTimeout(() => setSaveStatus(null), 3000);
-  };
-
   const handleLogoutClick = () => {
     if (window.confirm('Are you sure you want to log out of CIT Campus Portal?')) {
       onLogout?.();
@@ -25,23 +14,14 @@ export function SettingsPage({ currentUser, onLogout, onNavigate }) {
       <div className="subpage-header-card">
         <div>
           <h2 className="section-title" style={{ fontSize: 20 }}>
-            Faculty &amp; System Settings
+            Faculty &amp; Institutional Profile
           </h2>
           <span style={{ fontSize: 13, color: 'var(--text-secondary)' }}>
-            Manage profile preferences, schedule rules, and active session
+            Verified institutional faculty identity and academic scheduling policies
           </span>
         </div>
 
         <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-          <button
-            type="button"
-            className="app-btn-lime"
-            onClick={handleSave}
-          >
-            <Save size={15} />
-            <span>Save Preferences</span>
-          </button>
-
           {/* Clear Logout Button */}
           <button
             type="button"
@@ -55,88 +35,111 @@ export function SettingsPage({ currentUser, onLogout, onNavigate }) {
         </div>
       </div>
 
-      {saveStatus && (
-        <div style={{ padding: '12px 18px', borderRadius: 12, backgroundColor: 'var(--status-completed-bg)', color: 'var(--status-completed-text)', fontWeight: 600, fontSize: 13, display: 'flex', alignItems: 'center', gap: 8 }}>
-          <CheckCircle2 size={16} />
-          <span>{saveStatus}</span>
-        </div>
-      )}
-
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 20 }}>
-        {/* Faculty Profile Card */}
-        <div className="white-app-card" style={{ gap: 14 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <User size={18} color="#0f172a" />
-            <h3 style={{ fontSize: 16, fontWeight: 700 }}>Faculty Profile</h3>
+        {/* Faculty Profile Card (Static / Read-Only Institutional Record) */}
+        <div className="white-app-card" style={{ gap: 16 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <User size={18} color="var(--accent-terracotta)" />
+              <h3 style={{ fontSize: 16, fontWeight: 700 }}>Faculty Profile</h3>
+            </div>
+            <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--accent-sage)', background: 'var(--accent-sage-light)', padding: '3px 8px', borderRadius: 9999, display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+              <Lock size={11} /> Verified Record
+            </span>
           </div>
 
-          <div>
-            <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 6 }}>Full Name</label>
-            <input
-              type="text"
-              className="app-select-field"
-              style={{ width: '100%' }}
-              value={fullName}
-              onChange={(e) => setFullName(e.target.value)}
-            />
-          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+            <div>
+              <span style={{ fontSize: 11.5, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: 0.3 }}>
+                Full Name
+              </span>
+              <div style={{ padding: '10px 14px', borderRadius: 10, background: 'var(--bg-card-subtle)', border: '1px solid var(--border-default)', fontSize: 14, fontWeight: 700, color: 'var(--text-primary)', marginTop: 4 }}>
+                {currentUser?.name || 'Dr. A. Sharma'}
+              </div>
+            </div>
 
-          <div>
-            <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 6 }}>Institutional Email</label>
-            <input
-              type="email"
-              className="app-select-field"
-              style={{ width: '100%' }}
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-            />
-          </div>
+            <div>
+              <span style={{ fontSize: 11.5, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: 0.3 }}>
+                Institutional Email
+              </span>
+              <div style={{ padding: '10px 14px', borderRadius: 10, background: 'var(--bg-card-subtle)', border: '1px solid var(--border-default)', fontSize: 13.5, fontWeight: 600, color: 'var(--text-primary)', marginTop: 4 }}>
+                {currentUser?.email || 'a.sharma@cit.edu.in'}
+              </div>
+            </div>
 
-          <div>
-            <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 6 }}>Cabin Location</label>
-            <input
-              type="text"
-              className="app-select-field"
-              style={{ width: '100%' }}
-              value={cabin}
-              onChange={(e) => setCabin(e.target.value)}
-            />
+            <div>
+              <span style={{ fontSize: 11.5, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: 0.3 }}>
+                Department
+              </span>
+              <div style={{ padding: '10px 14px', borderRadius: 10, background: 'var(--bg-card-subtle)', border: '1px solid var(--border-default)', fontSize: 13.5, fontWeight: 600, color: 'var(--text-primary)', marginTop: 4 }}>
+                Computer Science &amp; Engineering (CSE)
+              </div>
+            </div>
+
+            <div>
+              <span style={{ fontSize: 11.5, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: 0.3 }}>
+                Cabin Location
+              </span>
+              <div style={{ padding: '10px 14px', borderRadius: 10, background: 'var(--bg-card-subtle)', border: '1px solid var(--border-default)', fontSize: 13.5, fontWeight: 600, color: 'var(--text-primary)', marginTop: 4 }}>
+                Faculty Block B &bull; Cabin 204
+              </div>
+            </div>
           </div>
         </div>
 
-        {/* Institutional Policy Parameters */}
-        <div className="white-app-card" style={{ gap: 14 }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <Shield size={18} color="#0f172a" />
-            <h3 style={{ fontSize: 16, fontWeight: 700 }}>Institutional Parameters</h3>
+        {/* Institutional Policy Parameters (Static / Read-Only Policy) */}
+        <div className="white-app-card" style={{ gap: 16 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <Shield size={18} color="var(--accent-ochre)" />
+              <h3 style={{ fontSize: 16, fontWeight: 700 }}>Institutional Parameters</h3>
+            </div>
+            <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--accent-sage)', background: 'var(--accent-sage-light)', padding: '3px 8px', borderRadius: 9999, display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+              <Lock size={11} /> Locked by Policy
+            </span>
           </div>
 
-          <div>
-            <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 6 }}>Academic Term</label>
-            <select
-              className="app-select-field"
-              style={{ width: '100%' }}
-              value={academicTerm}
-              onChange={(e) => setAcademicTerm(e.target.value)}
-            >
-              <option value="2026-odd">AY 2026-27 (Odd Semester)</option>
-              <option value="2026-even">AY 2026-27 (Even Semester)</option>
-            </select>
-          </div>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
+            <div>
+              <span style={{ fontSize: 11.5, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: 0.3 }}>
+                Academic Term
+              </span>
+              <div style={{ padding: '10px 14px', borderRadius: 10, background: 'var(--bg-card-subtle)', border: '1px solid var(--border-default)', fontSize: 13.5, fontWeight: 600, color: 'var(--text-primary)', marginTop: 4 }}>
+                AY 2026–27 (Odd Semester)
+              </div>
+            </div>
 
-          <div>
-            <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 6 }}>Mandatory Lunch Intermission</label>
-            <input type="text" className="app-select-field" style={{ width: '100%' }} defaultValue="12:55 - 13:45 (Locked by CIT Policy)" disabled />
-          </div>
+            <div>
+              <span style={{ fontSize: 11.5, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: 0.3 }}>
+                Mandatory Lunch Intermission
+              </span>
+              <div style={{ padding: '10px 14px', borderRadius: 10, background: 'var(--bg-card-subtle)', border: '1px solid var(--border-default)', fontSize: 13.5, fontWeight: 600, color: 'var(--text-primary)', marginTop: 4 }}>
+                12:55 – 13:45 (Locked by CIT Policy)
+              </div>
+            </div>
 
-          <div>
-            <label style={{ fontSize: 12, fontWeight: 600, display: 'block', marginBottom: 6 }}>Daily Class Window</label>
-            <input type="text" className="app-select-field" style={{ width: '100%' }} defaultValue="P1 to P13 (08:30 - 20:30)" disabled />
+            <div>
+              <span style={{ fontSize: 11.5, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: 0.3 }}>
+                Daily Operational Class Window
+              </span>
+              <div style={{ padding: '10px 14px', borderRadius: 10, background: 'var(--bg-card-subtle)', border: '1px solid var(--border-default)', fontSize: 13.5, fontWeight: 600, color: 'var(--text-primary)', marginTop: 4 }}>
+                P1 to P13 (08:30 – 20:30)
+              </div>
+            </div>
+
+            <div>
+              <span style={{ fontSize: 11.5, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: 0.3 }}>
+                Teaching Commitment
+              </span>
+              <div style={{ padding: '10px 14px', borderRadius: 10, background: 'var(--bg-card-subtle)', border: '1px solid var(--border-default)', fontSize: 13.5, fontWeight: 600, color: 'var(--text-primary)', marginTop: 4 }}>
+                Full-Time Academic Faculty (4 Courses Assigned)
+              </div>
+            </div>
           </div>
         </div>
       </div>
 
-      {/* Dedicated Session & Account Danger Zone / Logout */}
+      {/* Session Account Bar */}
       <div className="white-app-card" style={{ marginTop: 20, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
         <div>
           <h4 style={{ fontSize: 15, fontWeight: 700, margin: 0 }}>Active Account Session</h4>

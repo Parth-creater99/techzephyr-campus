@@ -165,8 +165,8 @@
 }
 
 .swap-tab-btn.active {
-  color: #101320;
-  border-bottom-color: #101320;
+  color: var(--accent-terracotta);
+  border-bottom-color: var(--accent-terracotta);
 }
 
 .swap-tab-count {
@@ -448,9 +448,9 @@
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: var(--accent-lime);
-  color: #101320;
-  border: 1.5px solid var(--accent-lime);
+  background: var(--accent-terracotta);
+  color: #ffffff;
+  border: 1.5px solid var(--accent-terracotta);
   padding: 10px 20px;
   border-radius: 9999px;
   font-weight: 800;
@@ -460,9 +460,10 @@
 }
 
 .approve-swap-btn:hover {
-  background: #c4eb46;
+  background: var(--accent-terracotta-hover);
+  color: #ffffff;
   transform: translateY(-1px);
-  box-shadow: 0 4px 14px rgba(210, 248, 87, 0.4);
+  box-shadow: 0 4px 14px rgba(194, 84, 45, 0.35);
 }
 
 .decline-swap-btn {

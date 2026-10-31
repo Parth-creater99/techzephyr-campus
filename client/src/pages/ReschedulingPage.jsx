@@ -329,61 +329,45 @@ export function ReschedulingPage({ currentUser, onNavigate }) {
         </div>
       )}
 
-      {/* Main Header & Scoring Criterion Banner */}
-      <div className="reschedule-hero-banner">
-        <div className="reschedule-hero-info">
-          <div className="reschedule-badge">
-            <ShieldCheck size={16} />
-            <span>Hackathon Judged Criterion: Rescheduling (15 Marks)</span>
-          </div>
-          <h1 className="reschedule-title">
-            Faculty Permission-Based Lecture Switching Engine
-          </h1>
-          <p className="reschedule-desc">
-            Enforcing strict academic protocol: <strong>No lecture can be moved or changed without the explicit permission of the affected faculty.</strong> Fully audited for zero hard violations, minimal moved sessions, and tie-breaking priority.
-          </p>
+      {/* Clean Subpage Header */}
+      <div className="subpage-header-card">
+        <div>
+          <h2 className="section-title" style={{ fontSize: 20 }}>
+            Lecture Swaps & Permission Engine
+          </h2>
+          <span style={{ fontSize: 13, color: 'var(--text-secondary)' }}>
+            Strict faculty permission governance with minimal moved sessions and zero conflict verification
+          </span>
         </div>
 
-        <div className="reschedule-hero-actions">
+        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
           <button
             type="button"
             className="app-btn-lime"
             onClick={() => setIsCreateModalOpen(true)}
           >
-            <Plus size={16} />
+            <Plus size={15} />
             <span>Propose Lecture Swap</span>
           </button>
 
           <button
             type="button"
-            className="hero-action-btn-white"
+            className="app-btn-outline"
             onClick={() => setIsJudgesModalOpen(true)}
           >
-            <Upload size={16} />
+            <Upload size={15} />
             <span>Apply Change File (.json)</span>
           </button>
 
           <button
             type="button"
-            className="hero-action-btn-lime"
+            className="app-btn-outline"
             onClick={handleExportValidatorJson}
-            title="Download schedule.json for the Hackathon Validator"
+            title="Download schedule.json for the Validator"
           >
-            <Download size={16} />
-            <span>Export schedule.json (Validator)</span>
+            <Download size={15} />
+            <span>Export schedule.json</span>
           </button>
-        </div>
-      </div>
-
-      {/* Priority Order Pill Bar (Image 2 Requirement) */}
-      <div className="priority-tie-breaker-bar">
-        <span className="priority-bar-title">Priority Order (Tie-Breaker Rule):</span>
-        <div className="priority-chips-list">
-          {PRIORITY_LEVELS.map((p) => (
-            <span key={p.level} className="priority-chip-item" title={p.description}>
-              <strong>{p.level}.</strong> {p.name}
-            </span>
-          ))}
         </div>
       </div>
 

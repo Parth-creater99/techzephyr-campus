@@ -159,248 +159,8 @@
 
 /* Active Nav State - Vibrant Lime Pill */
 .sidebar-link.active {
-  background-color: var(--accent-lime);
-  color: var(--text-on-lime);
-  font-weight: 700;
-  box-shadow: var(--shadow-lime);
-}
-
-.sidebar-link.active .sidebar-link-content svg {
-  stroke: var(--text-on-lime);
-}
-
-.sidebar-pill-badge {
-  background-color: #ff7d54;
-  color: #ffffff;
-  border-radius: var(--radius-full);
-  width: 18px;
-  height: 18px;
-  font-size: 11px;
-  font-weight: 700;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-/* Bottom Promo / Mobile App Widget in Sidebar */
-.sidebar-bottom-promo {
-  margin-top: auto;
-  padding-top: 20px;
-}
-
-.sidebar-app-card {
-  background: linear-gradient(135deg, #d2f857 0%, #bde840 100%);
-  border-radius: var(--radius-lg);
-  padding: 14px 14px 14px 14px;
-  position: relative;
-  overflow: hidden;
-  color: #13151f;
-  box-shadow: 0 8px 20px rgba(210, 248, 87, 0.25);
-}
-
-.sidebar-app-arrow-btn {
-  width: 32px;
-  height: 32px;
-  background-color: #ffffff;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #13151f;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
-  margin-bottom: 12px;
-  transition: transform var(--transition-fast);
-}
-
-.sidebar-app-card:hover .sidebar-app-arrow-btn {
-  transform: translate(2px, -2px);
-}
-
-.sidebar-app-title {
-  font-size: 13px;
-  font-weight: 700;
-  line-height: 1.25;
-  color: #13151f;
-  max-width: 130px;
-}
-
-/* ==========================================================================
-   Main Application Viewport (Header + Scrollable Body)
-   ========================================================================== */
-
-.app-main-viewport {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  min-width: 0;
-  min-height: 100vh;
-  background-color: var(--bg-canvas);
-}
-
-/* Top Header Bar */
-.app-topbar {
-  padding: 24px 36px 12px 36px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 16px;
-}
-
-@media (max-width: 768px) {
-  .app-topbar {
-    padding: 16px 20px 8px 20px;
-  }
-}
-
-.topbar-left {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.mobile-nav-toggle {
-  display: none;
-  width: 36px;
-  height: 36px;
-  border-radius: var(--radius-sm);
-  background-color: #ffffff;
-  border: 1px solid var(--border-default);
-  align-items: center;
-  justify-content: center;
-  color: var(--text-primary);
-}
-
-@media (max-width: 1024px) {
-  .mobile-nav-toggle {
-    display: flex;
-  }
-}
-
-.welcome-heading {
-  font-size: 26px;
-  font-weight: 700;
-  color: var(--text-primary);
-  letter-spacing: -0.02em;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-@media (max-width: 640px) {
-  .welcome-heading {
-    font-size: 20px;
-  }
-}
-
-.topbar-right {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-}
-
-/* Search Bar (Rounded Pill with Icon) */
-.search-pill-container {
-  position: relative;
-  display: flex;
-  align-items: center;
-  width: 260px;
-}
-
-@media (max-width: 768px) {
-  .search-pill-container {
-    display: none;
-  }
-}
-
-.search-pill-icon {
-  position: absolute;
-  left: 14px;
-  color: #94a3b8;
-  pointer-events: none;
-}
-
-.search-pill-input {
-  width: 100%;
-  height: 40px;
-  border-radius: var(--radius-full);
-  background-color: #ffffff;
-  border: 1px solid var(--border-default);
-  padding: 0 16px 0 38px;
-  font-size: 13.5px;
-  color: var(--text-primary);
-  transition: all var(--transition-fast);
-}
-
-.search-pill-input::placeholder {
-  color: #94a3b8;
-}
-
-.search-pill-input:focus {
-  outline: none;
-  border-color: #13151f;
-  box-shadow: 0 0 0 3px rgba(19, 21, 31, 0.08);
-}
-
-/* User Avatar */
-.topbar-avatar-btn {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  border: 2px solid #ffffff;
-  background: linear-gradient(135deg, #a855f7 0%, #ec4899 100%);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #ffffff;
-  font-weight: 700;
-  font-size: 13px;
-  box-shadow: var(--shadow-sm);
-  cursor: pointer;
-  position: relative;
-}
-
-/* ==========================================================================
-   Faculty Dashboard Layout (3-Column Layout Matching Mockup)
-   ========================================================================== */
-
-.faculty-dashboard-container {
-  padding: 8px 36px 36px 36px;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
-@media (max-width: 768px) {
-  .faculty-dashboard-container {
-    padding: 8px 20px 24px 20px;
-    gap: 20px;
-  }
-}
-
-/* Row 1: Assigned Courses + Dark Feature Card */
-.top-courses-row {
-  display: grid;
-  grid-template-columns: 1fr 340px;
-  gap: 24px;
-}
-
-@media (max-width: 1200px) {
-  .top-courses-row {
-    grid-template-columns: 1fr;
-  }
-}
-
-.section-title-wrap {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 14px;
-}
-
-.section-title {
-  font-size: 18px;
-  font-weight: 800;
-  color: #0f172a !important;
+  background-color: var(--accent-terracotta) !important;
+  color: #ffffff !important;
   letter-spacing: -0.01em;
 }
 
@@ -553,8 +313,8 @@
 }
 
 .feature-lime-btn {
-  background-color: var(--accent-lime);
-  color: #13151f;
+  background-color: var(--accent-terracotta);
+  color: #ffffff;
   font-weight: 700;
   font-size: 13px;
   padding: 8px 18px;
@@ -563,7 +323,7 @@
   align-items: center;
   gap: 6px;
   width: fit-content;
-  box-shadow: 0 3px 10px rgba(210, 248, 87, 0.3);
+  box-shadow: 0 4px 14px rgba(194, 84, 45, 0.25);
   transition: transform var(--transition-fast);
 }
 
@@ -677,9 +437,9 @@
 }
 
 .bar-pillar.active-lime {
-  background-color: var(--accent-lime);
+  background: linear-gradient(180deg, var(--accent-ochre) 0%, var(--accent-terracotta) 100%);
   width: 8px;
-  box-shadow: 0 0 10px rgba(210, 248, 87, 0.4);
+  box-shadow: 0 0 10px rgba(194, 84, 45, 0.35);
 }
 
 .bar-label {
@@ -1016,8 +776,8 @@
 }
 
 .app-btn-lime {
-  background-color: var(--accent-lime);
-  color: #13151f;
+  background-color: var(--accent-terracotta);
+  color: #ffffff;
   font-weight: 700;
   font-size: 13px;
   padding: 8px 18px;
@@ -1327,8 +1087,13 @@
 }
 
 .sidebar-link.active {
-  background-color: var(--accent-lime) !important;
-  color: #0f172a !important;
+  background-color: var(--accent-terracotta) !important;
+  color: #ffffff !important;
+}
+
+.sidebar-link.active svg {
+  stroke: #ffffff !important;
+  color: #ffffff !important;
 }
 
 .app-topbar {
