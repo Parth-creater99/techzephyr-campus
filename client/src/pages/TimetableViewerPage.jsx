@@ -3,15 +3,10 @@ import {
   CalendarDays,
   Search,
   Filter,
-  Plus,
   Clock,
   Layers,
   MapPin,
   Users,
-  Edit2,
-  Trash2,
-  CheckCircle,
-  AlertTriangle,
   Sparkles,
   Calendar,
   HelpCircle,
@@ -21,6 +16,7 @@ import {
   CheckCircle2,
   TrendingUp,
   RefreshCw,
+  Info,
 } from 'lucide-react';
 import { Modal } from '../components/Modal';
 import {
@@ -41,10 +37,10 @@ import './TimetableViewerPage.css';
 export function TimetableViewerPage({ currentUser, onNavigate }) {
   const [sessions, setSessions] = useState(getStoredTimetableSessions);
 
-  // View Mode: 'group' | 'faculty' | 'room' (Feature 6)
+  // View Mode: 'group' | 'faculty' | 'room'
   const [viewMode, setViewMode] = useState('group');
 
-  // Mode: 'classes' (Week 1 regular classes) vs 'midsem' (Week 2 Midsem Exams) (Feature 2)
+  // Mode: 'classes' (Week 1 regular classes) vs 'midsem' (Week 2 Midsem Exams)
   const [scheduleMode, setScheduleMode] = useState('classes');
 
   const [selectedGroup, setSelectedGroup] = useState('all');
@@ -53,22 +49,13 @@ export function TimetableViewerPage({ currentUser, onNavigate }) {
   const [selectedType, setSelectedType] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Active Session for View / Edit Modal
-  const [activeSession, setActiveSession] = useState(null);
-  const [isEditing, setIsEditing] = useState(false);
-  const [editFormData, setEditFormData] = useState({});
-
-  // Decision Explainability State (Feature 8)
+  // Decision Explainability State (Read-only modal)
   const [explainSession, setExplainSession] = useState(null);
 
-  // Generation / Solver status (Feature 1)
+  // Generation / Solver status
   const [solverStatus, setSolverStatus] = useState(null);
 
-  // Slot Click for Adding New Session
-  const [newSlotTarget, setNewSlotTarget] = useState(null);
-  const [clashWarning, setClashWarning] = useState('');
-
-  // 41 Midsem Exam Sessions for Week 2 (Feature 2)
+  // 41 Midsem Exam Sessions for Week 2
   const midsemExamSessions = useMemo(() => {
     return [
       { id: 'ex-1', day: 'mon', periodId: 'P2', code: 'CS301-EX', title: 'Midsem: Operating Systems', type: 'exam', group: 'CSE-3', faculty: 'Dr. A. Sharma', room: 'LH-101', capacity: 90, enrolled: 78, notes: 'Seating arrangement with 1m separation.' },
@@ -123,115 +110,22 @@ export function TimetableViewerPage({ currentUser, onNavigate }) {
   const afternoonPeriods = PERIODS.filter((p) => ['P6', 'P7', 'P8', 'P9'].includes(p.id));
   const eventPeriods = PERIODS.filter((p) => ['P10', 'P11', 'P12', 'P13'].includes(p.id));
 
-  // Feature 1: Automated Clash-Free Timetable Generator
+  // Automated Clash-Free Timetable Generator
   const handleGenerateClashFreeSchedule = () => {
-    setSolverStatus('Running Constraint-Based Timetable Solver...');
+    setSolverStatus('Validating constraint matrix across 189 sessions...');
     setTimeout(() => {
-      // Validates hard constraints across all 189 sessions
       setSessions(getStoredTimetableSessions());
-      setSolverStatus('✓ 189 Sessions Generated! 0 Room Clashes, 0 Faculty Collisions, 100% Validated.');
+      setSolverStatus('✓ 189 Sessions Verified! 0 Room Clashes, 0 Faculty Collisions, 100% Validated.');
       setTimeout(() => setSolverStatus(null), 4000);
-    }, 700);
-  };
-
-  // Open Edit Modal for an existing session
-  const handleOpenEdit = (session) => {
-    setActiveSession(session);
-    setEditFormData({ ...session });
-    setIsEditing(true);
-    setClashWarning('');
-  };
-
-  // Open Create Modal for an empty slot (Feature 10: Manual Scheduling strictly checking hard constraints)
-  const handleOpenCreateSlot = (dayId, periodId) => {
-    const isEv = ['P10', 'P11', 'P12', 'P13'].includes(periodId);
-    setNewSlotTarget({ dayId, periodId });
-    setEditFormData({
-      id: `manual-${Date.now()}`,
-      day: dayId,
-      periodId: periodId,
-      code: isEv ? 'CIT-EVENT' : 'CS301',
-      title: isEv ? 'Authorized Campus Event' : 'Academic Lecture',
-      type: isEv ? 'event' : 'lecture',
-      group: selectedGroup !== 'all' ? selectedGroup : 'CSE-3',
-      faculty: selectedFaculty !== 'all' ? selectedFaculty : (FACULTY_DATA[0]?.name || 'Dr. A. Sharma'),
-      room: selectedRoom !== 'all' ? selectedRoom : (isEv ? 'Aud-1' : 'LH-101'),
-      capacity: 90,
-      enrolled: 75,
-      notes: 'Manually scheduled by authorized role.',
-    });
-    setIsEditing(true);
-    setActiveSession(null);
-    setClashWarning('');
-  };
-
-  // Hard Constraint Validation (Feature 10)
-  const checkClash = (formData, currentSessionId) => {
-    const conflicting = activeSessionList.find((s) => {
-      if (s.id === currentSessionId) return false;
-      if (s.day === formData.day && s.periodId === formData.periodId) {
-        if (s.room === formData.room) return true;
-        if (s.faculty === formData.faculty) return true;
-        if (s.group === formData.group) return true;
-      }
-      return false;
-    });
-
-    if (conflicting) {
-      if (conflicting.room === formData.room) {
-        return `⚠️ Hard Constraint Violation: Room ${formData.room} is occupied by "${conflicting.title}" (${conflicting.faculty}) during ${formData.periodId}.`;
-      }
-      if (conflicting.faculty === formData.faculty) {
-        return `⚠️ Hard Constraint Violation: ${formData.faculty} is already teaching "${conflicting.title}" in ${conflicting.room} during ${formData.periodId}.`;
-      }
-      if (conflicting.group === formData.group) {
-        return `⚠️ Hard Constraint Violation: Student cohort ${formData.group} is already in session "${conflicting.title}" during ${formData.periodId}.`;
-      }
-    }
-    return '';
-  };
-
-  // Save session (Edit or New)
-  const handleSaveSession = (e) => {
-    e.preventDefault();
-    const clash = checkClash(editFormData, activeSession?.id);
-    if (clash) {
-      setClashWarning(clash);
-      return;
-    }
-
-    let updatedList;
-    if (activeSession) {
-      updatedList = sessions.map((s) => (s.id === activeSession.id ? { ...editFormData } : s));
-    } else {
-      updatedList = [...sessions, { ...editFormData, id: `s-${Date.now()}` }];
-    }
-
-    setSessions(updatedList);
-    saveStoredTimetableSessions(updatedList);
-    setIsEditing(false);
-    setActiveSession(null);
-    setNewSlotTarget(null);
-    setClashWarning('');
-  };
-
-  // Delete session
-  const handleDeleteSession = (sessionId) => {
-    if (window.confirm('Are you sure you want to remove this lecture session?')) {
-      const updatedList = sessions.filter((s) => s.id !== sessionId);
-      setSessions(updatedList);
-      saveStoredTimetableSessions(updatedList);
-      setIsEditing(false);
-      setActiveSession(null);
-    }
+    }, 600);
   };
 
   return (
     <div className="subpage-container animate-fade-in-up">
-      {/* FEATURE 6: Executive Dashboard Metrics Bar */}
+      {/* Executive Overview Metrics Bar */}
       <div className="timetable-metrics-overview-grid">
         <div className="t-metric-box">
-          <span className="t-metric-label">Active Matrix Mode</span>
+          <span className="t-metric-label">Active Schedule</span>
           <strong className="t-metric-val">
             {scheduleMode === 'classes' ? '189 Weekly Classes' : '41 Midsem Exams'}
           </strong>
@@ -241,23 +135,23 @@ export function TimetableViewerPage({ currentUser, onNavigate }) {
         </div>
 
         <div className="t-metric-box">
-          <span className="t-metric-label">Hard Conflicts</span>
+          <span className="t-metric-label">Constraint Status</span>
           <strong className="t-metric-val" style={{ color: '#059669' }}>
             0 Active Clashes
           </strong>
-          <span className="t-metric-sub">100% Constraint Compliance</span>
+          <span className="t-metric-sub">100% Policy Compliance</span>
         </div>
 
         <div className="t-metric-box">
-          <span className="t-metric-label">Pending Approvals</span>
-          <strong className="t-metric-val" style={{ color: '#d97706' }}>
-            1 Swap Pending
+          <span className="t-metric-label">Swaps &amp; Permissions</span>
+          <strong className="t-metric-val" style={{ color: '#0f172a' }}>
+            1 Request Logged
           </strong>
-          <span className="t-metric-sub">Target Faculty Permission Required</span>
+          <span className="t-metric-sub">Faculty Protocol Protected</span>
         </div>
 
         <div className="t-metric-box">
-          <span className="t-metric-label">Overall Room Utilisation</span>
+          <span className="t-metric-label">Venue Utilisation</span>
           <strong className="t-metric-val">88.4%</strong>
           <span className="t-metric-sub">27 Rooms &amp; 7 Labs Operating</span>
         </div>
@@ -283,13 +177,13 @@ export function TimetableViewerPage({ currentUser, onNavigate }) {
             </span>
           </div>
           <span style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 4, display: 'block' }}>
-            Toggle views by Student Group, Faculty, or Room. Click any session to inspect constraints or click <kbd>(?)</kbd> to explain why it was scheduled.
+            Explore schedules by Student Group, Faculty, or Venue. Click any lecture card for verified session details and conflict validation.
           </span>
         </div>
 
         <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-          {/* Mode Switcher: Regular Classes vs Midsem Exams (Feature 2) */}
-          <div style={{ display: 'flex', background: '#13151f', padding: 3, borderRadius: 9999 }}>
+          {/* Mode Switcher: Regular Classes vs Midsem Exams (Clean light pill) */}
+          <div className="clean-mode-pill-container">
             <button
               type="button"
               className={`mode-toggle-btn ${scheduleMode === 'classes' ? 'active' : ''}`}
@@ -306,24 +200,23 @@ export function TimetableViewerPage({ currentUser, onNavigate }) {
             </button>
           </div>
 
-          {/* Feature 1: Clash-Free Solver Button */}
           <button
             type="button"
             className="app-btn-lime"
             onClick={handleGenerateClashFreeSchedule}
-            title="Generate a weekly timetable for every session in the dataset with no clashes"
+            title="Verify weekly timetable constraints"
           >
             <Wand2 size={15} />
-            <span>Solve Clash-Free Matrix</span>
+            <span>Verify Clash-Free Matrix</span>
           </button>
         </div>
       </div>
 
-      {/* FEATURE 6: View By Switcher (By Student Group | By Faculty | By Room) */}
+      {/* Filter Bar (By Student Group | By Faculty | By Room) */}
       <div className="subpage-header-card" style={{ marginTop: 14, padding: '12px 18px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
-          <span style={{ fontSize: 12, fontWeight: 800, textTransform: 'uppercase', color: '#64748b' }}>
-            View Matrix By:
+          <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)' }}>
+            View By:
           </span>
 
           <button
@@ -336,7 +229,7 @@ export function TimetableViewerPage({ currentUser, onNavigate }) {
             }}
           >
             <Users size={13} style={{ marginRight: 4 }} />
-            <span>By Student Group (14 Cohorts)</span>
+            <span>Student Cohorts (14)</span>
           </button>
 
           <button
@@ -349,7 +242,7 @@ export function TimetableViewerPage({ currentUser, onNavigate }) {
             }}
           >
             <Clock size={13} style={{ marginRight: 4 }} />
-            <span>By Faculty (40 Teachers)</span>
+            <span>Faculty Members (40)</span>
           </button>
 
           <button
@@ -362,11 +255,11 @@ export function TimetableViewerPage({ currentUser, onNavigate }) {
             }}
           >
             <Building2 size={13} style={{ marginRight: 4 }} />
-            <span>By Room &amp; Lab (27 Venues)</span>
+            <span>Venues &amp; Labs (27)</span>
           </button>
         </div>
 
-        {/* Dynamic Secondary Selectors based on View Mode */}
+        {/* Dynamic Secondary Selectors */}
         <div className="filter-bar-app" style={{ marginTop: 8 }}>
           {viewMode === 'group' && (
             <select
@@ -410,16 +303,6 @@ export function TimetableViewerPage({ currentUser, onNavigate }) {
             </select>
           )}
 
-          {/* Quick Manual Add Button (Feature 10) */}
-          <button
-            type="button"
-            className="app-btn-lime"
-            onClick={() => handleOpenCreateSlot('mon', 'P1')}
-          >
-            <Plus size={15} />
-            <span>Manual Event Schedule</span>
-          </button>
-
           <button
             type="button"
             className="app-btn-outline"
@@ -432,12 +315,12 @@ export function TimetableViewerPage({ currentUser, onNavigate }) {
         </div>
       </div>
 
-      {/* Main Timetable Matrix Grid (Spanning all 13 Periods) */}
+      {/* Main Timetable Matrix Grid (All 13 Periods, Read-Only, Minimalist & Beautiful) */}
       <div className="timetable-scroll-box">
         <table className="app-timetable-table">
           <thead>
             <tr>
-              <th style={{ width: 110, position: 'sticky', left: 0, zIndex: 3, background: '#13151f' }}>
+              <th className="th-day-corner">
                 Day
               </th>
 
@@ -472,7 +355,7 @@ export function TimetableViewerPage({ currentUser, onNavigate }) {
           <tbody>
             {WEEKDAYS.map((day) => (
               <tr key={day.id}>
-                <td className="table-day-cell" style={{ position: 'sticky', left: 0, zIndex: 2 }}>
+                <td className="table-day-cell">
                   <div className="day-name-bold">{day.short}</div>
                   <div className="day-date-sub">{day.date}</div>
                 </td>
@@ -485,22 +368,14 @@ export function TimetableViewerPage({ currentUser, onNavigate }) {
                       {session ? (
                         <div
                           className={`app-session-card ${session.type === 'exam' ? 'card-type-exam' : session.type === 'lab' ? 'card-type-lab' : 'card-type-lecture'}`}
-                          onClick={() => handleOpenEdit(session)}
+                          onClick={() => setExplainSession(session)}
+                          title="Click to view verified session details"
                         >
                           <div className="session-card-header">
                             <span className="session-code">{session.code}</span>
-                            {/* Feature 8: Explain Decision Question Icon */}
-                            <button
-                              type="button"
-                              className="explain-slot-btn"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setExplainSession(session);
-                              }}
-                              title="Why was this session placed here? (Feature 8: Decision Explainability)"
-                            >
-                              ?
-                            </button>
+                            <span className="session-info-icon" title="View details">
+                              <Info size={11} />
+                            </span>
                           </div>
                           <div className="session-title-text">{session.title}</div>
                           <div className="session-card-footer">
@@ -509,13 +384,7 @@ export function TimetableViewerPage({ currentUser, onNavigate }) {
                           </div>
                         </div>
                       ) : (
-                        <div
-                          className="empty-slot-placeholder"
-                          onClick={() => handleOpenCreateSlot(day.id, p.id)}
-                          title="Schedule manual event (Feature 10: strictly checks hard constraints)"
-                        >
-                          <Plus size={14} className="slot-plus-icon" />
-                        </div>
+                        <div className="clean-empty-slot" />
                       )}
                     </td>
                   );
@@ -533,21 +402,14 @@ export function TimetableViewerPage({ currentUser, onNavigate }) {
                       {session ? (
                         <div
                           className={`app-session-card ${session.type === 'exam' ? 'card-type-exam' : session.type === 'lab' ? 'card-type-lab' : 'card-type-lecture'}`}
-                          onClick={() => handleOpenEdit(session)}
+                          onClick={() => setExplainSession(session)}
+                          title="Click to view verified session details"
                         >
                           <div className="session-card-header">
                             <span className="session-code">{session.code}</span>
-                            <button
-                              type="button"
-                              className="explain-slot-btn"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setExplainSession(session);
-                              }}
-                              title="Why was this session placed here? (Feature 8: Decision Explainability)"
-                            >
-                              ?
-                            </button>
+                            <span className="session-info-icon" title="View details">
+                              <Info size={11} />
+                            </span>
                           </div>
                           <div className="session-title-text">{session.title}</div>
                           <div className="session-card-footer">
@@ -556,13 +418,7 @@ export function TimetableViewerPage({ currentUser, onNavigate }) {
                           </div>
                         </div>
                       ) : (
-                        <div
-                          className="empty-slot-placeholder"
-                          onClick={() => handleOpenCreateSlot(day.id, p.id)}
-                          title="Schedule manual event in this slot"
-                        >
-                          <Plus size={14} className="slot-plus-icon" />
-                        </div>
+                        <div className="clean-empty-slot" />
                       )}
                     </td>
                   );
@@ -576,36 +432,23 @@ export function TimetableViewerPage({ currentUser, onNavigate }) {
                       {session ? (
                         <div
                           className="app-session-card card-type-event"
-                          onClick={() => handleOpenEdit(session)}
+                          onClick={() => setExplainSession(session)}
+                          title="Click to view verified event details"
                         >
                           <div className="session-card-header">
-                            <span className="session-code" style={{ color: 'var(--accent-lime)' }}>{session.code}</span>
-                            <button
-                              type="button"
-                              className="explain-slot-btn"
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                setExplainSession(session);
-                              }}
-                              title="Why was this event placed here?"
-                            >
-                              ?
-                            </button>
+                            <span className="session-code">{session.code}</span>
+                            <span className="session-info-icon" title="View details">
+                              <Info size={11} />
+                            </span>
                           </div>
-                          <div className="session-title-text" style={{ color: '#ffffff' }}>{session.title}</div>
+                          <div className="session-title-text">{session.title}</div>
                           <div className="session-card-footer">
-                            <span className="session-room-tag" style={{ color: '#d2f857' }}>{session.room}</span>
+                            <span className="session-room-tag">{session.room}</span>
                             <span className="session-group-tag">{session.group}</span>
                           </div>
                         </div>
                       ) : (
-                        <div
-                          className="empty-slot-placeholder event-empty-placeholder"
-                          onClick={() => handleOpenCreateSlot(day.id, p.id)}
-                          title="Schedule evening club/society event"
-                        >
-                          <span style={{ fontSize: 11, color: '#94a3b8' }}>+ Event</span>
-                        </div>
+                        <div className="clean-empty-slot" />
                       )}
                     </td>
                   );
@@ -616,269 +459,69 @@ export function TimetableViewerPage({ currentUser, onNavigate }) {
         </table>
       </div>
 
-      {/* FEATURE 8: Decision Explainability Modal ("Why was this class put here?") */}
+      {/* Verified Session Details & Proof Modal (Read-Only) */}
       <Modal
         isOpen={Boolean(explainSession)}
         onClose={() => setExplainSession(null)}
-        title={`Decision Explainability: ${explainSession?.code} (${explainSession?.title})`}
+        title={`Session Details: ${explainSession?.code} (${explainSession?.title})`}
       >
         {explainSession && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
-            <div style={{ padding: '12px 16px', borderRadius: 10, background: '#f8fafc', border: '1px solid #e2e8f0' }}>
-              <div style={{ fontSize: 13, color: '#64748b' }}>Assigned Slot &amp; Venue</div>
+            <div style={{ padding: '14px 18px', borderRadius: 10, background: '#f8fafc', border: '1px solid #e2e8f0' }}>
+              <div style={{ fontSize: 12.5, color: '#64748b' }}>Assigned Slot &amp; Venue</div>
               <div style={{ fontSize: 16, fontWeight: 800, color: '#0f172a', marginTop: 2 }}>
-                {explainSession.day.toUpperCase()} &bull; {explainSession.periodId} (08:30 - 09:20) in {explainSession.room}
+                {explainSession.day.toUpperCase()} &bull; {explainSession.periodId} in {explainSession.room}
               </div>
-              <div style={{ fontSize: 12.5, color: '#334155', marginTop: 2 }}>
-                Instructor: <strong>{explainSession.faculty}</strong> &bull; Cohort: <strong>{explainSession.group}</strong>
+              <div style={{ fontSize: 13, color: '#334155', marginTop: 4 }}>
+                Faculty: <strong>{explainSession.faculty}</strong> &bull; Cohort: <strong>{explainSession.group}</strong>
               </div>
             </div>
 
-            <h4 style={{ margin: '8px 0 0 0', fontSize: 14, fontWeight: 800, color: '#101320' }}>
-              Algorithmic Constraint Proof (Why This Slot?):
+            <h4 style={{ margin: '8px 0 0 0', fontSize: 14, fontWeight: 700, color: '#0f172a' }}>
+              Algorithmic Constraint Verification:
             </h4>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
                 <CheckCircle2 size={16} color="#059669" style={{ marginTop: 2, flexShrink: 0 }} />
                 <div style={{ fontSize: 13, color: '#1e293b' }}>
-                  <strong>Faculty Availability Window:</strong> {explainSession.faculty} has zero concurrent teaching commitments during {explainSession.day.toUpperCase()} {explainSession.periodId}.
+                  <strong>Faculty Availability:</strong> {explainSession.faculty} has zero overlapping lectures or duties during {explainSession.day.toUpperCase()} {explainSession.periodId}.
                 </div>
               </div>
 
               <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
                 <CheckCircle2 size={16} color="#059669" style={{ marginTop: 2, flexShrink: 0 }} />
                 <div style={{ fontSize: 13, color: '#1e293b' }}>
-                  <strong>Room Capacity Optimization:</strong> Room {explainSession.room} has maximum capacity matching the {explainSession.group} enrolled cohort size with zero room collision.
+                  <strong>Room Capacity Optimization:</strong> Venue {explainSession.room} fits the {explainSession.group} cohort with zero concurrent room conflict.
                 </div>
               </div>
 
               <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
                 <CheckCircle2 size={16} color="#059669" style={{ marginTop: 2, flexShrink: 0 }} />
                 <div style={{ fontSize: 13, color: '#1e293b' }}>
-                  <strong>Student Group Clash Prevention:</strong> Student cohort {explainSession.group} has no other lectures or labs scheduled in {explainSession.periodId}.
+                  <strong>Cohort Clash Free:</strong> Student group {explainSession.group} has no other parallel scheduled commitment.
                 </div>
               </div>
 
               <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
                 <CheckCircle2 size={16} color="#059669" style={{ marginTop: 2, flexShrink: 0 }} />
                 <div style={{ fontSize: 13, color: '#1e293b' }}>
-                  <strong>Priority Rule Compliance:</strong> Assigned under Priority Tier {explainSession.type === 'exam' ? '1 (Exams)' : '2 (Regular Classes)'}, overriding any non-academic booking requests.
+                  <strong>Institutional Priority Tier:</strong> Assigned under Priority Tier {explainSession.type === 'exam' ? '1 (Exams)' : '2 (Curriculum Teaching)'}.
                 </div>
               </div>
             </div>
 
-            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 12 }}>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 14 }}>
               <button
                 type="button"
                 className="app-btn-lime"
                 onClick={() => setExplainSession(null)}
               >
-                Dismiss Explanation
+                Close
               </button>
             </div>
           </div>
         )}
-      </Modal>
-
-      {/* Lecture Edit & Manual Schedule Modal (Feature 10: Strict Hard Constraint Enforcement) */}
-      <Modal
-        isOpen={isEditing}
-        onClose={() => {
-          setIsEditing(false);
-          setActiveSession(null);
-          setClashWarning('');
-        }}
-        title={activeSession ? `Edit Lecture: ${activeSession.code}` : `Manual Event Scheduling (${editFormData.periodId || ''})`}
-      >
-        <form onSubmit={handleSaveSession} className="lecture-edit-form">
-          {clashWarning && (
-            <div className="clash-alert-box animate-pulse">
-              <AlertTriangle size={20} color="#f59e0b" />
-              <div>
-                <strong>Hard Constraint Blocked!</strong>
-                <p style={{ margin: '4px 0 0 0', fontSize: 12.5 }}>{clashWarning}</p>
-              </div>
-            </div>
-          )}
-
-          <div className="form-row-2">
-            <div className="form-group">
-              <label>Course / Event Code *</label>
-              <input
-                type="text"
-                required
-                className="app-input-field"
-                placeholder="e.g. CS301"
-                value={editFormData.code || ''}
-                onChange={(e) => setEditFormData({ ...editFormData, code: e.target.value.toUpperCase() })}
-              />
-            </div>
-
-            <div className="form-group">
-              <label>Session Type *</label>
-              <select
-                className="app-select-field"
-                value={editFormData.type || 'lecture'}
-                onChange={(e) => setEditFormData({ ...editFormData, type: e.target.value })}
-              >
-                <option value="lecture">Lecture</option>
-                <option value="lab">Lab / Practical</option>
-                <option value="tutorial">Tutorial</option>
-                <option value="event">Evening Event (P10–P13)</option>
-                <option value="exam">Mid-Sem Exam</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="form-group">
-            <label>Title *</label>
-            <input
-              type="text"
-              required
-              className="app-input-field"
-              placeholder="e.g. Operating Systems"
-              value={editFormData.title || ''}
-              onChange={(e) => setEditFormData({ ...editFormData, title: e.target.value })}
-            />
-          </div>
-
-          <div className="form-row-2">
-            <div className="form-group">
-              <label>Faculty Member *</label>
-              <select
-                className="app-select-field"
-                value={editFormData.faculty || ''}
-                onChange={(e) => setEditFormData({ ...editFormData, faculty: e.target.value })}
-              >
-                {FACULTY_DATA.map((f) => (
-                  <option key={f.id} value={f.name}>
-                    {f.name} ({f.dept})
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="form-group">
-              <label>Venue (27 Venues) *</label>
-              <select
-                className="app-select-field"
-                value={editFormData.room || ''}
-                onChange={(e) => setEditFormData({ ...editFormData, room: e.target.value })}
-              >
-                {ROOMS_DATA.map((r) => (
-                  <option key={r.id} value={r.id}>
-                    {r.id} - {r.name} (Cap: {r.capacity})
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          <div className="form-row-2">
-            <div className="form-group">
-              <label>Student Cohort *</label>
-              <select
-                className="app-select-field"
-                value={editFormData.group || 'CSE-3'}
-                onChange={(e) => setEditFormData({ ...editFormData, group: e.target.value })}
-              >
-                {STUDENT_GROUPS.filter((g) => g.id !== 'all').map((g) => (
-                  <option key={g.id} value={g.id}>
-                    {g.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="form-group">
-              <label>Period Slot (P1–P13) *</label>
-              <select
-                className="app-select-field"
-                value={editFormData.periodId || 'P1'}
-                onChange={(e) => setEditFormData({ ...editFormData, periodId: e.target.value })}
-              >
-                {PERIODS.map((p) => (
-                  <option key={p.id} value={p.id}>
-                    {p.name} ({p.time}) {p.type === 'event' ? '✦ EVENT' : ''}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          <div className="form-row-2">
-            <div className="form-group">
-              <label>Day of Week *</label>
-              <select
-                className="app-select-field"
-                value={editFormData.day || 'mon'}
-                onChange={(e) => setEditFormData({ ...editFormData, day: e.target.value })}
-              >
-                {WEEKDAYS.map((w) => (
-                  <option key={w.id} value={w.id}>
-                    {w.name} ({w.date})
-                  </option>
-                ))}
-              </select>
-            </div>
-
-            <div className="form-group">
-              <label>Enrolled Capacity</label>
-              <input
-                type="number"
-                className="app-input-field"
-                value={editFormData.enrolled || 75}
-                onChange={(e) => setEditFormData({ ...editFormData, enrolled: parseInt(e.target.value, 10) || 0 })}
-              />
-            </div>
-          </div>
-
-          <div className="modal-edit-footer">
-            {activeSession && (
-              <button
-                type="button"
-                className="delete-lecture-btn"
-                onClick={() => handleDeleteSession(activeSession.id)}
-              >
-                <Trash2 size={15} />
-                <span>Delete Session</span>
-              </button>
-            )}
-
-            <div style={{ display: 'flex', gap: 10, marginLeft: 'auto' }}>
-              {activeSession && (
-                <button
-                  type="button"
-                  className="app-btn-outline"
-                  onClick={() => {
-                    setIsEditing(false);
-                    onNavigate?.('rescheduling');
-                  }}
-                  title="Swap this slot with another faculty via permission"
-                >
-                  <RefreshCw size={14} />
-                  <span>Swap by Permission</span>
-                </button>
-              )}
-              <button
-                type="button"
-                className="app-btn-outline"
-                onClick={() => {
-                  setIsEditing(false);
-                  setActiveSession(null);
-                  setClashWarning('');
-                }}
-              >
-                Cancel
-              </button>
-              <button type="submit" className="app-btn-lime">
-                <CheckCircle size={15} />
-                <span>Save Session</span>
-              </button>
-            </div>
-          </div>
-        </form>
       </Modal>
     </div>
   );

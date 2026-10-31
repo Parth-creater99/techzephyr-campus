@@ -1284,3 +1284,177 @@
 .class-done-row {
   opacity: 0.85;
 }
+
+
+/* ==========================================================================
+   Minimalist & Light Theme Overrides (Zero Black Boxes)
+   ========================================================================== */
+
+.app-sidebar {
+  background-color: #ffffff !important;
+  border-right: 1px solid var(--border-default) !important;
+}
+
+.brand-logo-text {
+  color: var(--text-primary) !important;
+}
+
+.back-hint-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #f1f5f9;
+  color: #64748b;
+  margin-left: 6px;
+  transition: all 0.2s;
+}
+
+.brand-logo-wrap:hover .back-hint-badge {
+  background: #0f172a;
+  color: #ffffff;
+}
+
+.sidebar-link {
+  color: #475569 !important;
+}
+
+.sidebar-link:hover {
+  color: #0f172a !important;
+  background-color: #f1f5f9 !important;
+}
+
+.sidebar-link.active {
+  background-color: var(--accent-lime) !important;
+  color: #0f172a !important;
+}
+
+.app-topbar {
+  background-color: #ffffff !important;
+  border-bottom: 1px solid var(--border-subtle) !important;
+  padding: 16px 32px !important;
+}
+
+.app-content-inner {
+  padding: 24px 32px;
+}
+
+@media (max-width: 768px) {
+  .app-content-inner {
+    padding: 16px;
+  }
+}
+
+.feature-dark-card {
+  background-color: #ffffff !important;
+  color: var(--text-primary) !important;
+  border: 1px solid var(--border-default) !important;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03) !important;
+}
+
+.feature-brand-title,
+.feature-card-title {
+  color: var(--text-primary) !important;
+}
+
+/* Settings Logout Button */
+.settings-logout-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff1f2;
+  color: #e11d48;
+  border: 1.5px solid #fecdd3;
+  padding: 8px 18px;
+  border-radius: 9999px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.settings-logout-btn:hover {
+  background: #ffe4e6;
+  border-color: #fda4af;
+  color: #be123c;
+  transform: translateY(-1px);
+}
+
+/* Dashboard Minimalist Strip & Grid */
+.dashboard-stats-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.stat-clean-card {
+  background: #ffffff;
+  border: 1px solid var(--border-default);
+  border-radius: var(--radius-lg);
+  padding: 16px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+.stat-clean-icon {
+  width: 42px;
+  height: 42px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.stat-clean-val {
+  font-size: 16px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.stat-clean-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin-top: 2px;
+}
+
+.dashboard-main-grid {
+  display: flex;
+  gap: 20px;
+}
+
+@media (max-width: 960px) {
+  .dashboard-main-grid {
+    flex-direction: column;
+  }
+}
+
+.weekday-pill-selector {
+  display: flex;
+  gap: 4px;
+  background: #f1f5f9;
+  padding: 3px;
+  border-radius: 9999px;
+  border: 1px solid #e2e8f0;
+}
+
+.weekday-pill-btn {
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 9999px;
+  color: #64748b;
+  background: transparent;
+  transition: all 0.15s;
+}
+
+.weekday-pill-btn.active {
+  background: #ffffff;
+  color: #0f172a;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}

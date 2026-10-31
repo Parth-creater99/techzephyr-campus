@@ -1,9 +1,8 @@
 import React, { useState } from 'react';
-import { User, Menu, X, ChevronsRight, ShieldCheck, CheckCircle2, LogIn, UserPlus, Sparkles, Clock, Calendar } from 'lucide-react';
-import { LiveTicker } from '../components/LiveTicker';
+import { User, Menu, X, ChevronsRight, ShieldCheck, CheckCircle2, Sparkles, Clock, Calendar, ArrowRight, ArrowLeft } from 'lucide-react';
 import './LandingPage.css';
 
-export function LandingPage({ currentUser, onOpenLogin, onNavigate }) {
+export function LandingPage({ currentUser, onEnterPortal, onNavigate }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   const scrollToSection = (id) => {
@@ -14,11 +13,21 @@ export function LandingPage({ currentUser, onOpenLogin, onNavigate }) {
     }
   };
 
+  const handleCitBackClick = () => {
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      onNavigate?.('dashboard');
+    }
+  };
+
+  const handleEnter = (targetPage = 'dashboard') => {
+    onEnterPortal?.();
+    onNavigate?.(targetPage);
+  };
+
   return (
     <div className="landing-root animate-fade-in">
-      {/* Live Updates Moving Right to Left */}
-      <LiveTicker />
-
       {/* Hand-coded background wave contours */}
       <div className="landing-bg-waves" aria-hidden="true">
         <svg
@@ -64,8 +73,17 @@ export function LandingPage({ currentUser, onOpenLogin, onNavigate }) {
       {/* Top Navigation */}
       <header className="landing-header">
         <div className="landing-nav-inner">
-          <div className="landing-logo" onClick={() => scrollToSection('home')}>
+          {/* Logo - clicking CIT goes back */}
+          <div
+            className="landing-logo"
+            onClick={handleCitBackClick}
+            title="Click CIT to go back"
+            style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8 }}
+          >
             <span>CIT Campus</span>
+            <span style={{ fontSize: 13, padding: '2px 8px', borderRadius: 9999, background: 'rgba(210,248,87,0.18)', color: '#d2f857', display: 'inline-flex', alignItems: 'center', gap: 4 }}>
+              <ArrowLeft size={12} /> Back
+            </span>
           </div>
 
           {/* Clean Desktop Navigation Links */}
@@ -80,50 +98,16 @@ export function LandingPage({ currentUser, onOpenLogin, onNavigate }) {
               Permission Protocol
             </button>
 
-            {/* Clear Log In and Sign In Buttons */}
-            {currentUser?.isLoggedIn ? (
-              <div className="landing-user-badge-group">
-                <button
-                  type="button"
-                  className="landing-user-pill-btn"
-                  onClick={() => onNavigate?.('dashboard')}
-                  title="Open Dashboard"
-                >
-                  <span className="user-dot-pulse" />
-                  <span>Enter Portal as {currentUser.name}</span>
-                </button>
-                <button
-                  type="button"
-                  className="landing-avatar-btn"
-                  onClick={onOpenLogin}
-                  title="Switch User / Log In"
-                >
-                  {currentUser.avatarInitials || 'AS'}
-                </button>
-              </div>
-            ) : (
-              <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-                <button
-                  type="button"
-                  className="hero-btn-outline"
-                  style={{ padding: '8px 20px', fontSize: 13.5 }}
-                  onClick={onOpenLogin}
-                >
-                  <LogIn size={14} style={{ marginRight: 6 }} />
-                  <span>Log In</span>
-                </button>
-
-                <button
-                  type="button"
-                  className="landing-login-btn"
-                  style={{ padding: '8px 22px', fontSize: 13.5 }}
-                  onClick={onOpenLogin}
-                >
-                  <UserPlus size={14} style={{ marginRight: 6 }} />
-                  <span>Sign In</span>
-                </button>
-              </div>
-            )}
+            {/* Direct Portal Entrance Button */}
+            <button
+              type="button"
+              className="landing-login-btn"
+              style={{ padding: '8px 22px', fontSize: 13.5 }}
+              onClick={() => handleEnter('dashboard')}
+            >
+              <span>Enter Campus Portal</span>
+              <ArrowRight size={14} style={{ marginLeft: 6 }} />
+            </button>
           </nav>
 
           {/* Mobile Menu Toggle */}
@@ -155,17 +139,18 @@ export function LandingPage({ currentUser, onOpenLogin, onNavigate }) {
                 className="landing-login-btn w-full"
                 onClick={() => {
                   setMobileMenuOpen(false);
-                  onOpenLogin();
+                  handleEnter('dashboard');
                 }}
               >
-                Log In / Sign In with Name &amp; Password
+                <span>Enter Campus Portal</span>
+                <ArrowRight size={14} style={{ marginLeft: 6 }} />
               </button>
             </div>
           </div>
         )}
       </header>
 
-      {/* Main Hero Section: Clean Intro with Direct Login & Sign In Buttons */}
+      {/* Main Hero Section: Clean Minimalist Intro */}
       <main id="home" className="landing-hero-section">
         <div className="landing-hero-content">
           <div className="hero-kicker">CIT Academic Scheduling &amp; Venue Intelligence</div>
@@ -181,24 +166,24 @@ export function LandingPage({ currentUser, onOpenLogin, onNavigate }) {
             and natural language venue booking with strict faculty permission safeguards.
           </p>
 
-          {/* Direct Buttons for Entering: Sign In & Log In */}
+          {/* Direct Buttons for Entering */}
           <div className="hero-cta-group" style={{ display: 'flex', gap: 14, flexWrap: 'wrap', marginTop: 10 }}>
             <button
               type="button"
               className="hero-btn-solid"
-              onClick={onOpenLogin}
+              onClick={() => handleEnter('dashboard')}
             >
-              <UserPlus size={16} style={{ marginRight: 8 }} />
-              <span>Sign In to Portal</span>
+              <span>Enter Campus Portal</span>
+              <ArrowRight size={16} style={{ marginLeft: 8 }} />
             </button>
 
             <button
               type="button"
               className="hero-btn-outline"
-              onClick={onOpenLogin}
+              onClick={() => handleEnter('timetable')}
             >
-              <LogIn size={16} style={{ marginRight: 8 }} />
-              <span>Faculty Log In</span>
+              <Clock size={16} style={{ marginRight: 8 }} />
+              <span>View Master Timetable</span>
             </button>
           </div>
         </div>
@@ -209,13 +194,13 @@ export function LandingPage({ currentUser, onOpenLogin, onNavigate }) {
         </div>
       </main>
 
-      {/* High-Level Feature Pillars (Overview only - no massive data dumps) */}
+      {/* High-Level Feature Pillars */}
       <section id="features" className="landing-section">
         <div className="section-container">
           <span className="section-label">Core Capabilities</span>
           <h2 className="section-title">Built for Real Academic Governance</h2>
           <p className="section-lead">
-            Engineered to fulfill all 10 platform evaluation criteria with zero hard constraint violations.
+            Engineered to fulfill all platform evaluation criteria with zero hard constraint violations.
           </p>
 
           <div className="unboxed-grid">
@@ -241,7 +226,7 @@ export function LandingPage({ currentUser, onOpenLogin, onNavigate }) {
               <span className="stat-large-num">03</span>
               <h4 className="service-name">Plain English &amp; Hinglish AI Booking</h4>
               <p className="service-desc">
-                Accepts conversational booking requests in English or Hinglish, generates a structured card for review and editing,
+                Accepts conversational booking requests in English or Hinglish, generates a structured card for review,
                 and validates hard constraints before commit.
               </p>
             </div>
@@ -293,8 +278,9 @@ export function LandingPage({ currentUser, onOpenLogin, onNavigate }) {
           </div>
 
           <div style={{ marginTop: 40, textAlign: 'center' }}>
-            <button type="button" className="hero-btn-solid" onClick={onOpenLogin}>
-              <span>Enter Portal &amp; Sign In</span>
+            <button type="button" className="hero-btn-solid" onClick={() => handleEnter('dashboard')}>
+              <span>Enter Campus Portal</span>
+              <ArrowRight size={16} style={{ marginLeft: 8 }} />
             </button>
           </div>
         </div>

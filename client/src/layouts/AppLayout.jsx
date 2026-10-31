@@ -16,7 +16,7 @@ import {
   Menu,
   X,
   Search,
-  ArrowUpRight,
+  ArrowLeft,
   MessageSquare,
 } from 'lucide-react';
 import { LiveTicker } from '../components/LiveTicker';
@@ -24,22 +24,21 @@ import { LiveTicker } from '../components/LiveTicker';
 export const FACULTY_NAV_ITEMS = [
   { id: 'dashboard', label: 'Faculty Dashboard', icon: LayoutDashboard },
   { id: 'timetable', label: 'Master Schedule (P1–P13)', icon: Clock },
-  { id: 'ai-assistant', label: 'AI Assistant (Validated)', icon: Bot, badge: 'AI' },
-  { id: 'rescheduling', label: 'Swaps & Disruptions', icon: RefreshCw, badge: '15m' },
+  { id: 'ai-assistant', label: 'AI Assistant', icon: Bot, badge: 'AI' },
+  { id: 'rescheduling', label: 'Swaps & Disruptions', icon: RefreshCw },
   { id: 'venues', label: 'Venues & 7 Labs (27)', icon: Building2 },
   { id: 'spectra', label: 'Spectra Events (25)', icon: Sparkles },
-  { id: 'faculty-network', label: 'Faculty Network', icon: Users, badge: '40' },
+  { id: 'faculty-network', label: 'Faculty Network', icon: Users },
   { id: 'faculty-chat', label: 'Faculty Chat', icon: MessageSquare, badge: 'Live' },
   { id: 'courses', label: 'Courses (62)', icon: BookOpen },
-  { id: 'landing', label: 'CIT Landing Page', icon: ArrowUpRight },
   { id: 'settings', label: 'Settings', icon: Settings },
 ];
 
 export function AppLayout({
   activePage = 'dashboard',
   currentUser,
-  onOpenLogin,
   onNavigate,
+  onLogout,
   children,
 }) {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -48,6 +47,14 @@ export function AppLayout({
   const handleNavClick = (pageId) => {
     onNavigate?.(pageId);
     setMobileMenuOpen(false);
+  };
+
+  const handleCitBackClick = () => {
+    if (window.history.length > 1) {
+      window.history.back();
+    } else {
+      handleNavClick('dashboard');
+    }
   };
 
   return (
@@ -61,23 +68,26 @@ export function AppLayout({
         />
       )}
 
-      {/* Dark Sidebar (Matches reference UI) */}
+      {/* Clean Minimalist Sidebar */}
       <aside className={`app-sidebar ${mobileMenuOpen ? 'sidebar-open' : ''}`}>
         <div>
-          {/* Logo */}
+          {/* Logo - Clicking CIT goes back */}
           <div className="sidebar-logo-area">
             <div
               className="brand-logo-wrap"
-              onClick={() => handleNavClick('landing')}
+              onClick={handleCitBackClick}
               role="button"
               tabIndex={0}
-              title="Return to Landing Page"
+              title="Click CIT to go back"
               style={{ cursor: 'pointer' }}
             >
               <div className="brand-dot-icon" aria-hidden="true">
                 <div className="brand-dot-center" />
               </div>
               <span className="brand-logo-text">Smart.CIT</span>
+              <span className="back-hint-badge" title="Click to go back">
+                <ArrowLeft size={12} />
+              </span>
             </div>
             <button
               type="button"
@@ -112,18 +122,6 @@ export function AppLayout({
               );
             })}
           </nav>
-        </div>
-
-        {/* Bottom Mobile App / Faculty Portal Promo Card */}
-        <div className="sidebar-bottom-promo">
-          <div className="sidebar-app-card">
-            <div className="sidebar-app-arrow-btn">
-              <ArrowUpRight size={18} />
-            </div>
-            <div className="sidebar-app-title">
-              Download our mobile app
-            </div>
-          </div>
         </div>
       </aside>
 
@@ -161,11 +159,11 @@ export function AppLayout({
               />
             </div>
 
-            {/* User Profile Avatar with Click to Switch Account */}
+            {/* User Profile Avatar - Click to go to Settings */}
             <div
               className="topbar-avatar-btn"
-              onClick={onOpenLogin}
-              title={`Signed in as ${currentUser?.name || 'Faculty'} (${currentUser?.email || ''}) - Click to switch user`}
+              onClick={() => handleNavClick('settings')}
+              title={`Signed in as ${currentUser?.name || 'Faculty'} (${currentUser?.email || ''}) - View Settings`}
               style={{ cursor: 'pointer' }}
             >
               {currentUser?.avatarInitials || 'AS'}
@@ -174,7 +172,7 @@ export function AppLayout({
         </header>
 
         {/* Dynamic Page Body */}
-        <div className="animate-fade-in">
+        <div className="animate-fade-in app-content-inner">
           {children}
         </div>
       </div>

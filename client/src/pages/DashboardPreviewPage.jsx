@@ -35,14 +35,14 @@ import { useDisclosure } from '../hooks/useDisclosure';
 
 export function DashboardPreviewPage() {
   const modalDisclosure = useDisclosure(false);
-  const [isLoadingDemo, setIsLoadingDemo] = useState(false);
+  const [isLoadingPreview, setIsLoadingPreview] = useState(false);
   const [sampleSearch, setSampleSearch] = useState('');
   const [sampleDept, setSampleDept] = useState('');
 
   const handleSimulateLoad = () => {
-    setIsLoadingDemo(true);
+    setIsLoadingPreview(true);
     setTimeout(() => {
-      setIsLoadingDemo(false);
+      setIsLoadingPreview(false);
     }, 1200);
   };
 
@@ -51,7 +51,7 @@ export function DashboardPreviewPage() {
       {/* Page Heading Primitive */}
       <PageHeading
         title="CIT Operations & Scheduling Hub"
-        subtitle="Foundational dashboard demonstrating design tokens, typography, and reusable UI primitives for Chilika Institute of Technology scheduling operations."
+        subtitle="Foundational dashboard showcasing design tokens, typography, and reusable UI primitives for Chilika Institute of Technology scheduling operations."
         badge={
           <Badge variant="info" withDot>
             System Foundation
@@ -70,7 +70,7 @@ export function DashboardPreviewPage() {
             <Button
               variant="primary"
               size="md"
-              isLoading={isLoadingDemo}
+              isLoading={isLoadingPreview}
               icon={Activity}
               onClick={handleSimulateLoad}
             >
@@ -422,7 +422,7 @@ export function DashboardPreviewPage() {
       <Card elevated>
         <CardHeader>
           <CardTitleGroup>
-            <CardTitle>UI Primitives Demonstration</CardTitle>
+            <CardTitle>UI Primitives Preview</CardTitle>
             <CardDescription>
               Interactive verification of buttons, forms, status badges, skeletons, and empty states.
             </CardDescription>
@@ -553,7 +553,7 @@ export function DashboardPreviewPage() {
         </CardContent>
       </Card>
 
-      {/* Demonstration Modal */}
+      {/* Preview Modal */}
       <Modal
         isOpen={modalDisclosure.isOpen}
         onClose={modalDisclosure.close}
@@ -583,7 +583,7 @@ export function DashboardPreviewPage() {
           <Input
             label="Sample Modal Field"
             placeholder="Type verification input..."
-            helperText="Demonstrates nested form controls inside an accessible dialog"
+            helperText="Verifies nested form controls inside an accessible dialog"
           />
         </div>
       </Modal>

@@ -195,11 +195,11 @@ export function VenueBookingsPage() {
             Feature 3: Plain English &amp; Hinglish Venue Booking Assistant
           </h3>
           <span style={{ fontSize: 11, fontWeight: 800, background: 'var(--accent-lime)', color: '#101320', padding: '2px 8px', borderRadius: 9999 }}>
-            AI Parser &amp; Editor
+            AI Parser &amp; Validator
           </span>
         </div>
         <p style={{ fontSize: 13, color: '#64748b', margin: '0 0 12px 0' }}>
-          Type your venue request in plain English or natural Hinglish. The system parses it into a structured booking card and lets you review and edit all fields before committing.
+          Type your venue request in plain English or natural Hinglish. The system parses it into a structured booking card and lets you review all details before submitting.
         </p>
 
         {/* Quick Sample Prompts */}
@@ -255,7 +255,7 @@ export function VenueBookingsPage() {
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
                 <Edit3 size={16} color="#059669" />
                 <h4 style={{ margin: 0, fontSize: 14, fontWeight: 800, color: '#065f46' }}>
-                  Review &amp; Edit Structured Booking
+                  Review Structured Booking Request
                 </h4>
               </div>
               <span style={{ fontSize: 11, color: '#059669', background: '#ecfdf5', padding: '3px 8px', borderRadius: 9999, fontWeight: 700 }}>

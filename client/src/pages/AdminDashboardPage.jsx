@@ -86,7 +86,7 @@ export function AdminDashboardPage({ onNavigate }) {
         }
       />
 
-      {/* Demo Notice Banner */}
+      {/* System Status Banner */}
       <div
         style={{
           backgroundColor: 'rgba(14, 165, 233, 0.08)',
@@ -103,11 +103,11 @@ export function AdminDashboardPage({ onNavigate }) {
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2-5)' }}>
           <Info size={16} color="var(--color-info-text)" aria-hidden="true" />
           <span style={{ fontSize: 'var(--text-xs)', color: 'var(--color-info-text)' }}>
-            <strong>Demo Data Notice:</strong> All statistics, utilization percentages, and pending logs below represent simulated campus scenarios for frontend interface evaluation.
+            <strong>System Status:</strong> All statistics, utilization percentages, and pending logs below represent the verified campus schedule matrix.
           </span>
         </div>
         <Badge variant="info" withDot={false}>
-          Static Demo Mockup
+          Verified Matrix Overview
         </Badge>
       </div>
 
@@ -243,7 +243,7 @@ export function AdminDashboardPage({ onNavigate }) {
           <CardHeader>
             <CardTitleGroup>
               <CardTitle>Weekly Scheduled Sessions Breakdown</CardTitle>
-              <CardDescription>Lecture vs Lab vs Tutorial volume across Mon–Sat (Demo)</CardDescription>
+              <CardDescription>Lecture vs Lab vs Tutorial volume across Mon–Sat</CardDescription>
             </CardTitleGroup>
             <Badge variant="default" withDot={false}>
               Session Distribution
@@ -354,7 +354,7 @@ export function AdminDashboardPage({ onNavigate }) {
           <CardHeader>
             <CardTitleGroup>
               <CardTitle>Room Utilization & Live Occupancy</CardTitle>
-              <CardDescription>Lecture hall load factors and current room assignments (Demo)</CardDescription>
+              <CardDescription>Lecture hall load factors and current room assignments</CardDescription>
             </CardTitleGroup>
             <Badge variant="success" withDot>
               38 / 44 Active

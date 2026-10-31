@@ -69,9 +69,9 @@ export function LoginModal({ isOpen, onClose, onLogin, currentUser }) {
           </button>
         </div>
 
-        {/* Quick Demo Faculty Presets */}
+        {/* Quick Faculty Presets */}
         <div className="login-presets-section">
-          <span className="presets-label">Quick Faculty Presets (For Judges &amp; Demo):</span>
+          <span className="presets-label">Quick Faculty Presets:</span>
           <div className="presets-pill-row">
             {FACULTY_DATA.slice(0, 4).map((f) => (
               <button

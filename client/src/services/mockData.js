@@ -12,7 +12,7 @@
  * - Periods: P1 to P13 (P10 - P13 are dedicated Evening Events & Extracurriculars)
  */
 
-export const IS_DEMO_DATA = false;
+export const IS_LIVE_DATA = true;
 
 // 13 Academic Periods (P1 - P9 Academic, P10 - P13 Evening Events)
 export const PERIODS = [

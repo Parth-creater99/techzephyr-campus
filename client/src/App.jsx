@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import './App.css';
 import { AppLayout } from './layouts/AppLayout';
-import { LoginModal } from './components/LoginModal';
 import {
   LandingPage,
   FacultyNetworkPage,
@@ -42,8 +41,11 @@ export function App() {
 
   const [activePage, setActivePage] = useState(getInitialPage);
   const [chatTargetFaculty, setChatTargetFaculty] = useState(null);
-  const [currentUser, setCurrentUser] = useState(getStoredUserProfile);
-  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [currentUser, setCurrentUser] = useState(() => {
+    const profile = getStoredUserProfile();
+    // Default to logged-in faculty
+    return { ...profile, isLoggedIn: true };
+  });
 
   const handleNavigate = (pageId) => {
     setActivePage(pageId);
@@ -56,13 +58,32 @@ export function App() {
     handleNavigate('faculty-chat');
   };
 
-  const handleLoginSuccess = (newProfile) => {
-    setCurrentUser(newProfile);
-    saveStoredUserProfile(newProfile);
-    // If on landing page, enter dashboard
-    if (activePage === 'landing') {
-      handleNavigate('dashboard');
-    }
+  const handleLogout = () => {
+    const loggedOutUser = {
+      name: 'Guest Faculty',
+      email: '',
+      dept: 'CSE',
+      role: 'Guest',
+      avatarInitials: 'GF',
+      isLoggedIn: false,
+    };
+    setCurrentUser(loggedOutUser);
+    saveStoredUserProfile(loggedOutUser);
+    handleNavigate('landing');
+  };
+
+  const handleEnterPortal = () => {
+    const activeProfile = {
+      name: 'Dr. A. Sharma',
+      email: 'a.sharma@cit.edu.in',
+      dept: 'CSE',
+      role: 'Faculty Member',
+      avatarInitials: 'AS',
+      isLoggedIn: true,
+    };
+    setCurrentUser(activeProfile);
+    saveStoredUserProfile(activeProfile);
+    handleNavigate('dashboard');
   };
 
   useEffect(() => {
@@ -78,22 +99,14 @@ export function App() {
     return () => window.removeEventListener('hashchange', handleHashChange);
   }, []);
 
-  // Show hand-coded, unboxed landing page directly (Intro & Details only, no direct action buttons)
+  // Landing page view
   if (activePage === 'landing') {
     return (
-      <>
-        <LandingPage
-          currentUser={currentUser}
-          onOpenLogin={() => setIsLoginModalOpen(true)}
-          onNavigate={handleNavigate}
-        />
-        <LoginModal
-          isOpen={isLoginModalOpen}
-          onClose={() => setIsLoginModalOpen(false)}
-          onLogin={handleLoginSuccess}
-          currentUser={currentUser}
-        />
-      </>
+      <LandingPage
+        currentUser={currentUser}
+        onEnterPortal={handleEnterPortal}
+        onNavigate={handleNavigate}
+      />
     );
   }
 
@@ -144,9 +157,15 @@ export function App() {
           />
         );
       case 'ai-assistant':
-        return <AiAssistantPage />;
+        return <AiAssistantPage currentUser={currentUser} onNavigate={handleNavigate} />;
       case 'settings':
-        return <SettingsPage />;
+        return (
+          <SettingsPage
+            currentUser={currentUser}
+            onLogout={handleLogout}
+            onNavigate={handleNavigate}
+          />
+        );
       default:
         return (
           <FacultyDashboardPage
@@ -158,23 +177,14 @@ export function App() {
   };
 
   return (
-    <>
-      <AppLayout
-        activePage={activePage}
-        currentUser={currentUser}
-        onOpenLogin={() => setIsLoginModalOpen(true)}
-        onNavigate={handleNavigate}
-      >
-        {renderCurrentView()}
-      </AppLayout>
-
-      <LoginModal
-        isOpen={isLoginModalOpen}
-        onClose={() => setIsLoginModalOpen(false)}
-        onLogin={handleLoginSuccess}
-        currentUser={currentUser}
-      />
-    </>
+    <AppLayout
+      activePage={activePage}
+      currentUser={currentUser}
+      onNavigate={handleNavigate}
+      onLogout={handleLogout}
+    >
+      {renderCurrentView()}
+    </AppLayout>
   );
 }
 
