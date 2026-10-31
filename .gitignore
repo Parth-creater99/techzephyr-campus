@@ -1,0 +1,14 @@
+# Environment variables
+.env
+.env.*
+!.env.example
+
+# Python generated files
+__pycache__/
+*.pyc
+
+# Frontend dependencies
+node_modules/
+
+# Build files
+dist/

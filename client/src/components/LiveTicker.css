@@ -1,0 +1,113 @@
+/* CIT Live Updates Ticker - Moving Left to Right */
+
+.cit-live-ticker-wrap {
+  position: relative;
+  width: 100%;
+  height: 38px;
+  background: #101320;
+  border-bottom: 1px solid rgba(210, 248, 87, 0.25);
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+  z-index: 90;
+  font-family: var(--font-sans);
+}
+
+.ticker-badge {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: #181d2c;
+  padding: 0 16px;
+  height: 100%;
+  border-right: 1px solid rgba(210, 248, 87, 0.25);
+  flex-shrink: 0;
+  z-index: 2;
+  box-shadow: 4px 0 12px rgba(0, 0, 0, 0.35);
+}
+
+.ticker-pulse-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background-color: var(--accent-lime);
+  box-shadow: 0 0 8px var(--accent-lime);
+  animation: pulseLiveDot 1.6s infinite ease-in-out;
+}
+
+@keyframes pulseLiveDot {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.4;
+    transform: scale(0.8);
+  }
+}
+
+.ticker-badge-text {
+  font-size: 11.5px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  color: var(--accent-lime);
+}
+
+.ticker-track-container {
+  flex: 1;
+  overflow: hidden;
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  mask-image: linear-gradient(to right, transparent, black 24px, black calc(100% - 24px), transparent);
+}
+
+/* Moving strictly Right to Left */
+.ticker-marquee-track {
+  display: flex;
+  white-space: nowrap;
+  animation: marqueeRightToLeft 36s linear infinite;
+  will-change: transform;
+}
+
+.ticker-paused {
+  animation-play-state: paused;
+}
+
+@keyframes marqueeRightToLeft {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.ticker-content-item {
+  display: inline-block;
+  padding-right: 48px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #e2e8f0;
+  letter-spacing: 0.2px;
+}
+
+.ticker-close-btn {
+  background: transparent;
+  border: none;
+  color: #94a3b8;
+  padding: 0 12px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  flex-shrink: 0;
+  transition: color 0.15s;
+  z-index: 2;
+}
+
+.ticker-close-btn:hover {
+  color: var(--accent-lime);
+}
