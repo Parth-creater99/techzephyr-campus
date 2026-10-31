@@ -136,7 +136,7 @@ export function TimetableViewerPage({ currentUser, onNavigate }) {
 
         <div className="t-metric-box">
           <span className="t-metric-label">Constraint Status</span>
-          <strong className="t-metric-val" style={{ color: '#059669' }}>
+          <strong className="t-metric-val" style={{ color: 'var(--accent-sage)' }}>
             0 Active Clashes
           </strong>
           <span className="t-metric-sub">100% Policy Compliance</span>
@@ -144,7 +144,7 @@ export function TimetableViewerPage({ currentUser, onNavigate }) {
 
         <div className="t-metric-box">
           <span className="t-metric-label">Swaps &amp; Permissions</span>
-          <strong className="t-metric-val" style={{ color: '#0f172a' }}>
+          <strong className="t-metric-val" style={{ color: 'var(--text-primary)' }}>
             1 Request Logged
           </strong>
           <span className="t-metric-sub">Faculty Protocol Protected</span>
@@ -159,7 +159,7 @@ export function TimetableViewerPage({ currentUser, onNavigate }) {
 
       {/* Solver Feedback Notification */}
       {solverStatus && (
-        <div style={{ padding: '12px 18px', borderRadius: 12, backgroundColor: '#ecfdf5', color: '#047857', border: '1.5px solid #a7f3d0', fontWeight: 700, fontSize: 13, display: 'flex', alignItems: 'center', gap: 10, marginTop: 14 }}>
+        <div style={{ padding: '12px 18px', borderRadius: 12, backgroundColor: 'var(--accent-sage-light)', color: 'var(--accent-sage)', border: '1.5px solid var(--accent-sage-border)', fontWeight: 700, fontSize: 13, display: 'flex', alignItems: 'center', gap: 10, marginTop: 14 }}>
           <Sparkles size={18} />
           <span>{solverStatus}</span>
         </div>
@@ -483,28 +483,28 @@ export function TimetableViewerPage({ currentUser, onNavigate }) {
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-                <CheckCircle2 size={16} color="#059669" style={{ marginTop: 2, flexShrink: 0 }} />
+                <CheckCircle2 size={16} color="var(--accent-sage)" style={{ marginTop: 2, flexShrink: 0 }} />
                 <div style={{ fontSize: 13, color: '#1e293b' }}>
                   <strong>Faculty Availability:</strong> {explainSession.faculty} has zero overlapping lectures or duties during {explainSession.day.toUpperCase()} {explainSession.periodId}.
                 </div>
               </div>
 
               <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-                <CheckCircle2 size={16} color="#059669" style={{ marginTop: 2, flexShrink: 0 }} />
+                <CheckCircle2 size={16} color="var(--accent-sage)" style={{ marginTop: 2, flexShrink: 0 }} />
                 <div style={{ fontSize: 13, color: '#1e293b' }}>
                   <strong>Room Capacity Optimization:</strong> Venue {explainSession.room} fits the {explainSession.group} cohort with zero concurrent room conflict.
                 </div>
               </div>
 
               <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-                <CheckCircle2 size={16} color="#059669" style={{ marginTop: 2, flexShrink: 0 }} />
+                <CheckCircle2 size={16} color="var(--accent-sage)" style={{ marginTop: 2, flexShrink: 0 }} />
                 <div style={{ fontSize: 13, color: '#1e293b' }}>
                   <strong>Cohort Clash Free:</strong> Student group {explainSession.group} has no other parallel scheduled commitment.
                 </div>
               </div>
 
               <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
-                <CheckCircle2 size={16} color="#059669" style={{ marginTop: 2, flexShrink: 0 }} />
+                <CheckCircle2 size={16} color="var(--accent-sage)" style={{ marginTop: 2, flexShrink: 0 }} />
                 <div style={{ fontSize: 13, color: '#1e293b' }}>
                   <strong>Institutional Priority Tier:</strong> Assigned under Priority Tier {explainSession.type === 'exam' ? '1 (Exams)' : '2 (Curriculum Teaching)'}.
                 </div>

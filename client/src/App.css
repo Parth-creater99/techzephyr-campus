@@ -84,6 +84,29 @@
   text-decoration: none;
 }
 
+.techzephyr-brand-badge {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--accent-terracotta) 0%, #b03e1c 100%);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(197, 74, 38, 0.3);
+  font-weight: 900;
+  font-size: 18px;
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+.techzephyr-badge-4 {
+  font-family: var(--font-sans);
+  color: #ffffff;
+  font-weight: 900;
+}
+
+
 .brand-dot-icon {
   width: 22px;
   height: 22px;
@@ -432,7 +455,7 @@
 .bar-pillar {
   width: 7px;
   border-radius: var(--radius-full);
-  background-color: #141722;
+  background-color: var(--border-default);
   transition: height var(--transition-smooth);
 }
 
@@ -1219,7 +1242,60 @@
 }
 
 .weekday-pill-btn.active {
+  background: var(--accent-terracotta);
+  color: #ffffff;
+  box-shadow: 0 1px 4px rgba(197, 74, 38, 0.25);
+}
+
+
+/* Topbar Avatar & Search Pill */
+.topbar-avatar-btn {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, var(--accent-ochre) 0%, var(--accent-terracotta) 100%);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 800;
+  font-size: 13.5px;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 8px rgba(197, 74, 38, 0.25);
+  transition: transform 0.15s;
+}
+
+.topbar-avatar-btn:hover {
+  transform: scale(1.05);
+}
+
+.search-pill-container {
+  display: flex;
+  align-items: center;
+  background: var(--bg-card-subtle);
+  border: 1px solid var(--border-default);
+  border-radius: 9999px;
+  padding: 0 14px;
+  height: 38px;
+  transition: all 0.2s;
+}
+
+.search-pill-container:focus-within {
+  border-color: var(--accent-terracotta);
+  box-shadow: 0 0 0 3px rgba(197, 74, 38, 0.15);
   background: #ffffff;
-  color: #0f172a;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.search-pill-icon {
+  color: var(--text-muted);
+  margin-right: 8px;
+}
+
+.search-pill-input {
+  border: none;
+  background: transparent;
+  outline: none;
+  font-size: 13px;
+  color: var(--text-primary);
+  width: 200px;
 }

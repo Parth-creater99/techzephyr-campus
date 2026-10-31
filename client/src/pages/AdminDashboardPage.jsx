@@ -282,7 +282,7 @@ export function AdminDashboardPage({ onNavigate }) {
                         width="10"
                         height={lecH}
                         rx="3"
-                        fill="#2563eb"
+                        fill="#c54a26"
                       >
                         <title>{`${item.day}: ${item.lectures} Lectures`}</title>
                       </rect>
@@ -293,7 +293,7 @@ export function AdminDashboardPage({ onNavigate }) {
                         width="10"
                         height={labH}
                         rx="3"
-                        fill="#10b981"
+                        fill="#db822a"
                       >
                         <title>{`${item.day}: ${item.labs} Labs`}</title>
                       </rect>
@@ -304,7 +304,7 @@ export function AdminDashboardPage({ onNavigate }) {
                         width="10"
                         height={tutH}
                         rx="3"
-                        fill="#8b5cf6"
+                        fill="#4e7561"
                       >
                         <title>{`${item.day}: ${item.tutorials} Tutorials`}</title>
                       </rect>
@@ -328,15 +328,15 @@ export function AdminDashboardPage({ onNavigate }) {
               {/* Chart Legend */}
               <div className="chart-legend">
                 <div className="legend-item">
-                  <span className="legend-color-dot" style={{ backgroundColor: '#2563eb' }} />
+                  <span className="legend-color-dot" style={{ backgroundColor: '#c54a26' }} />
                   <span>Lectures</span>
                 </div>
                 <div className="legend-item">
-                  <span className="legend-color-dot" style={{ backgroundColor: '#10b981' }} />
+                  <span className="legend-color-dot" style={{ backgroundColor: '#db822a' }} />
                   <span>Labs / Practical</span>
                 </div>
                 <div className="legend-item">
-                  <span className="legend-color-dot" style={{ backgroundColor: '#8b5cf6' }} />
+                  <span className="legend-color-dot" style={{ backgroundColor: '#4e7561' }} />
                   <span>Tutorials</span>
                 </div>
               </div>

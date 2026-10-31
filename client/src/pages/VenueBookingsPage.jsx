@@ -181,20 +181,20 @@ export function VenueBookingsPage() {
       </div>
 
       {successBanner && (
-        <div style={{ padding: '12px 18px', borderRadius: 12, backgroundColor: '#ecfdf5', color: '#047857', border: '1px solid #a7f3d0', fontWeight: 600, fontSize: 13, display: 'flex', alignItems: 'center', gap: 8, marginTop: 14 }}>
+        <div style={{ padding: '12px 18px', borderRadius: 12, backgroundColor: 'var(--accent-sage-light)', color: 'var(--accent-sage)', border: '1px solid var(--accent-sage-border)', fontWeight: 600, fontSize: 13, display: 'flex', alignItems: 'center', gap: 8, marginTop: 14 }}>
           <CheckCircle2 size={18} />
           <span>{successBanner}</span>
         </div>
       )}
 
       {/* FEATURE 3: Plain English & Hinglish Booking Assistant */}
-      <div className="white-app-card" style={{ marginTop: 18, border: '1.5px solid var(--accent-lime)' }}>
+      <div className="white-app-card" style={{ marginTop: 18, border: '1.5px solid var(--accent-terracotta-border)' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 8 }}>
-          <Sparkles size={18} color="#101320" />
-          <h3 style={{ fontSize: 16, fontWeight: 800, margin: 0, color: '#101320' }}>
+          <Sparkles size={18} color="var(--accent-terracotta)" />
+          <h3 style={{ fontSize: 16, fontWeight: 800, margin: 0, color: "var(--text-primary)" }}>
             Feature 3: Plain English &amp; Hinglish Venue Booking Assistant
           </h3>
-          <span style={{ fontSize: 11, fontWeight: 800, background: 'var(--accent-lime)', color: '#101320', padding: '2px 8px', borderRadius: 9999 }}>
+          <span style={{ fontSize: 11, fontWeight: 800, background: 'var(--accent-terracotta)', color: '#ffffff', padding: '2px 8px', borderRadius: 9999 }}>
             AI Parser &amp; Validator
           </span>
         </div>
@@ -253,12 +253,12 @@ export function VenueBookingsPage() {
           <div className="animate-fade-in-up" style={{ marginTop: 18, padding: 18, background: '#f8fafc', border: '1.5px solid #cbd5e1', borderRadius: 14 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 14, borderBottom: '1px solid #e2e8f0', paddingBottom: 10 }}>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <Edit3 size={16} color="#059669" />
-                <h4 style={{ margin: 0, fontSize: 14, fontWeight: 800, color: '#065f46' }}>
+                <Edit3 size={16} color="var(--accent-sage)" />
+                <h4 style={{ margin: 0, fontSize: 14, fontWeight: 800, color: 'var(--text-primary)' }}>
                   Review Structured Booking Request
                 </h4>
               </div>
-              <span style={{ fontSize: 11, color: '#059669', background: '#ecfdf5', padding: '3px 8px', borderRadius: 9999, fontWeight: 700 }}>
+              <span style={{ fontSize: 11, color: 'var(--accent-sage)', background: 'var(--accent-sage-light)', border: '1px solid var(--accent-sage-border)', padding: '3px 8px', borderRadius: 9999, fontWeight: 700 }}>
                 ✓ Clash-Free Verified
               </span>
             </div>

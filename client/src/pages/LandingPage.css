@@ -1,15 +1,16 @@
 /* ==========================================================================
    Techzephyr 4.0 Booklet Themed Landing Page
-   Palette: Signature Terracotta (#c2542d), Warm Ochre (#d9822b),
-            Sage Green (#4e7c67), Warm Ivory (#faf7f2), Deep Espresso (#1f1c1a)
+   Palette: Signature Terracotta (#c54a26), Warm Ochre (#db822a),
+            Chocolate Brown (#3a2216), Sage Green (#4e7561), Peach (#f2a97c),
+            Warm Ivory (#faf6ef), Deep Espresso (#1c1815)
    ========================================================================== */
 
 .landing-root {
   min-height: 100vh;
   width: 100%;
-  background-color: #faf7f2;
-  color: #1f1c1a;
-  font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--app-outer-bg);
+  color: var(--text-primary);
+  font-family: var(--font-sans);
   position: relative;
   overflow-x: hidden;
 }
@@ -28,7 +29,7 @@
   height: 100%;
   min-height: 800px;
   object-fit: cover;
-  opacity: 0.8;
+  opacity: 0.85;
 }
 
 /* Top Header & Navigation */
@@ -36,12 +37,12 @@
   position: relative;
   z-index: 10;
   width: 100%;
-  padding: 30px 56px 18px 56px;
+  padding: 24px 56px 16px 56px;
 }
 
 @media (max-width: 768px) {
   .landing-header {
-    padding: 20px 20px 14px 20px;
+    padding: 18px 20px 12px 20px;
   }
 }
 
@@ -53,42 +54,43 @@
   justify-content: space-between;
 }
 
-/* Logo */
 .landing-logo {
-  font-size: 1.85rem;
+  font-size: 20px;
   font-weight: 800;
-  color: #c2542d;
   letter-spacing: -0.02em;
-  cursor: pointer;
+  color: var(--text-primary);
+  display: flex;
+  align-items: center;
+  gap: 10px;
   user-select: none;
-  transition: opacity 0.2s;
-}
-
-.landing-logo:hover {
-  opacity: 0.88;
 }
 
 .landing-back-pill {
-  font-size: 12.5px;
-  font-weight: 600;
+  font-size: 12px;
+  font-weight: 700;
   padding: 3px 10px;
   border-radius: 9999px;
-  background: #fdf2ed;
-  color: #c2542d;
-  border: 1px solid #f7d6c8;
+  background: var(--accent-terracotta-light);
+  color: var(--accent-terracotta);
+  border: 1px solid var(--accent-terracotta-border);
   display: inline-flex;
   align-items: center;
   gap: 4px;
+  transition: all 0.15s ease;
 }
 
-/* Nav Menu Items */
+.landing-logo:hover .landing-back-pill {
+  background: var(--accent-terracotta);
+  color: #ffffff;
+}
+
 .landing-nav-menu {
   display: flex;
   align-items: center;
   gap: 32px;
 }
 
-@media (max-width: 860px) {
+@media (max-width: 768px) {
   .landing-nav-menu {
     display: none;
   }
@@ -97,57 +99,49 @@
 .landing-nav-link {
   background: transparent;
   border: none;
-  color: #5c534b;
+  color: var(--text-secondary);
   font-size: 14.5px;
   font-weight: 600;
   cursor: pointer;
-  padding: 6px 0;
-  position: relative;
-  transition: color 0.18s ease;
+  transition: color 0.15s ease;
 }
 
 .landing-nav-link:hover {
-  color: #c2542d;
+  color: var(--accent-terracotta);
 }
 
-/* Terracotta Pill Button */
 .landing-login-btn {
-  background-color: #c2542d;
-  color: #ffffff;
-  border: 1.5px solid #c2542d;
-  padding: 9px 24px;
-  border-radius: 9999px;
-  font-size: 14px;
-  font-weight: 700;
-  cursor: pointer;
   display: inline-flex;
   align-items: center;
-  transition: all 0.18s ease;
-  box-shadow: 0 2px 8px rgba(194, 84, 45, 0.2);
+  gap: 6px;
+  background-color: var(--accent-terracotta);
+  color: #ffffff;
+  border: 1.5px solid var(--accent-terracotta);
+  padding: 9px 22px;
+  border-radius: 9999px;
+  font-weight: 700;
+  font-size: 13.5px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(197, 74, 38, 0.25);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .landing-login-btn:hover {
-  background-color: #ad4723;
-  border-color: #ad4723;
+  background-color: var(--accent-terracotta-hover);
+  border-color: var(--accent-terracotta-hover);
   transform: translateY(-1px);
-  box-shadow: 0 4px 14px rgba(194, 84, 45, 0.35);
+  box-shadow: 0 6px 18px rgba(197, 74, 38, 0.35);
 }
 
-/* Mobile Toggle */
 .landing-mobile-toggle {
   display: none;
-  color: #1f1c1a;
-  background: #ffffff;
-  border: 1px solid #e7e0d5;
-  width: 40px;
-  height: 40px;
-  border-radius: 10px;
-  align-items: center;
-  justify-content: center;
+  background: transparent;
+  border: none;
+  color: var(--text-primary);
   cursor: pointer;
 }
 
-@media (max-width: 860px) {
+@media (max-width: 768px) {
   .landing-mobile-toggle {
     display: flex;
   }
@@ -159,28 +153,28 @@
   left: 20px;
   right: 20px;
   background: #ffffff;
-  border: 1px solid #e7e0d5;
+  border: 1px solid var(--border-default);
   border-radius: 14px;
   padding: 16px;
   display: flex;
   flex-direction: column;
   gap: 8px;
-  box-shadow: 0 12px 30px rgba(31, 28, 26, 0.12);
+  box-shadow: 0 12px 30px rgba(58, 34, 22, 0.1);
   z-index: 100;
 }
 
 .mobile-nav-link {
   padding: 10px 14px;
   border-radius: 8px;
-  color: #1f1c1a;
+  color: var(--text-primary);
   font-weight: 600;
   font-size: 14px;
   text-align: left;
 }
 
 .mobile-nav-link:hover {
-  background: #fdf2ed;
-  color: #c2542d;
+  background: var(--accent-terracotta-light);
+  color: var(--accent-terracotta);
 }
 
 /* Hero Section */
@@ -193,48 +187,50 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 40px;
 }
 
 @media (max-width: 768px) {
   .landing-hero-section {
     padding: 30px 20px 50px 20px;
+    flex-direction: column;
   }
 }
 
 .landing-hero-content {
-  max-width: 660px;
+  max-width: 640px;
 }
 
 .hero-kicker {
-  color: #d9822b;
-  font-size: 15px;
-  font-weight: 700;
-  letter-spacing: 0.5px;
-  margin-bottom: 16px;
+  color: var(--accent-ochre);
+  font-size: 14px;
+  font-weight: 800;
+  letter-spacing: 0.8px;
+  margin-bottom: 14px;
   text-transform: uppercase;
 }
 
 .hero-heading {
-  font-size: clamp(2.8rem, 6vw, 4.8rem);
+  font-size: clamp(2.6rem, 5.5vw, 4.4rem);
   font-weight: 800;
-  line-height: 1.05;
+  line-height: 1.08;
   letter-spacing: -0.025em;
   margin: 0 0 20px 0;
 }
 
 .hero-line-terracotta {
   display: block;
-  color: #c2542d;
+  color: var(--accent-terracotta);
 }
 
 .hero-line-dark {
   display: block;
-  color: #1f1c1a;
+  color: var(--text-primary);
   margin-top: 4px;
 }
 
 .hero-description {
-  color: #5c534b;
+  color: var(--text-secondary);
   font-size: 16px;
   line-height: 1.65;
   max-width: 520px;
@@ -247,23 +243,23 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  background-color: #c2542d;
+  background-color: var(--accent-terracotta);
   color: #ffffff;
-  border: 1.5px solid #c2542d;
+  border: 1.5px solid var(--accent-terracotta);
   padding: 12px 28px;
   border-radius: 9999px;
   font-size: 15px;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 4px 14px rgba(194, 84, 45, 0.25);
+  box-shadow: 0 4px 14px rgba(197, 74, 38, 0.25);
 }
 
 .hero-btn-solid:hover {
-  background-color: #ad4723;
-  border-color: #ad4723;
+  background-color: var(--accent-terracotta-hover);
+  border-color: var(--accent-terracotta-hover);
   transform: translateY(-2px);
-  box-shadow: 0 6px 18px rgba(194, 84, 45, 0.35);
+  box-shadow: 0 6px 18px rgba(197, 74, 38, 0.35);
 }
 
 .hero-btn-outline {
@@ -272,26 +268,138 @@
   justify-content: center;
   gap: 8px;
   background-color: #ffffff;
-  color: #1f1c1a;
-  border: 1.5px solid #e7e0d5;
+  color: var(--text-primary);
+  border: 1.5px solid var(--border-default);
   padding: 12px 28px;
   border-radius: 9999px;
   font-size: 15px;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 1px 3px rgba(31, 28, 26, 0.04);
+  box-shadow: 0 1px 3px rgba(58, 34, 22, 0.04);
 }
 
 .hero-btn-outline:hover {
-  border-color: #c2542d;
-  color: #c2542d;
+  border-color: var(--accent-terracotta);
+  color: var(--accent-terracotta);
   transform: translateY(-2px);
-  background: #fdf2ed;
+  background: var(--accent-terracotta-light);
 }
 
-.hero-bottom-accent {
-  display: none;
+/* Hero Pattern Card (Exact match to Techzephyr booklet mosaic) */
+.landing-hero-pattern-card {
+  width: 380px;
+  background: #ffffff;
+  border: 1.5px solid var(--border-default);
+  border-radius: 20px;
+  padding: 24px;
+  box-shadow: 0 12px 36px -6px rgba(58, 34, 22, 0.08);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  animation: floatCard 6s ease-in-out infinite;
+}
+
+@keyframes floatCard {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@media (max-width: 960px) {
+  .landing-hero-pattern-card {
+    display: none;
+  }
+}
+
+.mini-badge-4 {
+  width: 24px;
+  height: 24px;
+  border-radius: 6px;
+  background: var(--accent-terracotta);
+  color: #ffffff;
+  font-weight: 900;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.pattern-tag {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--text-primary);
+}
+
+.pattern-sub {
+  font-size: 11px;
+  color: var(--text-secondary);
+}
+
+.booklet-brick-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-auto-rows: 24px;
+  gap: 8px;
+  padding: 14px;
+  background: var(--bg-card-subtle);
+  border: 1px solid var(--border-default);
+  border-radius: 12px;
+}
+
+.brick-item {
+  border-radius: 4px;
+  transition: transform 0.2s;
+}
+
+.brick-item:hover {
+  transform: scale(1.05);
+}
+
+.brick-item.wide {
+  grid-column: span 2;
+}
+
+.brick-item.tall {
+  grid-row: span 2;
+}
+
+.brick-terracotta {
+  background-color: #c54a26;
+}
+
+.brick-chocolate {
+  background-color: #3a2216;
+}
+
+.brick-ochre {
+  background-color: #db822a;
+}
+
+.brick-sage {
+  background-color: #4e7561;
+}
+
+.brick-peach {
+  background-color: #f2a97c;
+}
+
+.pattern-metrics-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-top: 10px;
+  border-top: 1px solid var(--border-subtle);
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.p-stat strong {
+  color: var(--accent-terracotta);
+  font-size: 14px;
 }
 
 /* Features Section */
@@ -315,7 +423,7 @@
   font-weight: 800;
   letter-spacing: 0.8px;
   text-transform: uppercase;
-  color: #d9822b;
+  color: var(--accent-ochre);
   margin-bottom: 8px;
 }
 
@@ -323,13 +431,13 @@
   font-size: clamp(1.8rem, 3.2vw, 2.5rem);
   font-weight: 800;
   letter-spacing: -0.02em;
-  color: #1f1c1a;
+  color: var(--text-primary);
   margin: 0 0 12px 0;
 }
 
 .section-lead {
   font-size: 16px;
-  color: #6e645c;
+  color: var(--text-secondary);
   max-width: 600px;
   line-height: 1.55;
   margin-bottom: 40px;
@@ -343,23 +451,23 @@
 
 .unboxed-stat-item {
   background: #ffffff;
-  border: 1px solid #e7e0d5;
+  border: 1px solid var(--border-default);
   border-radius: 16px;
   padding: 28px 24px;
-  box-shadow: 0 2px 8px rgba(31, 28, 26, 0.03);
+  box-shadow: 0 2px 8px rgba(58, 34, 22, 0.03);
   transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .unboxed-stat-item:hover {
   transform: translateY(-3px);
-  box-shadow: 0 8px 20px rgba(31, 28, 26, 0.06);
-  border-color: #f7d6c8;
+  box-shadow: 0 8px 20px rgba(58, 34, 22, 0.06);
+  border-color: var(--accent-terracotta-border);
 }
 
 .stat-large-num {
   font-size: 32px;
   font-weight: 800;
-  color: #c2542d;
+  color: var(--accent-terracotta);
   display: block;
   margin-bottom: 12px;
   letter-spacing: -0.02em;
@@ -368,20 +476,20 @@
 .service-name {
   font-size: 17px;
   font-weight: 700;
-  color: #1f1c1a;
+  color: var(--text-primary);
   margin-bottom: 8px;
 }
 
 .service-desc {
   font-size: 14px;
   line-height: 1.6;
-  color: #6e645c;
+  color: var(--text-secondary);
 }
 
 /* Footer */
 .landing-footer {
-  border-top: 1px solid #e7e0d5;
-  background: #f5efe6;
+  border-top: 1px solid var(--border-default);
+  background: #f5eee4;
   padding: 28px 56px;
   margin-top: 40px;
 }
@@ -405,12 +513,12 @@
 .footer-brand {
   font-size: 16px;
   font-weight: 800;
-  color: #c2542d;
+  color: var(--accent-terracotta);
 }
 
 .footer-copy {
   font-size: 13px;
-  color: #6e645c;
+  color: var(--text-secondary);
 }
 
 .footer-top-btn {
@@ -418,6 +526,6 @@
   border: none;
   font-size: 13px;
   font-weight: 700;
-  color: #c2542d;
+  color: var(--accent-terracotta);
   cursor: pointer;
 }

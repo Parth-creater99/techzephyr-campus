@@ -30,7 +30,7 @@ export function CoursesPage({ onNavigate }) {
             <h2 className="section-title" style={{ fontSize: 22, margin: 0 }}>
               CIT Course Catalog
             </h2>
-            <span className="cit-period-count-pill" style={{ background: 'rgba(210, 248, 87, 0.25)' }}>
+            <span className="cit-period-count-pill" style={{ background: 'var(--accent-terracotta-light)', color: 'var(--accent-terracotta)', border: '1px solid var(--accent-terracotta-border)' }}>
               {COURSES_CATALOG.length} Accredited Courses
             </span>
           </div>
@@ -82,7 +82,7 @@ export function CoursesPage({ onNavigate }) {
         {filteredCourses.map((c) => (
           <div key={c.code} className="white-app-card animate-card-lift" style={{ gap: 12 }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-              <span style={{ fontSize: 13, fontWeight: 800, color: 'var(--accent-lime-text)', background: 'var(--accent-lime)', padding: '2px 8px', borderRadius: 4 }}>
+              <span style={{ fontSize: 13, fontWeight: 800, color: '#ffffff', background: 'var(--accent-terracotta)', padding: '2px 8px', borderRadius: 4 }}>
                 {c.code}
               </span>
               <span style={{ fontSize: 11, fontWeight: 700, color: '#64748b', textTransform: 'uppercase' }}>

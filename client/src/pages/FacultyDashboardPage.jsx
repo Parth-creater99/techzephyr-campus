@@ -1,25 +1,17 @@
 import React, { useState, useMemo } from 'react';
 import {
-  Brain,
-  Camera,
-  ChevronRight,
-  TrendingUp,
-  BookOpen,
-  Users,
   Clock,
-  Layers,
+  Users,
+  Building2,
   Sparkles,
   CheckCircle2,
   Circle,
-  Check,
   Calendar as CalendarIcon,
-  Building2,
   ArrowRight,
 } from 'lucide-react';
 import {
   getStoredTimetableSessions,
   saveStoredTimetableSessions,
-  COURSES_CATALOG,
 } from '../services/mockData';
 
 export function FacultyDashboardPage({ currentUser, onNavigate }) {
@@ -96,10 +88,10 @@ export function FacultyDashboardPage({ currentUser, onNavigate }) {
 
   return (
     <div className="faculty-dashboard-container animate-fade-in-up">
-      {/* Minimalist Metrics Strip */}
+      {/* Minimalist Metrics Strip - Techzephyr Booklet Palette */}
       <div className="dashboard-stats-strip">
         <div className="stat-clean-card">
-          <div className="stat-clean-icon" style={{ background: '#ecfdf5', color: '#059669' }}>
+          <div className="stat-clean-icon" style={{ background: 'var(--accent-sage-light)', color: 'var(--accent-sage)' }}>
             <Clock size={18} />
           </div>
           <div>
@@ -109,7 +101,7 @@ export function FacultyDashboardPage({ currentUser, onNavigate }) {
         </div>
 
         <div className="stat-clean-card">
-          <div className="stat-clean-icon" style={{ background: '#eff6ff', color: '#2563eb' }}>
+          <div className="stat-clean-icon" style={{ background: 'var(--accent-terracotta-light)', color: 'var(--accent-terracotta)' }}>
             <Users size={18} />
           </div>
           <div>
@@ -119,7 +111,7 @@ export function FacultyDashboardPage({ currentUser, onNavigate }) {
         </div>
 
         <div className="stat-clean-card">
-          <div className="stat-clean-icon" style={{ background: '#faf5ff', color: '#7c3aed' }}>
+          <div className="stat-clean-icon" style={{ background: 'var(--accent-ochre-light)', color: 'var(--accent-ochre)' }}>
             <Building2 size={18} />
           </div>
           <div>
@@ -129,7 +121,7 @@ export function FacultyDashboardPage({ currentUser, onNavigate }) {
         </div>
 
         <div className="stat-clean-card">
-          <div className="stat-clean-icon" style={{ background: '#fef3c7', color: '#d97706' }}>
+          <div className="stat-clean-icon" style={{ background: 'var(--accent-chocolate-light)', color: '#5c3523' }}>
             <Sparkles size={18} />
           </div>
           <div>
@@ -170,7 +162,7 @@ export function FacultyDashboardPage({ currentUser, onNavigate }) {
 
           <div className="daily-schedule-list" style={{ maxHeight: 440, overflowY: 'auto' }}>
             {dailyClasses.length === 0 ? (
-              <div style={{ padding: '40px 16px', textAlign: 'center', color: '#94a3b8' }}>
+              <div style={{ padding: '40px 16px', textAlign: 'center', color: 'var(--text-muted)' }}>
                 <CalendarIcon size={32} style={{ margin: '0 auto 8px auto', opacity: 0.5 }} />
                 <p>No classes scheduled for this day.</p>
               </div>
@@ -184,8 +176,8 @@ export function FacultyDashboardPage({ currentUser, onNavigate }) {
                     className={`schedule-row-item ${isCompleted ? 'class-done-row' : ''}`}
                     style={{
                       transition: 'all 0.2s',
-                      background: isCompleted ? '#f0fdf4' : '#ffffff',
-                      border: '1px solid #f1f5f9',
+                      background: isCompleted ? 'var(--accent-sage-light)' : '#ffffff',
+                      border: '1px solid var(--border-default)',
                       borderRadius: 10,
                       padding: '10px 14px',
                       marginBottom: 8,
@@ -203,19 +195,41 @@ export function FacultyDashboardPage({ currentUser, onNavigate }) {
                         title={isCompleted ? 'Mark as Incomplete' : 'Mark as Completed'}
                         style={{ cursor: 'pointer', border: 'none', background: 'transparent' }}
                       >
-                        {isCompleted ? <CheckCircle2 size={18} color="#059669" /> : <Circle size={18} color="#94a3b8" />}
+                        {isCompleted ? (
+                          <CheckCircle2 size={18} color="var(--accent-sage)" />
+                        ) : (
+                          <Circle size={18} color="var(--text-muted)" />
+                        )}
                       </button>
 
                       <div style={{ minWidth: 0, flex: 1 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                          <span style={{ fontSize: 11, fontWeight: 700, color: isEvent ? '#7c3aed' : '#0f172a', background: isEvent ? '#f3e8ff' : '#f1f5f9', padding: '2px 7px', borderRadius: 4 }}>
+                          <span
+                            style={{
+                              fontSize: 11,
+                              fontWeight: 700,
+                              color: isEvent ? 'var(--accent-terracotta)' : 'var(--text-primary)',
+                              background: isEvent ? 'var(--accent-terracotta-light)' : 'var(--bg-card-subtle)',
+                              border: `1px solid ${isEvent ? 'var(--accent-terracotta-border)' : 'var(--border-default)'}`,
+                              padding: '2px 7px',
+                              borderRadius: 4,
+                            }}
+                          >
                             {item.periodId}
                           </span>
-                          <span className="schedule-name-text" style={{ textDecoration: isCompleted ? 'line-through' : 'none', color: isCompleted ? '#64748b' : '#0f172a', fontWeight: 600, fontSize: 13.5 }}>
+                          <span
+                            className="schedule-name-text"
+                            style={{
+                              textDecoration: isCompleted ? 'line-through' : 'none',
+                              color: isCompleted ? 'var(--text-muted)' : 'var(--text-primary)',
+                              fontWeight: 600,
+                              fontSize: 13.5,
+                            }}
+                          >
                             {item.code} &bull; {item.title}
                           </span>
                         </div>
-                        <div style={{ fontSize: 12, color: '#64748b', marginTop: 3 }}>
+                        <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 3 }}>
                           {item.faculty} &bull; {item.room} &bull; {item.group}
                         </div>
                       </div>
@@ -251,7 +265,7 @@ export function FacultyDashboardPage({ currentUser, onNavigate }) {
           <div className="white-app-card">
             <div className="chart-top-header" style={{ marginBottom: 12 }}>
               <h3 className="section-title" style={{ fontSize: 16 }}>Teaching Load by Day</h3>
-              <span style={{ fontSize: 12, fontWeight: 700, color: '#059669', background: '#ecfdf5', padding: '2px 8px', borderRadius: 4 }}>
+              <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--accent-sage)', background: 'var(--accent-sage-light)', border: '1px solid var(--accent-sage-border)', padding: '2px 8px', borderRadius: 4 }}>
                 100% Clash-Free
               </span>
             </div>
@@ -291,25 +305,25 @@ export function FacultyDashboardPage({ currentUser, onNavigate }) {
                     gap: 10,
                     padding: '8px 10px',
                     borderRadius: 8,
-                    background: task.done ? '#f8fafc' : '#ffffff',
-                    border: '1px solid #f1f5f9',
+                    background: task.done ? 'var(--bg-card-subtle)' : '#ffffff',
+                    border: '1px solid var(--border-default)',
                     cursor: 'pointer',
                     transition: 'all 0.15s',
                   }}
                 >
                   <div style={{ marginTop: 2 }}>
                     {task.done ? (
-                      <CheckCircle2 size={16} color="#059669" />
+                      <CheckCircle2 size={16} color="var(--accent-sage)" />
                     ) : (
-                      <Circle size={16} color="#94a3b8" />
+                      <Circle size={16} color="var(--text-muted)" />
                     )}
                   </div>
                   <div style={{ flex: 1, minWidth: 0 }}>
-                    <div style={{ fontSize: 13, textDecoration: task.done ? 'line-through' : 'none', color: task.done ? '#94a3b8' : '#1e293b' }}>
+                    <div style={{ fontSize: 13, textDecoration: task.done ? 'line-through' : 'none', color: task.done ? 'var(--text-muted)' : 'var(--text-primary)' }}>
                       {task.text}
                     </div>
-                    <div style={{ fontSize: 11, color: '#94a3b8', marginTop: 2 }}>
-                      {task.due}
+                    <div style={{ fontSize: 11, color: 'var(--text-secondary)', marginTop: 2 }}>
+                      Due {task.due}
                     </div>
                   </div>
                 </div>

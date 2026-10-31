@@ -189,7 +189,7 @@ export function SpectraApprovalsPage() {
       </div>
 
       {feedback && (
-        <div style={{ padding: '12px 18px', borderRadius: 12, backgroundColor: '#ecfdf5', color: '#047857', border: '1px solid #a7f3d0', fontWeight: 600, fontSize: 13, display: 'flex', alignItems: 'center', gap: 8, marginTop: 14 }}>
+        <div style={{ padding: '12px 18px', borderRadius: 12, backgroundColor: 'var(--accent-sage-light)', color: 'var(--accent-sage)', border: '1px solid var(--accent-sage-border)', fontWeight: 600, fontSize: 13, display: 'flex', alignItems: 'center', gap: 8, marginTop: 14 }}>
           <CheckCircle2 size={18} />
           <span>{feedback}</span>
         </div>
@@ -263,9 +263,9 @@ export function SpectraApprovalsPage() {
                     padding: '4px 10px',
                     borderRadius: 9999,
                     textTransform: 'uppercase',
-                    background: isApproved ? '#ecfdf5' : isConflict ? '#fef2f2' : isCancelled ? '#f1f5f9' : '#fffbeb',
-                    color: isApproved ? '#059669' : isConflict ? '#dc2626' : isCancelled ? '#64748b' : '#d97706',
-                    border: `1px solid ${isApproved ? '#a7f3d0' : isConflict ? '#fecaca' : '#cbd5e1'}`,
+                    background: isApproved ? 'var(--accent-sage-light)' : isConflict ? 'var(--accent-terracotta-light)' : isCancelled ? 'var(--bg-card-subtle)' : 'var(--accent-ochre-light)',
+                    color: isApproved ? 'var(--accent-sage)' : isConflict ? 'var(--accent-terracotta)' : isCancelled ? 'var(--text-muted)' : 'var(--accent-ochre)',
+                    border: `1px solid ${isApproved ? 'var(--accent-sage-border)' : isConflict ? 'var(--accent-terracotta-border)' : 'var(--border-default)'}`,
                   }}
                 >
                   {req.status}
@@ -305,9 +305,9 @@ export function SpectraApprovalsPage() {
 
               {/* Suggest Alternative Box (Feature 4 Requirement) */}
               {req.suggestedAlternative && (
-                <div style={{ padding: '12px 16px', borderRadius: 10, background: '#f0fdf4', border: '1.5px dashed #86efac', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
+                <div style={{ padding: '12px 16px', borderRadius: 10, background: 'var(--accent-sage-light)', border: '1.5px dashed var(--accent-sage-border)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 12 }}>
                   <div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: '#166534', fontWeight: 800, fontSize: 13 }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 6, color: 'var(--accent-sage)', fontWeight: 800, fontSize: 13 }}>
                       <Shuffle size={15} />
                       <span>Suggested Clash-Free Alternative</span>
                     </div>

@@ -2,11 +2,7 @@ import React, { useState } from 'react';
 import {
   LayoutDashboard,
   BookOpen,
-  Calendar,
   Clock,
-  Mail,
-  Bell,
-  CalendarDays,
   Users,
   Settings,
   Building2,
@@ -71,20 +67,27 @@ export function AppLayout({
       {/* Clean Minimalist Sidebar */}
       <aside className={`app-sidebar ${mobileMenuOpen ? 'sidebar-open' : ''}`}>
         <div>
-          {/* Logo - Clicking CIT goes back */}
+          {/* Logo - Techzephyr 4.0 Brand (Clicking goes back) */}
           <div className="sidebar-logo-area">
             <div
               className="brand-logo-wrap"
               onClick={handleCitBackClick}
               role="button"
               tabIndex={0}
-              title="Click CIT to go back"
-              style={{ cursor: 'pointer' }}
+              title="Click to go back"
+              style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 10 }}
             >
-              <div className="brand-dot-icon" aria-hidden="true">
-                <div className="brand-dot-center" />
+              <div className="techzephyr-brand-badge" aria-hidden="true">
+                <span className="techzephyr-badge-4">4</span>
               </div>
-              <span className="brand-logo-text">Smart.CIT</span>
+              <div style={{ display: 'flex', flexDirection: 'column' }}>
+                <span className="brand-logo-text" style={{ fontSize: 16, fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.02em', lineHeight: 1.1 }}>
+                  Techzephyr
+                </span>
+                <span style={{ fontSize: 9.5, fontWeight: 700, color: 'var(--accent-terracotta)', letterSpacing: 0.8, textTransform: 'uppercase' }}>
+                  CIT Campus 4.0
+                </span>
+              </div>
               <span className="back-hint-badge" title="Click to go back">
                 <ArrowLeft size={12} />
               </span>

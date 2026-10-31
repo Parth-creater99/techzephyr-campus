@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Menu, X, ChevronsRight, ShieldCheck, CheckCircle2, Clock, Calendar, ArrowRight, ArrowLeft } from 'lucide-react';
+import { Menu, X, ShieldCheck, CheckCircle2, Clock, Calendar, ArrowRight, ArrowLeft, Sparkles, Building2, Layers } from 'lucide-react';
 import './LandingPage.css';
 
 export function LandingPage({ currentUser, onEnterPortal, onNavigate }) {
@@ -28,7 +28,7 @@ export function LandingPage({ currentUser, onEnterPortal, onNavigate }) {
 
   return (
     <div className="landing-root animate-fade-in">
-      {/* Background wave contours with warm aesthetic */}
+      {/* Background wave contours with Techzephyr warm palette */}
       <div className="landing-bg-waves" aria-hidden="true">
         <svg
           viewBox="0 0 1440 900"
@@ -39,22 +39,22 @@ export function LandingPage({ currentUser, onEnterPortal, onNavigate }) {
         >
           <path
             d="M-50,150 C250,120 380,320 620,280 C860,240 1020,400 1280,360 C1400,340 1480,420 1520,460"
-            stroke="rgba(194, 84, 45, 0.2)"
+            stroke="rgba(197, 74, 38, 0.22)"
             strokeWidth="1.2"
           />
           <path
             d="M-50,180 C260,150 390,350 630,310 C870,270 1030,430 1290,390 C1410,370 1490,450 1520,490"
-            stroke="rgba(217, 130, 43, 0.18)"
+            stroke="rgba(219, 130, 42, 0.2)"
             strokeWidth="1.2"
           />
           <path
             d="M-50,210 C270,180 400,380 640,340 C880,300 1040,460 1300,420 C1420,400 1500,480 1520,520"
-            stroke="rgba(78, 124, 103, 0.18)"
+            stroke="rgba(78, 117, 97, 0.2)"
             strokeWidth="1.2"
           />
           <path
             d="M-20,400 C300,360 450,560 700,520 C950,480 1100,640 1350,600 C1450,580 1500,620 1520,650"
-            stroke="rgba(194, 84, 45, 0.12)"
+            stroke="rgba(58, 34, 22, 0.12)"
             strokeWidth="1.2"
           />
         </svg>
@@ -63,14 +63,22 @@ export function LandingPage({ currentUser, onEnterPortal, onNavigate }) {
       {/* Top Navigation */}
       <header className="landing-header">
         <div className="landing-nav-inner">
-          {/* Logo - clicking CIT goes back */}
+          {/* Logo - Techzephyr 4.0 Brand (clicking goes back) */}
           <div
             className="landing-logo"
             onClick={handleCitBackClick}
-            title="Click CIT to go back"
-            style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 8 }}
+            title="Click to go back"
+            style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 10 }}
           >
-            <span>CIT Campus</span>
+            <div className="techzephyr-brand-badge" aria-hidden="true">
+              <span className="techzephyr-badge-4">4</span>
+            </div>
+            <div style={{ display: 'flex', flexDirection: 'column' }}>
+              <span style={{ fontSize: 17, fontWeight: 800, color: '#1c1815', lineHeight: 1.1 }}>Techzephyr</span>
+              <span style={{ fontSize: 9.5, fontWeight: 700, color: 'var(--accent-terracotta)', letterSpacing: 0.8, textTransform: 'uppercase' }}>
+                CIT Campus 4.0
+              </span>
+            </div>
             <span className="landing-back-pill">
               <ArrowLeft size={12} /> Back
             </span>
@@ -136,11 +144,11 @@ export function LandingPage({ currentUser, onEnterPortal, onNavigate }) {
       {/* Main Hero Section */}
       <main id="home" className="landing-hero-section">
         <div className="landing-hero-content">
-          <div className="hero-kicker">CIT Academic Scheduling &amp; Venue Intelligence</div>
+          <div className="hero-kicker">Techzephyr 4.0 &bull; Tech on the Breeze</div>
 
           <h1 className="hero-heading">
-            <span className="hero-line-terracotta">CIT Campus</span>
-            <span className="hero-line-dark">Smart Scheduler</span>
+            <span className="hero-line-terracotta">Techzephyr 4.0</span>
+            <span className="hero-line-dark">Campus Intelligence</span>
           </h1>
 
           <p className="hero-description">
@@ -171,9 +179,39 @@ export function LandingPage({ currentUser, onEnterPortal, onNavigate }) {
           </div>
         </div>
 
-        <div className="hero-bottom-accent" aria-hidden="true">
-          <ChevronsRight size={22} className="chevron-icon" />
-          <ChevronsRight size={22} className="chevron-icon" />
+        {/* Techzephyr Booklet Architectural Mosaic Hero Card */}
+        <div className="landing-hero-pattern-card" aria-hidden="true">
+          <div className="pattern-card-header">
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+              <div className="mini-badge-4">4</div>
+              <div>
+                <div className="pattern-tag">Techzephyr 4.0 Mosaic</div>
+                <div className="pattern-sub">Chilika Institute of Technology</div>
+              </div>
+            </div>
+          </div>
+
+          {/* Interlocking Brick Pattern Matching Booklet Cover */}
+          <div className="booklet-brick-grid">
+            <div className="brick-item brick-chocolate"></div>
+            <div className="brick-item brick-terracotta tall"></div>
+            <div className="brick-item brick-ochre"></div>
+            <div className="brick-item brick-sage tall"></div>
+            <div className="brick-item brick-peach wide"></div>
+            <div className="brick-item brick-terracotta"></div>
+            <div className="brick-item brick-chocolate tall"></div>
+            <div className="brick-item brick-ochre wide"></div>
+            <div className="brick-item brick-sage"></div>
+            <div className="brick-item brick-terracotta wide"></div>
+            <div className="brick-item brick-peach"></div>
+            <div className="brick-item brick-chocolate"></div>
+          </div>
+
+          <div className="pattern-metrics-bar">
+            <div className="p-stat"><strong>189</strong> Sessions</div>
+            <div className="p-stat"><strong>27</strong> Venues</div>
+            <div className="p-stat"><strong>0</strong> Clashes</div>
+          </div>
         </div>
       </main>
 
@@ -231,7 +269,12 @@ export function LandingPage({ currentUser, onEnterPortal, onNavigate }) {
       {/* Minimal Footer */}
       <footer className="landing-footer">
         <div className="footer-inner">
-          <span className="footer-brand">CIT Campus</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span className="footer-brand">Techzephyr 4.0</span>
+            <span style={{ fontSize: 11, background: 'var(--accent-terracotta-light)', color: 'var(--accent-terracotta)', padding: '2px 8px', borderRadius: 9999, fontWeight: 700 }}>
+              Tech on the Breeze
+            </span>
+          </div>
           <span className="footer-copy">
             Chilika Institute of Technology &bull; Smart Scheduling Matrix
           </span>
