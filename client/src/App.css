@@ -1299,3 +1299,111 @@
   color: var(--text-primary);
   width: 200px;
 }
+
+
+/* ==========================================================================
+   Motion Animations & Page/Feature Transitions
+   ========================================================================== */
+
+@keyframes featureMotionIn {
+  0% {
+    opacity: 0;
+    transform: translateY(16px) scale(0.995);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+.feature-transition-container {
+  animation: featureMotionIn 0.32s cubic-bezier(0.16, 1, 0.3, 1) both;
+  will-change: transform, opacity;
+}
+
+@keyframes tabContentGlide {
+  0% {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.tab-motion-content {
+  animation: tabContentGlide 0.25s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Motion for Cards */
+.white-app-card,
+.stat-clean-card,
+.faculty-card,
+.t-metric-box,
+.metric-card,
+.unboxed-stat-item {
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.2s ease;
+}
+
+.white-app-card:hover,
+.stat-clean-card:hover,
+.faculty-card:hover,
+.t-metric-box:hover,
+.unboxed-stat-item:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 24px -4px rgba(58, 34, 22, 0.08);
+}
+
+/* Motion for Buttons & Interactive Links */
+button,
+.app-btn-lime,
+.app-btn-outline,
+.hero-btn-solid,
+.hero-btn-outline,
+.sidebar-link,
+.dept-pill-btn,
+.weekday-pill-btn,
+.mode-toggle-btn {
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+button:active,
+.app-btn-lime:active,
+.app-btn-outline:active,
+.hero-btn-solid:active,
+.hero-btn-outline:active {
+  transform: scale(0.96) !important;
+}
+
+/* Smooth motion for active nav pill */
+.sidebar-link {
+  transition: background-color 0.2s ease, color 0.2s ease, transform 0.2s cubic-bezier(0.16, 1, 0.3, 1) !important;
+}
+
+.sidebar-link:hover {
+  transform: translateX(3px);
+}
+
+.sidebar-link.active {
+  transform: translateX(4px);
+}
+
+/* Animated Chart Bars */
+@keyframes barGrow {
+  0% {
+    transform: scaleY(0);
+    transform-origin: bottom;
+  }
+  100% {
+    transform: scaleY(1);
+    transform-origin: bottom;
+  }
+}
+
+.animated-chart-bar {
+  animation: barGrow 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  transform-origin: bottom;
+}

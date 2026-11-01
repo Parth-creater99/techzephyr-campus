@@ -4,7 +4,6 @@ import { AppLayout } from './layouts/AppLayout';
 import {
   LandingPage,
   FacultyNetworkPage,
-  FacultyChatPage,
   FacultyDashboardPage,
   CoursesPage,
   TimetableViewerPage,
@@ -27,7 +26,6 @@ export function App() {
       'dashboard',
       'timetable',
       'faculty-network',
-      'faculty-chat',
       'courses',
       'venues',
       'spectra',
@@ -40,7 +38,6 @@ export function App() {
   };
 
   const [activePage, setActivePage] = useState(getInitialPage);
-  const [chatTargetFaculty, setChatTargetFaculty] = useState(null);
   const [currentUser, setCurrentUser] = useState(() => {
     const profile = getStoredUserProfile();
     // Default to logged-in faculty
@@ -48,14 +45,11 @@ export function App() {
   });
 
   const handleNavigate = (pageId) => {
-    setActivePage(pageId);
-    window.location.hash = pageId;
+    // If user somehow triggers faculty-chat, redirect to faculty-network
+    const targetPage = pageId === 'faculty-chat' ? 'faculty-network' : pageId;
+    setActivePage(targetPage);
+    window.location.hash = targetPage;
     window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
-
-  const handleStartChatWithFaculty = (facultyName) => {
-    setChatTargetFaculty(facultyName);
-    handleNavigate('faculty-chat');
   };
 
   const handleLogout = () => {
@@ -89,8 +83,10 @@ export function App() {
   useEffect(() => {
     const handleHashChange = () => {
       const hash = window.location.hash.replace('#', '').trim();
-      if (hash) {
+      if (hash && hash !== 'faculty-chat') {
         setActivePage(hash);
+      } else if (hash === 'faculty-chat') {
+        setActivePage('faculty-network');
       } else {
         setActivePage('landing');
       }
@@ -130,15 +126,6 @@ export function App() {
         return (
           <FacultyNetworkPage
             currentUser={currentUser}
-            onNavigate={handleNavigate}
-            onStartChat={handleStartChatWithFaculty}
-          />
-        );
-      case 'faculty-chat':
-        return (
-          <FacultyChatPage
-            currentUser={currentUser}
-            initialFacultyName={chatTargetFaculty}
             onNavigate={handleNavigate}
           />
         );

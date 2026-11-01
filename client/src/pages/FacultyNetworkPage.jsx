@@ -203,16 +203,7 @@ export function FacultyNetworkPage({ currentUser, onNavigate, onStartChat }) {
               </div>
             </div>
 
-            <div className="faculty-card-actions">
-              <button
-                type="button"
-                className="chat-faculty-btn"
-                onClick={() => handleStartChatWithFaculty(faculty)}
-              >
-                <MessageSquare size={14} />
-                <span>Chat with Faculty</span>
-              </button>
-            </div>
+            
           </div>
         ))}
       </div>

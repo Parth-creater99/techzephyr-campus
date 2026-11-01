@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
-import { Menu, X, ShieldCheck, CheckCircle2, Clock, Calendar, ArrowRight, ArrowLeft, Sparkles, Building2, Layers } from 'lucide-react';
+import { Menu, X, Clock, Calendar, ArrowRight, ArrowLeft } from 'lucide-react';
+import { CitLogo } from '../components/CitLogo';
 import './LandingPage.css';
 
 export function LandingPage({ currentUser, onEnterPortal, onNavigate }) {
@@ -28,7 +29,7 @@ export function LandingPage({ currentUser, onEnterPortal, onNavigate }) {
 
   return (
     <div className="landing-root animate-fade-in">
-      {/* Background wave contours with Techzephyr warm palette */}
+      {/* Background wave contours with warm palette */}
       <div className="landing-bg-waves" aria-hidden="true">
         <svg
           viewBox="0 0 1440 900"
@@ -63,20 +64,20 @@ export function LandingPage({ currentUser, onEnterPortal, onNavigate }) {
       {/* Top Navigation */}
       <header className="landing-header">
         <div className="landing-nav-inner">
-          {/* Logo - Techzephyr 4.0 Brand (clicking goes back) */}
+          {/* Logo - CHILIKA INSTITUTE OF TECHNOLOGY */}
           <div
             className="landing-logo"
             onClick={handleCitBackClick}
             title="Click to go back"
-            style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 10 }}
+            style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 12 }}
           >
-            <div className="techzephyr-brand-badge" aria-hidden="true">
-              <span className="techzephyr-badge-4">4</span>
-            </div>
+            <CitLogo size={40} />
             <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <span style={{ fontSize: 17, fontWeight: 800, color: '#1c1815', lineHeight: 1.1 }}>Techzephyr</span>
-              <span style={{ fontSize: 9.5, fontWeight: 700, color: 'var(--accent-terracotta)', letterSpacing: 0.8, textTransform: 'uppercase' }}>
-                CIT Campus 4.0
+              <span style={{ fontSize: 15, fontWeight: 900, color: '#1c1815', letterSpacing: '0.04em', lineHeight: 1.15, textTransform: 'uppercase' }}>
+                Chilika Institute
+              </span>
+              <span style={{ fontSize: 10.5, fontWeight: 800, color: 'var(--accent-terracotta)', letterSpacing: '0.06em', lineHeight: 1.15, textTransform: 'uppercase' }}>
+                of Technology
               </span>
             </div>
             <span className="landing-back-pill">
@@ -144,11 +145,11 @@ export function LandingPage({ currentUser, onEnterPortal, onNavigate }) {
       {/* Main Hero Section */}
       <main id="home" className="landing-hero-section">
         <div className="landing-hero-content">
-          <div className="hero-kicker">Techzephyr 4.0 &bull; Tech on the Breeze</div>
+          <div className="hero-kicker">Chilika Institute of Technology &bull; Academic Portal</div>
 
           <h1 className="hero-heading">
-            <span className="hero-line-terracotta">Techzephyr 4.0</span>
-            <span className="hero-line-dark">Campus Intelligence</span>
+            <span className="hero-line-terracotta">Chilika Institute</span>
+            <span className="hero-line-dark">of Technology</span>
           </h1>
 
           <p className="hero-description">
@@ -179,13 +180,13 @@ export function LandingPage({ currentUser, onEnterPortal, onNavigate }) {
           </div>
         </div>
 
-        {/* Techzephyr Booklet Architectural Mosaic Hero Card */}
+        {/* CIT Campus Architectural Mosaic Hero Card */}
         <div className="landing-hero-pattern-card" aria-hidden="true">
           <div className="pattern-card-header">
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <div className="mini-badge-4">4</div>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <CitLogo size={32} />
               <div>
-                <div className="pattern-tag">Techzephyr 4.0 Mosaic</div>
+                <div className="pattern-tag">CIT Campus Mosaic</div>
                 <div className="pattern-sub">Chilika Institute of Technology</div>
               </div>
             </div>
@@ -269,11 +270,9 @@ export function LandingPage({ currentUser, onEnterPortal, onNavigate }) {
       {/* Minimal Footer */}
       <footer className="landing-footer">
         <div className="footer-inner">
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span className="footer-brand">Techzephyr 4.0</span>
-            <span style={{ fontSize: 11, background: 'var(--accent-terracotta-light)', color: 'var(--accent-terracotta)', padding: '2px 8px', borderRadius: 9999, fontWeight: 700 }}>
-              Tech on the Breeze
-            </span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <CitLogo size={28} />
+            <span className="footer-brand">CHILIKA INSTITUTE OF TECHNOLOGY</span>
           </div>
           <span className="footer-copy">
             Chilika Institute of Technology &bull; Smart Scheduling Matrix

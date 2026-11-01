@@ -13,9 +13,9 @@ import {
   X,
   Search,
   ArrowLeft,
-  MessageSquare,
 } from 'lucide-react';
 import { LiveTicker } from '../components/LiveTicker';
+import { CitLogo } from '../components/CitLogo';
 
 export const FACULTY_NAV_ITEMS = [
   { id: 'dashboard', label: 'Faculty Dashboard', icon: LayoutDashboard },
@@ -25,7 +25,6 @@ export const FACULTY_NAV_ITEMS = [
   { id: 'venues', label: 'Venues & 7 Labs (27)', icon: Building2 },
   { id: 'spectra', label: 'Spectra Events (25)', icon: Sparkles },
   { id: 'faculty-network', label: 'Faculty Network', icon: Users },
-  { id: 'faculty-chat', label: 'Faculty Chat', icon: MessageSquare, badge: 'Live' },
   { id: 'courses', label: 'Courses (62)', icon: BookOpen },
   { id: 'settings', label: 'Settings', icon: Settings },
 ];
@@ -67,7 +66,7 @@ export function AppLayout({
       {/* Clean Minimalist Sidebar */}
       <aside className={`app-sidebar ${mobileMenuOpen ? 'sidebar-open' : ''}`}>
         <div>
-          {/* Logo - Techzephyr 4.0 Brand (Clicking goes back) */}
+          {/* Logo - CHILIKA INSTITUTE OF TECHNOLOGY (Clicking goes back) */}
           <div className="sidebar-logo-area">
             <div
               className="brand-logo-wrap"
@@ -77,15 +76,13 @@ export function AppLayout({
               title="Click to go back"
               style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 10 }}
             >
-              <div className="techzephyr-brand-badge" aria-hidden="true">
-                <span className="techzephyr-badge-4">4</span>
-              </div>
+              <CitLogo size={36} />
               <div style={{ display: 'flex', flexDirection: 'column' }}>
-                <span className="brand-logo-text" style={{ fontSize: 16, fontWeight: 800, color: 'var(--text-primary)', letterSpacing: '-0.02em', lineHeight: 1.1 }}>
-                  Techzephyr
+                <span style={{ fontSize: 13, fontWeight: 900, color: 'var(--text-primary)', letterSpacing: '0.04em', lineHeight: 1.15, textTransform: 'uppercase' }}>
+                  Chilika Institute
                 </span>
-                <span style={{ fontSize: 9.5, fontWeight: 700, color: 'var(--accent-terracotta)', letterSpacing: 0.8, textTransform: 'uppercase' }}>
-                  CIT Campus 4.0
+                <span style={{ fontSize: 10, fontWeight: 800, color: 'var(--accent-terracotta)', letterSpacing: '0.06em', lineHeight: 1.15, textTransform: 'uppercase' }}>
+                  of Technology
                 </span>
               </div>
               <span className="back-hint-badge" title="Click to go back">
@@ -174,10 +171,10 @@ export function AppLayout({
           </div>
         </header>
 
-        {/* Dynamic Page Body */}
-        <div className="animate-fade-in app-content-inner">
+        {/* Dynamic Page Body with Smooth Feature Motion Transition */}
+        <main key={activePage} className="feature-transition-container app-content-inner">
           {children}
-        </div>
+        </main>
       </div>
     </div>
   );
