@@ -87,7 +87,7 @@ export function AiAssistantPage({ currentUser, onNavigate }) {
         responseText = `Available Computing Labs for Thursday Afternoon:\n\n` +
           `• Computing Lab 1 (Lab-101): Free during Period 7 (14:35 - 15:25)\n` +
           `• Computing Lab 2 (Lab-102): Free during Period 8 (15:35 - 16:25)\n` +
-          `• AI & Data Systems Lab: Free during Period 6 (13:45 - 14:35)\n\n` +
+          `• AI & Data Systems Lab: Free during Period 6 (14:00 - 15:00)\n\n` +
           `All 7 departmental laboratories have verified equipment and zero schedule clashes.`;
       } else {
         responseText = `I have received your request: "${query}".\n\n` +

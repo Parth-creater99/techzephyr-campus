@@ -97,7 +97,7 @@
 
 .app-timetable-table {
   width: 100%;
-  min-width: 1080px; width: 100%;
+  width: 100%;
   border-collapse: separate;
   border-spacing: 0;
 }
@@ -248,10 +248,9 @@
   font-weight: 600;
   line-height: 1.15;
   margin: 1px 0;
-  display: -webkit-box;
-  -webkit-line-clamp: 2;
-  -webkit-box-orient: vertical;
+  white-space: nowrap;
   overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .session-card-footer {
@@ -361,4 +360,108 @@
   color: var(--text-muted);
   font-weight: 600;
   letter-spacing: 0.5px;
+}
+
+
+/* CIT Official Policy Schedule Banner */
+.cit-policy-notice-banner {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg-card-subtle);
+  border: 1px solid var(--border-default);
+  border-left: 3.5px solid var(--accent-terracotta);
+  border-radius: 8px;
+  padding: 8px 14px;
+  font-size: 12.5px;
+  color: var(--text-primary);
+  margin-top: 10px;
+  line-height: 1.45;
+}
+
+/* 100% Fit Screen Layout */
+.timetable-scroll-box.fit-screen {
+  overflow-x: hidden;
+}
+
+@media (max-width: 768px) {
+  .timetable-scroll-box.fit-screen {
+    overflow-x: auto;
+  }
+}
+
+.app-timetable-table.fit-layout {
+  width: 100%;
+  min-width: 0;
+  table-layout: fixed;
+}
+
+@media (max-width: 768px) {
+  .app-timetable-table.fit-layout {
+    min-width: 780px;
+  }
+}
+
+/* Lunch Header & Body Styles */
+.lunch-title {
+  font-size: 10.5px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  color: var(--accent-terracotta);
+}
+
+.lunch-time {
+  font-size: 9px;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin-top: 1px;
+}
+
+.lunch-cell-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100%;
+  min-height: 60px;
+}
+
+.lunch-vertical-text {
+  font-size: 9px;
+  font-weight: 800;
+  letter-spacing: 1.5px;
+  color: #a89a8c;
+  text-transform: uppercase;
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+}
+
+
+.session-type-pill {
+  font-size: 7.5px;
+  font-weight: 800;
+  text-transform: uppercase;
+  padding: 1px 4px;
+  border-radius: 3px;
+  letter-spacing: 0.3px;
+  background: rgba(31, 28, 26, 0.08);
+}
+
+.card-type-lecture .session-type-pill {
+  background: rgba(45, 90, 69, 0.12);
+  color: #1e4533;
+}
+
+.card-type-lab .session-type-pill {
+  background: rgba(156, 89, 18, 0.12);
+  color: #7b4208;
+}
+
+.card-type-exam .session-type-pill {
+  background: rgba(162, 59, 24, 0.12);
+  color: #822e11;
+}
+
+.card-type-event .session-type-pill {
+  background: rgba(132, 40, 60, 0.12);
+  color: #6d1f30;
 }

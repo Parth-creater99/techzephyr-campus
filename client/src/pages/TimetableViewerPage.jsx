@@ -23,6 +23,7 @@ import { Modal } from '../components/Modal';
 import {
   PERIODS,
   WEEKDAYS,
+  TEACHING_WEEKDAYS,
   STUDENT_GROUPS,
   FACULTY_DATA,
   FACULTY_LIST,
@@ -43,8 +44,9 @@ export function TimetableViewerPage({ currentUser, onNavigate, onRequireAdmin, o
 
   // Mode: 'classes' (Week 1 regular classes) vs 'midsem' (Week 2 Midsem Exams)
   const [scheduleMode, setScheduleMode] = useState('classes');
-  // Fitted period view filter: 'all' (P1-P13) | 'academic' (P1-P9) | 'events' (P10-P13)
-  const [periodFilter, setPeriodFilter] = useState('all');
+  // Fitted period view filter: 'academic' (DEFAULT: Teaching Week Mon-Fri, P1-P9 & Lunch - 100% Fit Screen)
+  const [periodFilter, setPeriodFilter] = useState('academic');
+  const [includeSaturday, setIncludeSaturday] = useState(false);
 
   const [selectedGroup, setSelectedGroup] = useState('all');
   const [selectedFaculty, setSelectedFaculty] = useState('all');
@@ -75,6 +77,15 @@ export function TimetableViewerPage({ currentUser, onNavigate, onRequireAdmin, o
       { id: 'ex-12', day: 'sat', periodId: 'P2', code: 'ME301-EX', title: 'Midsem: Heat & Mass Transfer', type: 'exam', group: 'ME-3', faculty: 'Prof. S. Sen', room: 'LH-201', capacity: 120, enrolled: 92 },
     ];
   }, []);
+
+
+  // Days to display: In academic mode, default strictly to official Teaching Week (Monday to Friday)
+  const daysToDisplay = useMemo(() => {
+    if (periodFilter === 'academic') {
+      return includeSaturday ? WEEKDAYS : (TEACHING_WEEKDAYS || WEEKDAYS.slice(0, 5));
+    }
+    return WEEKDAYS;
+  }, [periodFilter, includeSaturday]);
 
   // Active dataset depending on mode (classes vs midsem exams)
   const activeSessionList = scheduleMode === 'classes' ? sessions : midsemExamSessions;
@@ -176,7 +187,17 @@ export function TimetableViewerPage({ currentUser, onNavigate, onRequireAdmin, o
               {scheduleMode === 'classes' ? 'CIT Master Timetable Matrix' : 'CIT Midsem Examination Timetable'}
             </h2>
             <span className="cit-period-count-pill">
-              13 Periods (P1–P9 Academic &bull; P10–P13 Evening Events)
+              {periodFilter === 'academic'
+                ? 'Teaching Week: 9 One-Hour Periods (P1–P9) • 100% Fit'
+                : periodFilter === 'events'
+                ? 'Evening Events: P10–P13 (18:00–22:00)'
+                : 'Full Master Matrix: P1–P13 (All 13 Periods)'}
+            </span>
+          </div>
+          <div className="cit-policy-notice-banner">
+            <Clock size={14} color="var(--accent-terracotta)" style={{ flexShrink: 0 }} />
+            <span>
+              <strong>Official CIT Schedule:</strong> Teaching week runs <strong>Monday to Friday</strong> in nine one-hour periods (<strong>P1 at 08:00 to P9 at 17:00</strong>). Lunch is <strong>13:00 to 14:00</strong> between P5 and P6. Evening periods <strong>P10 to P13 (18:00 to 22:00)</strong> are only for events.
             </span>
           </div>
           <span style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 4, display: 'block' }}>
@@ -204,29 +225,40 @@ export function TimetableViewerPage({ currentUser, onNavigate, onRequireAdmin, o
           </div>
 
           {/* Fit Timetable Period View Selector */}
-          <div className="clean-mode-pill-container" title="Select period display to fit screen">
-            <button
-              type="button"
-              className={`mode-toggle-btn ${periodFilter === 'all' ? 'active' : ''}`}
-              onClick={() => setPeriodFilter('all')}
-            >
-              All (P1–P13)
-            </button>
+          <div className="clean-mode-pill-container" title="Select timetable layout">
             <button
               type="button"
               className={`mode-toggle-btn ${periodFilter === 'academic' ? 'active' : ''}`}
               onClick={() => setPeriodFilter('academic')}
             >
-              Fit Screen (P1–P9)
+              Teaching Week (P1–P9)
             </button>
             <button
               type="button"
               className={`mode-toggle-btn ${periodFilter === 'events' ? 'active' : ''}`}
               onClick={() => setPeriodFilter('events')}
             >
-              Events (P10–P13)
+              Evening Events (P10–P13)
+            </button>
+            <button
+              type="button"
+              className={`mode-toggle-btn ${periodFilter === 'all' ? 'active' : ''}`}
+              onClick={() => setPeriodFilter('all')}
+            >
+              Full 13 Periods
             </button>
           </div>
+          {periodFilter === 'academic' && (
+            <button
+              type="button"
+              className={`dept-pill-btn ${includeSaturday ? 'active' : ''}`}
+              onClick={() => setIncludeSaturday(!includeSaturday)}
+              style={{ fontSize: 11.5, padding: '5px 12px' }}
+              title="Toggle Saturday elective sessions"
+            >
+              {includeSaturday ? '✓ Saturday Included (6 Days)' : '+ Include Saturday'}
+            </button>
+          )}
 
           <button
             type="button"
@@ -368,8 +400,32 @@ export function TimetableViewerPage({ currentUser, onNavigate, onRequireAdmin, o
       </div>
 
       {/* Main Timetable Matrix Grid (All 13 Periods, Read-Only, Minimalist & Beautiful) */}
-      <div className="timetable-scroll-box">
-        <table className="app-timetable-table">
+      <div className={`timetable-scroll-box ${periodFilter !== 'all' ? 'fit-screen' : ''}`}>
+        <table className={`app-timetable-table ${periodFilter !== 'all' ? 'fit-layout' : ''}`}>
+          {periodFilter === 'academic' && (
+            <colgroup>
+              <col style={{ width: '8%' }} />
+              <col style={{ width: '9.5%' }} />
+              <col style={{ width: '9.5%' }} />
+              <col style={{ width: '9.5%' }} />
+              <col style={{ width: '9.5%' }} />
+              <col style={{ width: '9.5%' }} />
+              <col style={{ width: '6.5%' }} />
+              <col style={{ width: '9.5%' }} />
+              <col style={{ width: '9.5%' }} />
+              <col style={{ width: '9.5%' }} />
+              <col style={{ width: '9.5%' }} />
+            </colgroup>
+          )}
+          {periodFilter === 'events' && (
+            <colgroup>
+              <col style={{ width: '12%' }} />
+              <col style={{ width: '22%' }} />
+              <col style={{ width: '22%' }} />
+              <col style={{ width: '22%' }} />
+              <col style={{ width: '22%' }} />
+            </colgroup>
+          )}
           <thead>
             <tr>
               <th className="th-day-corner">
@@ -378,21 +434,21 @@ export function TimetableViewerPage({ currentUser, onNavigate, onRequireAdmin, o
 
               {(periodFilter === 'all' || periodFilter === 'academic') && morningPeriods.map((p) => (
                 <th key={p.id} className="th-period-cell">
-                  <div className="th-pname">{p.name}</div>
+                  <div className="th-pname">{p.name.replace('Period ', 'P')}</div>
                   <div className="th-ptime">{p.time}</div>
                 </th>
               ))}
 
               {(periodFilter === 'all' || periodFilter === 'academic') && (
                 <th className="th-lunch-header">
-                  <div>LUNCH</div>
-                  <div style={{ fontSize: 9.5, fontWeight: 500 }}>12:55–13:45</div>
+                  <div className="lunch-title">LUNCH</div>
+                  <div className="lunch-time">13:00–14:00</div>
                 </th>
               )}
 
               {(periodFilter === 'all' || periodFilter === 'academic') && afternoonPeriods.map((p) => (
                 <th key={p.id} className="th-period-cell">
-                  <div className="th-pname">{p.name}</div>
+                  <div className="th-pname">{p.name.replace('Period ', 'P')}</div>
                   <div className="th-ptime">{p.time}</div>
                 </th>
               ))}
@@ -400,14 +456,14 @@ export function TimetableViewerPage({ currentUser, onNavigate, onRequireAdmin, o
               {(periodFilter === 'all' || periodFilter === 'events') && eventPeriods.map((p) => (
                 <th key={p.id} className="th-event-period-header">
                   <div className="th-event-tag">✦ EVENT</div>
-                  <div className="th-pname">{p.name}</div>
+                  <div className="th-pname">{p.name.replace('Period ', 'P').replace(' (Event)', '')}</div>
                   <div className="th-ptime">{p.time}</div>
                 </th>
               ))}
             </tr>
           </thead>
           <tbody>
-            {WEEKDAYS.map((day) => (
+            {daysToDisplay.map((day) => (
               <tr key={day.id}>
                 <td className="table-day-cell">
                   <div className="day-name-bold">{day.short}</div>
@@ -427,14 +483,16 @@ export function TimetableViewerPage({ currentUser, onNavigate, onRequireAdmin, o
                         >
                           <div className="session-card-header">
                             <span className="session-code">{session.code}</span>
-                            <span className="session-info-icon" title="View details">
-                              <Info size={11} />
+                            <span className="session-type-pill">
+                              {session.type === 'lab' ? 'LAB' : session.type === 'exam' ? 'EXAM' : 'LEC'}
                             </span>
                           </div>
-                          <div className="session-title-text">{session.title}</div>
+                          <div className="session-title-text" title={session.title}>{session.title}</div>
                           <div className="session-card-footer">
                             <span className="session-room-tag">{session.room}</span>
-                            <span className="session-group-tag">{session.group}</span>
+                            <span className="session-group-tag" title={viewMode === 'faculty' ? session.group : session.faculty}>
+                              {viewMode === 'faculty' ? session.group : session.faculty?.split(' ').pop()}
+                            </span>
                           </div>
                         </div>
                       ) : (
@@ -446,7 +504,9 @@ export function TimetableViewerPage({ currentUser, onNavigate, onRequireAdmin, o
 
                 {(periodFilter === 'all' || periodFilter === 'academic') && (
                   <td className="app-lunch-cell">
-                    <span>Lunch</span>
+                    <div className="lunch-cell-content">
+                      <span className="lunch-vertical-text">RECESS</span>
+                    </div>
                   </td>
                 )}
 
@@ -463,14 +523,16 @@ export function TimetableViewerPage({ currentUser, onNavigate, onRequireAdmin, o
                         >
                           <div className="session-card-header">
                             <span className="session-code">{session.code}</span>
-                            <span className="session-info-icon" title="View details">
-                              <Info size={11} />
+                            <span className="session-type-pill">
+                              {session.type === 'lab' ? 'LAB' : session.type === 'exam' ? 'EXAM' : 'LEC'}
                             </span>
                           </div>
-                          <div className="session-title-text">{session.title}</div>
+                          <div className="session-title-text" title={session.title}>{session.title}</div>
                           <div className="session-card-footer">
                             <span className="session-room-tag">{session.room}</span>
-                            <span className="session-group-tag">{session.group}</span>
+                            <span className="session-group-tag" title={viewMode === 'faculty' ? session.group : session.faculty}>
+                              {viewMode === 'faculty' ? session.group : session.faculty?.split(' ').pop()}
+                            </span>
                           </div>
                         </div>
                       ) : (
@@ -493,14 +555,16 @@ export function TimetableViewerPage({ currentUser, onNavigate, onRequireAdmin, o
                         >
                           <div className="session-card-header">
                             <span className="session-code">{session.code}</span>
-                            <span className="session-info-icon" title="View details">
-                              <Info size={11} />
+                            <span className="session-type-pill">
+                              {session.type === 'lab' ? 'LAB' : session.type === 'exam' ? 'EXAM' : 'LEC'}
                             </span>
                           </div>
-                          <div className="session-title-text">{session.title}</div>
+                          <div className="session-title-text" title={session.title}>{session.title}</div>
                           <div className="session-card-footer">
                             <span className="session-room-tag">{session.room}</span>
-                            <span className="session-group-tag">{session.group}</span>
+                            <span className="session-group-tag" title={viewMode === 'faculty' ? session.group : session.faculty}>
+                              {viewMode === 'faculty' ? session.group : session.faculty?.split(' ').pop()}
+                            </span>
                           </div>
                         </div>
                       ) : (

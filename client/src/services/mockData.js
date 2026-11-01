@@ -14,23 +14,32 @@
 
 export const IS_LIVE_DATA = true;
 
-// 13 Academic Periods (P1 - P9 Academic, P10 - P13 Evening Events)
+// 13 Official Periods: Nine 1-Hour Teaching Periods (P1-P9), Lunch (13:00-14:00), Four Evening Event Periods (P10-P13)
 export const PERIODS = [
-  { id: 'P1', name: 'Period 1', time: '08:30 - 09:20', type: 'academic' },
-  { id: 'P2', name: 'Period 2', time: '09:20 - 10:10', type: 'academic' },
-  { id: 'P3', name: 'Period 3', time: '10:25 - 11:15', type: 'academic' },
-  { id: 'P4', name: 'Period 4', time: '11:15 - 12:05', type: 'academic' },
-  { id: 'P5', name: 'Period 5', time: '12:05 - 12:55', type: 'academic' },
-  // Lunch Intermission: 12:55 - 13:45
-  { id: 'P6', name: 'Period 6', time: '13:45 - 14:35', type: 'academic' },
-  { id: 'P7', name: 'Period 7', time: '14:35 - 15:25', type: 'academic' },
-  { id: 'P8', name: 'Period 8', time: '15:35 - 16:25', type: 'academic' },
-  { id: 'P9', name: 'Period 9', time: '16:25 - 17:15', type: 'academic' },
-  // Evening Extracurricular & Spectra Events (P10 - P13)
-  { id: 'P10', name: 'Period 10 (Event)', time: '17:30 - 18:15', type: 'event', label: 'Club Events' },
-  { id: 'P11', name: 'Period 11 (Event)', time: '18:15 - 19:00', type: 'event', label: 'Spectra Rehearsal' },
-  { id: 'P12', name: 'Period 12 (Event)', time: '19:00 - 19:45', type: 'event', label: 'Tech & Sports' },
-  { id: 'P13', name: 'Period 13 (Event)', time: '19:45 - 20:30', type: 'event', label: 'OAT Cultural Fest' },
+  { id: 'P1', name: 'Period 1', time: '08:00 - 09:00', type: 'academic' },
+  { id: 'P2', name: 'Period 2', time: '09:00 - 10:00', type: 'academic' },
+  { id: 'P3', name: 'Period 3', time: '10:00 - 11:00', type: 'academic' },
+  { id: 'P4', name: 'Period 4', time: '11:00 - 12:00', type: 'academic' },
+  { id: 'P5', name: 'Period 5', time: '12:00 - 13:00', type: 'academic' },
+  // Lunch Intermission: 13:00 - 14:00 (between P5 and P6)
+  { id: 'P6', name: 'Period 6', time: '14:00 - 15:00', type: 'academic' },
+  { id: 'P7', name: 'Period 7', time: '15:00 - 16:00', type: 'academic' },
+  { id: 'P8', name: 'Period 8', time: '16:00 - 17:00', type: 'academic' },
+  { id: 'P9', name: 'Period 9', time: '17:00 - 18:00', type: 'academic' },
+  // Dedicated Evening Event Periods: P10 - P13 (18:00 - 22:00, only for events)
+  { id: 'P10', name: 'Period 10 (Event)', time: '18:00 - 19:00', type: 'event', label: 'Club & Tech Events' },
+  { id: 'P11', name: 'Period 11 (Event)', time: '19:00 - 20:00', type: 'event', label: 'Spectra Rehearsal' },
+  { id: 'P12', name: 'Period 12 (Event)', time: '20:00 - 21:00', type: 'event', label: 'Guest Lectures & Cultural' },
+  { id: 'P13', name: 'Period 13 (Event)', time: '21:00 - 22:00', type: 'event', label: 'OAT Fest & Star Night' },
+];
+
+// Official Teaching Week: Monday to Friday
+export const TEACHING_WEEKDAYS = [
+  { id: 'mon', name: 'Monday', short: 'MON', date: 'Oct 26' },
+  { id: 'tue', name: 'Tuesday', short: 'TUE', date: 'Oct 27' },
+  { id: 'wed', name: 'Wednesday', short: 'WED', date: 'Oct 28' },
+  { id: 'thu', name: 'Thursday', short: 'THU', date: 'Oct 29' },
+  { id: 'fri', name: 'Friday', short: 'FRI', date: 'Oct 30' },
 ];
 
 export const WEEKDAYS = [
@@ -602,7 +611,7 @@ export const INITIAL_LECTURE_SWAPS = [
       day: 'mon',
       dayName: 'Monday',
       periodId: 'P1',
-      time: '08:30 - 09:20',
+      time: '08:00 - 09:00',
       room: 'LH-101',
       group: 'CSE-3',
     },
@@ -614,7 +623,7 @@ export const INITIAL_LECTURE_SWAPS = [
       day: 'mon',
       dayName: 'Monday',
       periodId: 'P2',
-      time: '09:20 - 10:10',
+      time: '09:00 - 10:00',
       room: 'LH-102',
       group: 'CSE-3',
     },
@@ -638,7 +647,7 @@ export const INITIAL_LECTURE_SWAPS = [
       day: 'mon',
       dayName: 'Monday',
       periodId: 'P3',
-      time: '10:25 - 11:15',
+      time: '10:00 - 11:00',
       room: 'LH-201',
       group: 'ECE-2',
     },
@@ -650,7 +659,7 @@ export const INITIAL_LECTURE_SWAPS = [
       day: 'mon',
       dayName: 'Monday',
       periodId: 'P8',
-      time: '15:35 - 16:25',
+      time: '16:00 - 17:00',
       room: 'LH-202',
       group: 'ME-2',
     },
