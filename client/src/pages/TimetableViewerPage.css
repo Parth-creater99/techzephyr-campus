@@ -97,7 +97,7 @@
 
 .app-timetable-table {
   width: 100%;
-  min-width: 1540px;
+  min-width: 1080px; width: 100%;
   border-collapse: separate;
   border-spacing: 0;
 }
@@ -116,7 +116,8 @@
 }
 
 .th-day-corner {
-  width: 110px;
+  width: 76px;
+  min-width: 76px;
   position: sticky;
   left: 0;
   z-index: 3;
@@ -126,31 +127,34 @@
 }
 
 .th-period-cell {
-  min-width: 110px;
+  min-width: 76px;
+  padding: 8px 4px !important;
 }
 
 .th-pname {
-  font-size: 12px;
+  font-size: 11px;
   font-weight: 700;
   color: var(--text-primary);
 }
 
 .th-ptime {
-  font-size: 10.5px;
+  font-size: 9.5px;
   color: var(--text-secondary);
   font-weight: 500;
   margin-top: 2px;
 }
 
 .th-lunch-header {
-  min-width: 80px;
+  min-width: 46px;
+  padding: 6px 2px !important;
   background: #f5efe6 !important;
   color: var(--text-secondary) !important;
 }
 
 /* Distinct Warm Event Header (P10 - P13) */
 .th-event-period-header {
-  min-width: 125px;
+  min-width: 80px;
+  padding: 8px 4px !important;
   background: #fdf2ed !important;
   color: #a23b18 !important;
   border-bottom: 2px solid #f7d6c8 !important;
@@ -177,13 +181,13 @@
 }
 
 .day-name-bold {
-  font-size: 14px;
+  font-size: 12.5px;
   font-weight: 800;
   color: var(--text-primary);
 }
 
 .day-date-sub {
-  font-size: 11px;
+  font-size: 9.5px;
   color: var(--text-muted);
   margin-top: 2px;
 }
@@ -194,14 +198,16 @@
   border-bottom: 1px solid var(--border-subtle);
   border-right: 1px solid var(--border-subtle);
   vertical-align: top;
-  height: 94px;
+  height: 64px;
+  min-height: 64px;
+  padding: 3px !important;
 }
 
 /* Session Cards - Techzephyr Booklet Palette (Terracotta, Ochre, Sage, Brick) */
 .app-session-card {
   height: 100%;
-  border-radius: 10px;
-  padding: 8px 10px;
+  border-radius: 6px;
+  padding: 4px 6px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -223,7 +229,7 @@
 }
 
 .session-code {
-  font-size: 11.5px;
+  font-size: 10px;
   font-weight: 800;
   letter-spacing: 0.2px;
 }
@@ -238,10 +244,10 @@
 }
 
 .session-title-text {
-  font-size: 11.5px;
+  font-size: 9.5px;
   font-weight: 600;
-  line-height: 1.25;
-  margin: 3px 0;
+  line-height: 1.15;
+  margin: 1px 0;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -252,7 +258,7 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  font-size: 10px;
+  font-size: 8.5px;
   font-weight: 600;
   opacity: 0.9;
 }

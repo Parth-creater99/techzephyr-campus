@@ -175,58 +175,58 @@ export function FacultyDashboardPage({ currentUser, onNavigate }) {
         </div>
       </div>
 
-      {/* 2. Important Session Graphs & Pie Charts Row */}
-      <div className="dashboard-charts-row" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(380px, 1fr))', gap: 20, marginBottom: 20 }}>
-        {/* Weekly Activity Multi-Bar Session Graph */}
-        <div className="white-app-card" style={{ gap: 14 }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <BarChart3 size={18} color="var(--accent-terracotta)" />
-              <h3 className="section-title" style={{ fontSize: 16, margin: 0 }}>
-                Weekly Session Activity Graph
+      {/* 2. Fitted Compact Session Graphs & Pie Charts Row */}
+      <div className="dashboard-charts-row" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: 14, marginBottom: 16 }}>
+        {/* Weekly Activity Multi-Bar Session Graph (Fitted) */}
+        <div className="white-app-card" style={{ padding: '12px 16px', gap: 8 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 6 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <BarChart3 size={15} color="var(--accent-terracotta)" />
+              <h3 className="section-title" style={{ fontSize: 13.5, margin: 0, fontWeight: 800 }}>
+                Weekly Session Activity
               </h3>
             </div>
-            <span style={{ fontSize: 11.5, fontWeight: 700, color: 'var(--accent-sage)', background: 'var(--accent-sage-light)', border: '1px solid var(--accent-sage-border)', padding: '2px 8px', borderRadius: 9999 }}>
-              189 Sessions Total
+            <span style={{ fontSize: 10.5, fontWeight: 700, color: 'var(--accent-sage)', background: 'var(--accent-sage-light)', border: '1px solid var(--accent-sage-border)', padding: '1px 7px', borderRadius: 9999 }}>
+              189 Sessions
             </span>
           </div>
 
-          <p style={{ fontSize: 12.5, color: 'var(--text-secondary)', margin: 0 }}>
-            Monday to Saturday distribution of Lectures, Specialized Labs, and Tutorials across P1–P13.
+          <p style={{ fontSize: 11, color: 'var(--text-secondary)', margin: 0 }}>
+            Monday to Saturday session distribution across periods P1–P13.
           </p>
 
-          {/* SVG Responsive Multi-Bar Chart */}
-          <div style={{ width: '100%', overflowX: 'auto', paddingTop: 6 }}>
-            <svg viewBox="0 0 480 180" style={{ width: '100%', height: 'auto', minWidth: 380 }}>
+          {/* SVG Responsive Multi-Bar Chart (Fitted Height) */}
+          <div style={{ width: '100%', overflow: 'hidden', paddingTop: 2 }}>
+            <svg viewBox="0 0 360 88" style={{ width: '100%', height: 'auto', maxHeight: 88, display: 'block' }}>
               {/* Background horizontal grid lines */}
-              <line x1="40" y1="20" x2="470" y2="20" stroke="var(--border-subtle)" strokeDasharray="3 3" />
-              <line x1="40" y1="60" x2="470" y2="60" stroke="var(--border-subtle)" strokeDasharray="3 3" />
-              <line x1="40" y1="100" x2="470" y2="100" stroke="var(--border-subtle)" strokeDasharray="3 3" />
-              <line x1="40" y1="140" x2="470" y2="140" stroke="var(--border-default)" strokeWidth="1.5" />
+              <line x1="28" y1="12" x2="350" y2="12" stroke="var(--border-subtle)" strokeDasharray="2 2" />
+              <line x1="28" y1="36" x2="350" y2="36" stroke="var(--border-subtle)" strokeDasharray="2 2" />
+              <line x1="28" y1="60" x2="350" y2="60" stroke="var(--border-subtle)" strokeDasharray="2 2" />
+              <line x1="28" y1="72" x2="350" y2="72" stroke="var(--border-default)" strokeWidth="1" />
 
               {/* Y-axis Labels */}
-              <text x="32" y="24" fill="var(--text-muted)" fontSize="10" textAnchor="end">40h</text>
-              <text x="32" y="64" fill="var(--text-muted)" fontSize="10" textAnchor="end">30h</text>
-              <text x="32" y="104" fill="var(--text-muted)" fontSize="10" textAnchor="end">20h</text>
-              <text x="32" y="144" fill="var(--text-muted)" fontSize="10" textAnchor="end">0h</text>
+              <text x="24" y="15" fill="var(--text-muted)" fontSize="8" textAnchor="end">35h</text>
+              <text x="24" y="39" fill="var(--text-muted)" fontSize="8" textAnchor="end">20h</text>
+              <text x="24" y="63" fill="var(--text-muted)" fontSize="8" textAnchor="end">10h</text>
+              <text x="24" y="75" fill="var(--text-muted)" fontSize="8" textAnchor="end">0h</text>
 
               {/* Bars per Weekday */}
               {WEEKLY_ACTIVITY_DATA.map((item, index) => {
-                const xBase = 80 + index * 64;
-                const maxH = 110;
-                const lecH = (item.lectures / 35) * maxH;
-                const labH = (item.labs / 35) * maxH;
-                const tutH = (item.tutorials / 35) * maxH;
+                const xBase = 54 + index * 50;
+                const maxH = 50;
+                const lecH = Math.min((item.lectures / 35) * maxH, maxH);
+                const labH = Math.min((item.labs / 35) * maxH, maxH);
+                const tutH = Math.min((item.tutorials / 35) * maxH, maxH);
 
                 return (
                   <g key={item.day} className="chart-bar-group">
                     {/* Lectures bar (Terracotta) */}
                     <rect
-                      x={xBase - 14}
-                      y={140 - lecH}
-                      width="10"
+                      x={xBase - 10}
+                      y={72 - lecH}
+                      width="7"
                       height={lecH}
-                      rx="3"
+                      rx="2"
                       fill="#c54a26"
                       className="animated-chart-bar"
                     >
@@ -236,10 +236,10 @@ export function FacultyDashboardPage({ currentUser, onNavigate }) {
                     {/* Labs bar (Warm Ochre) */}
                     <rect
                       x={xBase - 2}
-                      y={140 - labH}
-                      width="10"
+                      y={72 - labH}
+                      width="7"
                       height={labH}
-                      rx="3"
+                      rx="2"
                       fill="#db822a"
                       className="animated-chart-bar"
                     >
@@ -248,11 +248,11 @@ export function FacultyDashboardPage({ currentUser, onNavigate }) {
 
                     {/* Tutorials bar (Architectural Sage) */}
                     <rect
-                      x={xBase + 10}
-                      y={140 - tutH}
-                      width="10"
+                      x={xBase + 6}
+                      y={72 - tutH}
+                      width="7"
                       height={tutH}
-                      rx="3"
+                      rx="2"
                       fill="#4e7561"
                       className="animated-chart-bar"
                     >
@@ -261,10 +261,10 @@ export function FacultyDashboardPage({ currentUser, onNavigate }) {
 
                     {/* Day Label */}
                     <text
-                      x={xBase + 4}
-                      y="158"
+                      x={xBase + 2}
+                      y="83"
                       fill="var(--text-primary)"
-                      fontSize="11"
+                      fontSize="9"
                       textAnchor="middle"
                       fontWeight="700"
                     >
@@ -276,65 +276,73 @@ export function FacultyDashboardPage({ currentUser, onNavigate }) {
             </svg>
           </div>
 
-          {/* Chart Legend */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 20, paddingTop: 4, flexWrap: 'wrap', borderTop: '1px solid var(--border-subtle)' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: 'var(--text-secondary)' }}>
-              <span style={{ width: 10, height: 10, borderRadius: 2, background: '#c54a26', display: 'inline-block' }} />
+          {/* Compact Chart Legend */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: 12, paddingTop: 2, flexWrap: 'wrap', borderTop: '1px solid var(--border-subtle)' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 10.5, color: 'var(--text-secondary)' }}>
+              <span style={{ width: 7, height: 7, borderRadius: 2, background: '#c54a26', display: 'inline-block' }} />
               <span>Lectures</span>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: 'var(--text-secondary)' }}>
-              <span style={{ width: 10, height: 10, borderRadius: 2, background: '#db822a', display: 'inline-block' }} />
-              <span>Labs &amp; Practicals</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 10.5, color: 'var(--text-secondary)' }}>
+              <span style={{ width: 7, height: 7, borderRadius: 2, background: '#db822a', display: 'inline-block' }} />
+              <span>Labs</span>
             </div>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6, fontSize: 12, color: 'var(--text-secondary)' }}>
-              <span style={{ width: 10, height: 10, borderRadius: 2, background: '#4e7561', display: 'inline-block' }} />
-              <span>Cohort Tutorials</span>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 4, fontSize: 10.5, color: 'var(--text-secondary)' }}>
+              <span style={{ width: 7, height: 7, borderRadius: 2, background: '#4e7561', display: 'inline-block' }} />
+              <span>Tutorials</span>
             </div>
           </div>
         </div>
 
-        {/* Academic Session Distribution Pie / Donut Chart */}
-        <div className="white-app-card" style={{ gap: 14 }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 8 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-              <PieChartIcon size={18} color="var(--accent-ochre)" />
-              <h3 className="section-title" style={{ fontSize: 16, margin: 0 }}>
-                Session Distribution Pie Chart
+        {/* Academic Session Distribution Pie / Donut Chart (Fitted) */}
+        <div className="white-app-card" style={{ padding: '12px 16px', gap: 8 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 6 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+              <PieChartIcon size={15} color="var(--accent-ochre)" />
+              <h3 className="section-title" style={{ fontSize: 13.5, margin: 0, fontWeight: 800 }}>
+                Session Distribution
               </h3>
             </div>
-            <span style={{ fontSize: 11.5, fontWeight: 700, color: 'var(--accent-terracotta)', background: 'var(--accent-terracotta-light)', border: '1px solid var(--accent-terracotta-border)', padding: '2px 8px', borderRadius: 9999 }}>
+            <span style={{ fontSize: 10.5, fontWeight: 700, color: 'var(--accent-terracotta)', background: 'var(--accent-terracotta-light)', border: '1px solid var(--accent-terracotta-border)', padding: '1px 7px', borderRadius: 9999 }}>
               243 Teaching Hours
             </span>
           </div>
 
-          <p style={{ fontSize: 12.5, color: 'var(--text-secondary)', margin: 0 }}>
-            Proportional breakdown of academic sessions scheduled across 14 student cohorts.
+          <p style={{ fontSize: 11, color: 'var(--text-secondary)', margin: 0 }}>
+            Curriculum proportion across 14 student cohorts.
           </p>
 
-          {/* SVG Donut / Pie Chart with Interactive Center */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around', gap: 16, flexWrap: 'wrap', padding: '10px 0' }}>
-            <div style={{ position: 'relative', width: 150, height: 150 }}>
-              <svg viewBox="0 0 140 140" style={{ transform: 'rotate(-90deg)', width: '100%', height: '100%' }}>
+          {/* SVG Donut / Pie Chart with Interactive Center (Fitted) */}
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around', gap: 10, flexWrap: 'wrap', padding: '2px 0' }}>
+            <div style={{ position: 'relative', width: 84, height: 84, flexShrink: 0 }}>
+              <svg viewBox="0 0 100 100" style={{ transform: 'rotate(-90deg)', width: '100%', height: '100%' }}>
                 {/* Background Ring */}
-                <circle cx="70" cy="70" r="54" fill="none" stroke="var(--border-subtle)" strokeWidth="18" />
+                <circle cx="50" cy="50" r="38" fill="none" stroke="var(--border-subtle)" strokeWidth="12" />
 
                 {/* Donut Segments */}
                 {pieCategories.map((cat) => {
                   const isHovered = hoveredSlice === cat.id;
+                  const dashArr = (cat.percent / 100) * 238.76;
+                  const offsetMap = {
+                    lectures: 0,
+                    labs: -((58.2 / 100) * 238.76),
+                    tutorials: -(((58.2 + 25.4) / 100) * 238.76),
+                    exams: -(((58.2 + 25.4 + 10.6) / 100) * 238.76),
+                  };
+
                   return (
                     <circle
                       key={cat.id}
-                      cx="70"
-                      cy="70"
-                      r="54"
+                      cx="50"
+                      cy="50"
+                      r="38"
                       fill="none"
                       stroke={cat.color}
-                      strokeWidth={isHovered ? 21 : 18}
-                      strokeDasharray={cat.strokeDash}
-                      strokeDashoffset={cat.strokeOffset}
+                      strokeWidth={isHovered ? 14 : 12}
+                      strokeDasharray={`${dashArr.toFixed(1)} 238.8`}
+                      strokeDashoffset={offsetMap[cat.id] || 0}
                       style={{
                         cursor: 'pointer',
-                        transition: 'stroke-width 0.25s, opacity 0.2s',
+                        transition: 'stroke-width 0.2s, opacity 0.2s',
                         opacity: hoveredSlice && !isHovered ? 0.6 : 1,
                       }}
                       onMouseEnter={() => setHoveredSlice(cat.id)}
@@ -358,17 +366,17 @@ export function FacultyDashboardPage({ currentUser, onNavigate }) {
                   pointerEvents: 'none',
                 }}
               >
-                <span style={{ fontSize: 18, fontWeight: 900, color: 'var(--text-primary)', lineHeight: 1 }}>
+                <span style={{ fontSize: 14.5, fontWeight: 900, color: 'var(--text-primary)', lineHeight: 1 }}>
                   {hoveredSlice ? pieCategories.find((c) => c.id === hoveredSlice)?.count : '189'}
                 </span>
-                <span style={{ fontSize: 10, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: 0.5, marginTop: 2 }}>
+                <span style={{ fontSize: 8.5, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase', letterSpacing: 0.3, marginTop: 1 }}>
                   {hoveredSlice ? pieCategories.find((c) => c.id === hoveredSlice)?.name.split(' ')[0] : 'Sessions'}
                 </span>
               </div>
             </div>
 
             {/* Pie Categories Legend */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 8, flex: 1, minWidth: 160 }}>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 3, flex: 1, minWidth: 130 }}>
               {pieCategories.map((cat) => (
                 <div
                   key={cat.id}
@@ -378,24 +386,24 @@ export function FacultyDashboardPage({ currentUser, onNavigate }) {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'space-between',
-                    padding: '4px 8px',
-                    borderRadius: 6,
+                    padding: '2px 5px',
+                    borderRadius: 4,
                     background: hoveredSlice === cat.id ? 'var(--bg-card-subtle)' : 'transparent',
                     cursor: 'pointer',
                     transition: 'background 0.15s',
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <span style={{ width: 10, height: 10, borderRadius: '50%', backgroundColor: cat.color, flexShrink: 0 }} />
-                    <span style={{ fontSize: 12.5, fontWeight: hoveredSlice === cat.id ? 700 : 600, color: 'var(--text-primary)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 5 }}>
+                    <span style={{ width: 7, height: 7, borderRadius: '50%', backgroundColor: cat.color, flexShrink: 0 }} />
+                    <span style={{ fontSize: 11, fontWeight: hoveredSlice === cat.id ? 700 : 600, color: 'var(--text-primary)' }}>
                       {cat.name}
                     </span>
                   </div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-                    <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                    <span style={{ fontSize: 10.5, fontWeight: 700, color: 'var(--text-secondary)' }}>
                       {cat.count}
                     </span>
-                    <span style={{ fontSize: 10.5, fontWeight: 700, color: cat.color, background: `${cat.color}18`, padding: '1px 5px', borderRadius: 4 }}>
+                    <span style={{ fontSize: 9, fontWeight: 700, color: cat.color, background: `${cat.color}18`, padding: '1px 3px', borderRadius: 3 }}>
                       {cat.percent}%
                     </span>
                   </div>

@@ -43,6 +43,8 @@ export function TimetableViewerPage({ currentUser, onNavigate, onRequireAdmin, o
 
   // Mode: 'classes' (Week 1 regular classes) vs 'midsem' (Week 2 Midsem Exams)
   const [scheduleMode, setScheduleMode] = useState('classes');
+  // Fitted period view filter: 'all' (P1-P13) | 'academic' (P1-P9) | 'events' (P10-P13)
+  const [periodFilter, setPeriodFilter] = useState('all');
 
   const [selectedGroup, setSelectedGroup] = useState('all');
   const [selectedFaculty, setSelectedFaculty] = useState('all');
@@ -197,7 +199,32 @@ export function TimetableViewerPage({ currentUser, onNavigate, onRequireAdmin, o
               className={`mode-toggle-btn ${scheduleMode === 'midsem' ? 'active' : ''}`}
               onClick={() => setScheduleMode('midsem')}
             >
-              Midsem Exams (Week 2)
+              Midsem Exams
+            </button>
+          </div>
+
+          {/* Fit Timetable Period View Selector */}
+          <div className="clean-mode-pill-container" title="Select period display to fit screen">
+            <button
+              type="button"
+              className={`mode-toggle-btn ${periodFilter === 'all' ? 'active' : ''}`}
+              onClick={() => setPeriodFilter('all')}
+            >
+              All (P1–P13)
+            </button>
+            <button
+              type="button"
+              className={`mode-toggle-btn ${periodFilter === 'academic' ? 'active' : ''}`}
+              onClick={() => setPeriodFilter('academic')}
+            >
+              Fit Screen (P1–P9)
+            </button>
+            <button
+              type="button"
+              className={`mode-toggle-btn ${periodFilter === 'events' ? 'active' : ''}`}
+              onClick={() => setPeriodFilter('events')}
+            >
+              Events (P10–P13)
             </button>
           </div>
 
@@ -349,26 +376,28 @@ export function TimetableViewerPage({ currentUser, onNavigate, onRequireAdmin, o
                 Day
               </th>
 
-              {morningPeriods.map((p) => (
+              {(periodFilter === 'all' || periodFilter === 'academic') && morningPeriods.map((p) => (
                 <th key={p.id} className="th-period-cell">
                   <div className="th-pname">{p.name}</div>
                   <div className="th-ptime">{p.time}</div>
                 </th>
               ))}
 
-              <th className="th-lunch-header">
-                <div>LUNCH</div>
-                <div style={{ fontSize: 10, fontWeight: 500 }}>12:55–13:45</div>
-              </th>
+              {(periodFilter === 'all' || periodFilter === 'academic') && (
+                <th className="th-lunch-header">
+                  <div>LUNCH</div>
+                  <div style={{ fontSize: 9.5, fontWeight: 500 }}>12:55–13:45</div>
+                </th>
+              )}
 
-              {afternoonPeriods.map((p) => (
+              {(periodFilter === 'all' || periodFilter === 'academic') && afternoonPeriods.map((p) => (
                 <th key={p.id} className="th-period-cell">
                   <div className="th-pname">{p.name}</div>
                   <div className="th-ptime">{p.time}</div>
                 </th>
               ))}
 
-              {eventPeriods.map((p) => (
+              {(periodFilter === 'all' || periodFilter === 'events') && eventPeriods.map((p) => (
                 <th key={p.id} className="th-event-period-header">
                   <div className="th-event-tag">✦ EVENT</div>
                   <div className="th-pname">{p.name}</div>
@@ -386,7 +415,7 @@ export function TimetableViewerPage({ currentUser, onNavigate, onRequireAdmin, o
                 </td>
 
                 {/* Morning Slots */}
-                {morningPeriods.map((p) => {
+                {(periodFilter === 'all' || periodFilter === 'academic') && morningPeriods.map((p) => {
                   const session = sessionsByDayAndPeriod[`${day.id}-${p.id}`];
                   return (
                     <td key={p.id} className="timetable-td-slot">
@@ -415,12 +444,14 @@ export function TimetableViewerPage({ currentUser, onNavigate, onRequireAdmin, o
                   );
                 })}
 
-                <td className="app-lunch-cell">
-                  <span>Intermission</span>
-                </td>
+                {(periodFilter === 'all' || periodFilter === 'academic') && (
+                  <td className="app-lunch-cell">
+                    <span>Lunch</span>
+                  </td>
+                )}
 
                 {/* Afternoon Slots */}
-                {afternoonPeriods.map((p) => {
+                {(periodFilter === 'all' || periodFilter === 'academic') && afternoonPeriods.map((p) => {
                   const session = sessionsByDayAndPeriod[`${day.id}-${p.id}`];
                   return (
                     <td key={p.id} className="timetable-td-slot">
@@ -450,7 +481,7 @@ export function TimetableViewerPage({ currentUser, onNavigate, onRequireAdmin, o
                 })}
 
                 {/* Evening Event Slots (P10 - P13) */}
-                {eventPeriods.map((p) => {
+                {(periodFilter === 'all' || periodFilter === 'events') && eventPeriods.map((p) => {
                   const session = sessionsByDayAndPeriod[`${day.id}-${p.id}`];
                   return (
                     <td key={p.id} className="timetable-td-slot event-slot-column">
