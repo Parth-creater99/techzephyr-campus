@@ -65,8 +65,24 @@ export function ReschedulingPage({ currentUser, onNavigate, onRequireAdmin, onSw
   };
 
   // Determine selected sessions for swap preview
-  const mySelectedSession = sessions.find((s) => s.id === mySessionId) || sessions[0];
-  const targetSelectedSession = sessions.find((s) => s.id === targetSessionId) || sessions[1];
+  const mySelectedSession = sessions.find((s) => s.id === mySessionId) || sessions[0] || {
+    id: 's-101',
+    code: 'CS301',
+    title: 'Operating Systems',
+    faculty: 'Dr. A. Sharma',
+    day: 'mon',
+    periodId: 'P1',
+    room: 'LH-101',
+  };
+  const targetSelectedSession = sessions.find((s) => s.id === targetSessionId) || sessions[1] || {
+    id: 's-102',
+    code: 'CS302',
+    title: 'Database Management Systems',
+    faculty: 'Dr. R. Verma',
+    day: 'mon',
+    periodId: 'P2',
+    room: 'LH-102',
+  };
 
   const handleLoadSampleSwap = () => {
     const sample = {
@@ -118,22 +134,26 @@ export function ReschedulingPage({ currentUser, onNavigate, onRequireAdmin, onSw
 
   // Grant Permission & Execute Atomic Swap
   const handleGrantPermission = (swap) => {
+    const reqId = swap.requestorSession?.id;
+    const tgtId = swap.targetSession?.id;
+    if (!reqId || !tgtId) return;
+
     // 1. Swap sessions in timetable
     const updatedSessions = sessions.map((s) => {
-      if (s.id === swap.requestorSession.id) {
+      if (s.id === reqId) {
         return {
           ...s,
-          day: swap.targetSession.day,
-          periodId: swap.targetSession.periodId,
-          room: swap.targetSession.room,
+          day: swap.targetSession?.day || s.day,
+          periodId: swap.targetSession?.periodId || s.periodId,
+          room: swap.targetSession?.room || s.room,
         };
       }
-      if (s.id === swap.targetSession.id) {
+      if (s.id === tgtId) {
         return {
           ...s,
-          day: swap.requestorSession.day,
-          periodId: swap.requestorSession.periodId,
-          room: swap.requestorSession.room,
+          day: swap.requestorSession?.day || s.day,
+          periodId: swap.requestorSession?.periodId || s.periodId,
+          room: swap.requestorSession?.room || s.room,
         };
       }
       return s;
@@ -483,7 +503,13 @@ export function ReschedulingPage({ currentUser, onNavigate, onRequireAdmin, onSw
               <p>There are no pending permission requests. Click "Propose Lecture Swap" to simulate a new request.</p>
             </div>
           ) : (
-            pendingSwaps.map((swap) => (
+            pendingSwaps.map((swap) => {
+              const req = swap.requestorSession || {};
+              const tgt = swap.targetSession || {};
+              const reqDay = req.dayName || dayNamesMap[req.day] || req.day?.toUpperCase() || 'MON';
+              const tgtDay = tgt.dayName || dayNamesMap[tgt.day] || tgt.day?.toUpperCase() || 'MON';
+
+              return (
               <div key={swap.id} className="swap-approval-card animate-card-lift">
                 {/* Header */}
                 <div className="swap-card-top-bar">
@@ -517,15 +543,15 @@ export function ReschedulingPage({ currentUser, onNavigate, onRequireAdmin, onSw
                     <div className="matrix-diff-box">
                       <div className="diff-row">
                         <span className="diff-label">Course:</span>
-                        <strong className="diff-val">{swap.requestorSession.code} • {swap.requestorSession.title}</strong>
+                        <strong className="diff-val">{req.code || 'CS301'} • {req.title || 'Lecture Session'}</strong>
                       </div>
                       <div className="diff-row">
                         <span className="diff-label">Before:</span>
-                        <span className="diff-before">{swap.requestorSession.dayName} {swap.requestorSession.periodId} ({swap.requestorSession.room})</span>
+                        <span className="diff-before">{reqDay} {req.periodId || 'P1'} ({req.room || 'LH-101'})</span>
                       </div>
                       <div className="diff-row">
                         <span className="diff-label">Proposed:</span>
-                        <span className="diff-after">{swap.targetSession.dayName} {swap.targetSession.periodId} ({swap.targetSession.room})</span>
+                        <span className="diff-after">{tgtDay} {tgt.periodId || 'P2'} ({tgt.room || 'LH-102'})</span>
                       </div>
                     </div>
                   </div>
@@ -546,15 +572,15 @@ export function ReschedulingPage({ currentUser, onNavigate, onRequireAdmin, onSw
                     <div className="matrix-diff-box">
                       <div className="diff-row">
                         <span className="diff-label">Course:</span>
-                        <strong className="diff-val">{swap.targetSession.code} • {swap.targetSession.title}</strong>
+                        <strong className="diff-val">{tgt.code || 'CS302'} • {tgt.title || 'Lecture Session'}</strong>
                       </div>
                       <div className="diff-row">
                         <span className="diff-label">Before:</span>
-                        <span className="diff-before">{swap.targetSession.dayName} {swap.targetSession.periodId} ({swap.targetSession.room})</span>
+                        <span className="diff-before">{tgtDay} {tgt.periodId || 'P2'} ({tgt.room || 'LH-102'})</span>
                       </div>
                       <div className="diff-row">
                         <span className="diff-label">Proposed:</span>
-                        <span className="diff-after">{swap.requestorSession.dayName} {swap.requestorSession.periodId} ({swap.requestorSession.room})</span>
+                        <span className="diff-after">{reqDay} {req.periodId || 'P1'} ({req.room || 'LH-101'})</span>
                       </div>
                     </div>
                   </div>
@@ -568,11 +594,11 @@ export function ReschedulingPage({ currentUser, onNavigate, onRequireAdmin, onSw
                   </div>
                   <div className="v-metric-item">
                     <span className="v-metric-label">Sessions Moved:</span>
-                    <strong className="v-metric-val score-green">{swap.movedSessionsCount} Sessions (Minimal Impact)</strong>
+                    <strong className="v-metric-val score-green">{swap.movedSessionsCount || 2} Sessions (Minimal Impact)</strong>
                   </div>
                   <div className="v-metric-item">
                     <span className="v-metric-label">Affected Cohorts:</span>
-                    <span className="v-metric-val">{swap.requestorSession.group}, {swap.targetSession.group}</span>
+                    <span className="v-metric-val">{req.group || 'CSE-3'}, {tgt.group || 'CSE-3'}</span>
                   </div>
                 </div>
 
@@ -606,7 +632,8 @@ export function ReschedulingPage({ currentUser, onNavigate, onRequireAdmin, onSw
                   </div>
                 </div>
               </div>
-            ))
+            );
+          })
           )}
         </div>
       )}
@@ -961,6 +988,11 @@ export function ReschedulingPage({ currentUser, onNavigate, onRequireAdmin, onSw
         <div className="swaps-list-container">
           {resolvedSwaps.map((swap) => {
             const isApproved = swap.status === 'APPROVED_SWAPPED';
+            const req = swap.requestorSession || {};
+            const tgt = swap.targetSession || {};
+            const reqDay = req.dayName || dayNamesMap[req.day] || req.day?.toUpperCase() || 'MON';
+            const tgtDay = tgt.dayName || dayNamesMap[tgt.day] || tgt.day?.toUpperCase() || 'MON';
+
             return (
               <div key={swap.id} className="swap-history-card">
                 <div className="history-header">
@@ -976,7 +1008,7 @@ export function ReschedulingPage({ currentUser, onNavigate, onRequireAdmin, onSw
                 </div>
 
                 <div style={{ fontSize: 13, color: '#334155', marginTop: 8 }}>
-                  <strong>Swapped Slots:</strong> {swap.requestorSession.code} ({swap.requestorSession.dayName} {swap.requestorSession.periodId}) with {swap.targetSession.code} ({swap.targetSession.dayName} {swap.targetSession.periodId}).
+                  <strong>Swapped Slots:</strong> {req.code || 'Class'} ({reqDay} {req.periodId || 'Slot'}) with {tgt.code || 'Class'} ({tgtDay} {tgt.periodId || 'Slot'}).
                 </div>
 
                 {isApproved && (

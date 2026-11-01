@@ -243,14 +243,61 @@ export const COURSES_CATALOG = [
 export const INITIAL_TIMETABLE_SESSIONS = [
   // Monday Academic (P1 - P9)
   { id: 's-101', day: 'mon', periodId: 'P1', code: 'CS301', title: 'Operating Systems', type: 'lecture', group: 'CSE-3', faculty: 'Dr. A. Sharma', room: 'LH-101', capacity: 90, enrolled: 78, notes: 'Core OS lecture series.' },
+  { id: 's-101-b', day: 'mon', periodId: 'P1', code: 'ME202', title: 'Dynamics of Machinery', type: 'lecture', group: 'ME-2', faculty: 'Prof. Rohit Kulkarni', room: 'LH-203', capacity: 120, enrolled: 85 },
+  { id: 's-101-c', day: 'mon', periodId: 'P1', code: 'EC202', title: 'Analog Circuits', type: 'lecture', group: 'ECE-2', faculty: 'Dr. Harish Natarajan', room: 'LH-301', capacity: 100, enrolled: 72 },
+  { id: 's-101-d', day: 'mon', periodId: 'P1', code: 'CS202L', title: 'Web Architecture Lab', type: 'lab', group: 'CSE-2', faculty: 'Prof. Meera Nair', room: 'Lab-2', capacity: 45, enrolled: 44 },
+  { id: 's-101-e', day: 'mon', periodId: 'P1', code: 'EC205L', title: 'Circuits & Simulation Lab', type: 'lab', group: 'ECE-2', faculty: 'Prof. Arun Balaji', room: 'Lab-5', capacity: 50, enrolled: 46 },
+  { id: 's-101-f', day: 'mon', periodId: 'P1', code: 'MA201', title: 'Discrete Mathematical Structures', type: 'lecture', group: 'Y2-SecA', faculty: 'Dr. Kavitha Selvan', room: 'CR-201', capacity: 60, enrolled: 58 },
+  { id: 's-101-g', day: 'mon', periodId: 'P1', code: 'CH102L', title: 'Applied Sciences Lab', type: 'lab', group: 'Y1-SecC', faculty: 'Prof. John Paul', room: 'Lab-7', capacity: 60, enrolled: 52 },
+
   { id: 's-102', day: 'mon', periodId: 'P2', code: 'CS302', title: 'Database Management Systems', type: 'lecture', group: 'CSE-3', faculty: 'Dr. R. Verma', room: 'LH-102', capacity: 90, enrolled: 82 },
+  { id: 's-102-b', day: 'mon', periodId: 'P2', code: 'ME304', title: 'Heat Transfer Fundamentals', type: 'lecture', group: 'ME-3', faculty: 'Dr. Madhavan Iyer', room: 'LH-201', capacity: 120, enrolled: 90 },
+  { id: 's-102-c', day: 'mon', periodId: 'P2', code: 'EC304', title: 'Digital Signal Processing', type: 'lecture', group: 'ECE-3', faculty: 'Prof. Ananya Sen', room: 'LH-303', capacity: 100, enrolled: 70 },
+  { id: 's-102-d', day: 'mon', periodId: 'P2', code: 'CS202L', title: 'Web Architecture Lab (Contd)', type: 'lab', group: 'CSE-2', faculty: 'Prof. Meera Nair', room: 'Lab-2', capacity: 45, enrolled: 44 },
+  { id: 's-102-e', day: 'mon', periodId: 'P2', code: 'CAD-LAB', title: 'CAD/CAM Solid Modeling', type: 'lab', group: 'ME-3', faculty: 'Prof. Arvind Joshi', room: 'Lab-6', capacity: 40, enrolled: 38 },
+  { id: 's-102-f', day: 'mon', periodId: 'P2', code: 'EE101', title: 'Basic Electrical Engineering', type: 'lecture', group: 'EE-1', faculty: 'Prof. Dinesh Rao', room: 'CR-102', capacity: 60, enrolled: 55 },
+  { id: 's-102-g', day: 'mon', periodId: 'P2', code: 'AI301', title: 'Machine Learning Principles', type: 'lecture', group: 'CSE-3', faculty: 'Dr. Anand Kumar', room: 'LH-103', capacity: 90, enrolled: 88 },
+
   { id: 's-103', day: 'mon', periodId: 'P3', code: 'EC204', title: 'Signals & Linear Systems', type: 'lecture', group: 'ECE-2', faculty: 'Prof. K. Patel', room: 'LH-201', capacity: 120, enrolled: 68 },
+  { id: 's-103-b', day: 'mon', periodId: 'P3', code: 'CS304', title: 'Software Engineering & Agile', type: 'lecture', group: 'CSE-3', faculty: 'Prof. Meera Nair', room: 'LH-101', capacity: 90, enrolled: 84 },
+  { id: 's-103-c', day: 'mon', periodId: 'P3', code: 'ME101', title: 'Engineering Graphics & Design', type: 'tutorial', group: 'ME-1', faculty: 'Dr. C. Balakrishnan', room: 'CR-202', capacity: 60, enrolled: 56 },
+  { id: 's-103-d', day: 'mon', periodId: 'P3', code: 'ROBO-LAB', title: 'Robotics Kinematics Practical', type: 'lab', group: 'CSE-4', faculty: 'Prof. Priya Chandran', room: 'Lab-4', capacity: 40, enrolled: 39 },
+  { id: 's-103-e', day: 'mon', periodId: 'P3', code: 'AI-DIST', title: 'Distinguished Guest AI Colloquium', type: 'lecture', group: 'General', faculty: 'Dr. Shalini Gupta', room: 'Sem-A', capacity: 150, enrolled: 135 },
+  { id: 's-103-f', day: 'mon', periodId: 'P3', code: 'IT203', title: 'Data Communication Systems', type: 'lecture', group: 'IT-2', faculty: 'Prof. Ashwin Thomas', room: 'LH-302', capacity: 100, enrolled: 65 },
+
   { id: 's-104', day: 'mon', periodId: 'P4', code: 'MA101', title: 'Engineering Mathematics I', type: 'tutorial', group: 'Y1-SecA', faculty: 'Dr. S. Radhakrishnan', room: 'CR-101', capacity: 60, enrolled: 58 },
+  { id: 's-104-b', day: 'mon', periodId: 'P4', code: 'CS303', title: 'Computer Networks & Protocols', type: 'lecture', group: 'CSE-3', faculty: 'Dr. R. Verma', room: 'LH-103', capacity: 90, enrolled: 80 },
+  { id: 's-104-c', day: 'mon', periodId: 'P4', code: 'ME201', title: 'Thermodynamics & Heat Engines', type: 'lecture', group: 'ME-2', faculty: 'Prof. S. Sen', room: 'LH-202', capacity: 120, enrolled: 76 },
+  { id: 's-104-d', day: 'mon', periodId: 'P4', code: 'EE301', title: 'Power Transmission & Distribution', type: 'lecture', group: 'EE-3', faculty: 'Prof. Dinesh Rao', room: 'CR-203', capacity: 60, enrolled: 52 },
+  { id: 's-104-e', day: 'mon', periodId: 'P4', code: 'NET-LAB', title: 'Network Routing & Switching Lab', type: 'lab', group: 'IT-3', faculty: 'Dr. N. Jena', room: 'Lab-3', capacity: 45, enrolled: 42 },
+
   { id: 's-105-p5', day: 'mon', periodId: 'P5', code: 'HS201', title: 'Professional Ethics', type: 'lecture', group: 'CSE-3', faculty: 'Prof. David Solomon', room: 'LH-101', capacity: 90, enrolled: 75, notes: 'Engineering ethics and standards.' },
+  { id: 's-105-p5-b', day: 'mon', periodId: 'P5', code: 'CS201', title: 'Data Structures & Algorithms', type: 'lecture', group: 'CSE-2', faculty: 'Dr. Anand Kumar', room: 'LH-102', capacity: 90, enrolled: 84 },
+  { id: 's-105-p5-c', day: 'mon', periodId: 'P5', code: 'EC201', title: 'Electronic Devices & Circuits', type: 'lecture', group: 'ECE-2', faculty: 'Dr. Harish Natarajan', room: 'LH-202', capacity: 120, enrolled: 95 },
+  { id: 's-105-p5-d', day: 'mon', periodId: 'P5', code: 'MA102', title: 'Differential Equations', type: 'tutorial', group: 'Y1-SecB', faculty: 'Dr. Kavitha Selvan', room: 'CR-103', capacity: 60, enrolled: 54 },
+  { id: 's-105-p5-e', day: 'mon', periodId: 'P5', code: 'EE202', title: 'Digital Electronics', type: 'lecture', group: 'EE-2', faculty: 'Dr. Sanjay Bhatt', room: 'CR-102', capacity: 60, enrolled: 50 },
+
   { id: 's-105', day: 'mon', periodId: 'P6', code: 'CS305L', title: 'OS & Systems Programming Lab', type: 'lab', group: 'CSE-3', faculty: 'Dr. A. Sharma', room: 'Lab-1', capacity: 45, enrolled: 42 },
+  { id: 's-105-net', day: 'mon', periodId: 'P6', code: 'NET-LAB', title: 'Cloud & Network Systems Lab', type: 'lab', group: 'IT-3', faculty: 'Dr. R. Verma', room: 'Lab-3', capacity: 45, enrolled: 40 },
+  { id: 's-105-vlsi', day: 'mon', periodId: 'P6', code: 'VLSI-LAB', title: 'VLSI Verilog Simulation', type: 'lab', group: 'ECE-3', faculty: 'Prof. K. Patel', room: 'Lab-5', capacity: 50, enrolled: 48 },
+  { id: 's-105-me', day: 'mon', periodId: 'P6', code: 'ME302', title: 'Design of Machine Elements', type: 'lecture', group: 'ME-3', faculty: 'Dr. Madhavan Iyer', room: 'LH-301', capacity: 100, enrolled: 82 },
+  { id: 's-105-chem', day: 'mon', periodId: 'P6', code: 'CH101', title: 'Engineering Chemistry', type: 'lecture', group: 'Y1-SecD', faculty: 'Prof. John Paul', room: 'CR-101', capacity: 60, enrolled: 57 },
+
   { id: 's-106', day: 'mon', periodId: 'P7', code: 'CS305L', title: 'OS & Systems Lab (Contd)', type: 'lab', group: 'CSE-3', faculty: 'Dr. A. Sharma', room: 'Lab-1', capacity: 45, enrolled: 42 },
+  { id: 's-106-net', day: 'mon', periodId: 'P7', code: 'NET-LAB', title: 'Cloud & Networks (Contd)', type: 'lab', group: 'IT-3', faculty: 'Dr. R. Verma', room: 'Lab-3', capacity: 45, enrolled: 40 },
+  { id: 's-106-vlsi', day: 'mon', periodId: 'P7', code: 'VLSI-LAB', title: 'VLSI Simulation (Contd)', type: 'lab', group: 'ECE-3', faculty: 'Prof. K. Patel', room: 'Lab-5', capacity: 50, enrolled: 48 },
+  { id: 's-106-me', day: 'mon', periodId: 'P7', code: 'ME302', title: 'Machine Elements Design (Contd)', type: 'lecture', group: 'ME-3', faculty: 'Dr. Madhavan Iyer', room: 'LH-301', capacity: 100, enrolled: 82 },
+  { id: 's-106-phy', day: 'mon', periodId: 'P7', code: 'PH102', title: 'Applied Physics Tutorial', type: 'tutorial', group: 'Y1-SecB', faculty: 'Dr. Maya Nambiar', room: 'CR-102', capacity: 60, enrolled: 52 },
+
   { id: 's-107', day: 'mon', periodId: 'P8', code: 'ME201', title: 'Thermodynamics & Heat Engines', type: 'lecture', group: 'ME-2', faculty: 'Prof. S. Sen', room: 'LH-202', capacity: 120, enrolled: 74 },
+  { id: 's-107-b', day: 'mon', periodId: 'P8', code: 'CS306', title: 'Deep Learning & Neural Networks', type: 'lecture', group: 'CSE-3', faculty: 'Dr. R. Verma', room: 'LH-201', capacity: 120, enrolled: 98 },
+  { id: 's-107-c', day: 'mon', periodId: 'P8', code: 'CR-FLUID', title: 'Applied Fluid Mechanics', type: 'tutorial', group: 'ME-2', faculty: 'Dr. C. Balakrishnan', room: 'CR-202', capacity: 60, enrolled: 54 },
+  { id: 's-107-d', day: 'mon', periodId: 'P8', code: 'ROBO-EXP', title: 'Autonomous Robotics Experimentation', type: 'lab', group: 'ME-4', faculty: 'Prof. Rohit Kulkarni', room: 'Lab-4', capacity: 40, enrolled: 36 },
+
   { id: 's-108', day: 'mon', periodId: 'P9', code: 'IT201', title: 'OOP in Java', type: 'tutorial', group: 'IT-2', faculty: 'Dr. N. Jena', room: 'LH-103', capacity: 90, enrolled: 65 },
+  { id: 's-108-b', day: 'mon', periodId: 'P9', code: 'CS203', title: 'Computer Organization & Architecture', type: 'lecture', group: 'CSE-2', faculty: 'Prof. Divya Swaminathan', room: 'LH-102', capacity: 90, enrolled: 78 },
+  { id: 's-108-c', day: 'mon', periodId: 'P9', code: 'EC203', title: 'Digital Systems & Logic Design', type: 'lecture', group: 'ECE-2', faculty: 'Prof. Arun Balaji', room: 'LH-203', capacity: 120, enrolled: 80 },
+  { id: 's-108-d', day: 'mon', periodId: 'P9', code: 'MA202', title: 'Graph Theory & Combinatorics', type: 'tutorial', group: 'CSE-2', faculty: 'Dr. Kavitha Selvan', room: 'CR-201', capacity: 60, enrolled: 55 },
 
   // Monday Evening Events (P10 - P13)
   { id: 'ev-101', day: 'mon', periodId: 'P10', code: 'CIT-CLUB', title: 'CIT Coding Club - DSA Sprint', type: 'event', group: 'CSE-3', faculty: 'Dr. A. Sharma', room: 'Lab-1', capacity: 45, enrolled: 45, notes: 'Evening algorithmic problem-solving sprint.' },
@@ -342,7 +389,7 @@ export const INITIAL_TIMETABLE_SESSIONS = [
 // Helper to get timetable sessions with localStorage persistence
 export function getStoredTimetableSessions() {
   try {
-    const raw = localStorage.getItem('cit_timetable_sessions_v3');
+    const raw = localStorage.getItem('cit_timetable_sessions_v4');
     if (raw) {
       const parsed = JSON.parse(raw);
       if (Array.isArray(parsed) && parsed.length > 0) {
@@ -352,9 +399,9 @@ export function getStoredTimetableSessions() {
   } catch (err) {
     console.warn('Failed to parse stored sessions, falling back to initial', err);
   }
-  // Initialize v3 with new P1-P13 9AM schedule
+  // Initialize v4 with new P1-P13 9AM schedule & distributed venue sessions
   try {
-    localStorage.setItem('cit_timetable_sessions_v3', JSON.stringify(INITIAL_TIMETABLE_SESSIONS));
+    localStorage.setItem('cit_timetable_sessions_v4', JSON.stringify(INITIAL_TIMETABLE_SESSIONS));
   } catch (e) {
     // ignore
   }
@@ -363,8 +410,8 @@ export function getStoredTimetableSessions() {
 
 export function saveStoredTimetableSessions(sessions) {
   try {
+    localStorage.setItem('cit_timetable_sessions_v4', JSON.stringify(sessions));
     localStorage.setItem('cit_timetable_sessions_v3', JSON.stringify(sessions));
-    localStorage.setItem('cit_timetable_sessions_v2', JSON.stringify(sessions));
   } catch (err) {
     console.error('Failed to save sessions to localStorage', err);
   }
@@ -372,8 +419,8 @@ export function saveStoredTimetableSessions(sessions) {
 
 export function resetStoredTimetableSessions() {
   try {
+    localStorage.setItem('cit_timetable_sessions_v4', JSON.stringify(INITIAL_TIMETABLE_SESSIONS));
     localStorage.setItem('cit_timetable_sessions_v3', JSON.stringify(INITIAL_TIMETABLE_SESSIONS));
-    localStorage.setItem('cit_timetable_sessions_v2', JSON.stringify(INITIAL_TIMETABLE_SESSIONS));
   } catch (err) {
     console.error('Failed to reset sessions in localStorage', err);
   }
@@ -702,7 +749,34 @@ export const INITIAL_LECTURE_SWAPS = [
 export function getStoredLectureSwaps() {
   try {
     const raw = localStorage.getItem('cit_lecture_swaps_v2');
-    if (raw) return JSON.parse(raw);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed)) {
+        return parsed.map((s) => ({
+          ...s,
+          requestorSession: s.requestorSession || {
+            id: 's-101',
+            code: 'CS301',
+            title: 'Operating Systems',
+            day: 'mon',
+            dayName: 'Monday',
+            periodId: 'P1',
+            room: 'LH-101',
+            group: 'CSE-3',
+          },
+          targetSession: s.targetSession || {
+            id: 's-102',
+            code: 'CS302',
+            title: 'Database Management Systems',
+            day: 'mon',
+            dayName: 'Monday',
+            periodId: 'P2',
+            room: 'LH-102',
+            group: 'CSE-3',
+          },
+        }));
+      }
+    }
   } catch (e) {
     console.warn(e);
   }
