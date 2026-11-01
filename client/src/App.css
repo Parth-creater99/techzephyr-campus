@@ -1082,24 +1082,6 @@
   color: var(--text-primary) !important;
 }
 
-.back-hint-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 22px;
-  height: 22px;
-  border-radius: 50%;
-  background: #f1f5f9;
-  color: #64748b;
-  margin-left: 6px;
-  transition: all 0.2s;
-}
-
-.brand-logo-wrap:hover .back-hint-badge {
-  background: #0f172a;
-  color: #ffffff;
-}
-
 .sidebar-link {
   color: #475569 !important;
 }

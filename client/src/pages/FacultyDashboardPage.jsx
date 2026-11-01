@@ -26,14 +26,21 @@ import {
   Pause,
   MessageSquare,
   Send,
+  Bell,
+  Bot,
+  Settings as SettingsIcon,
+  Check,
+  X,
+  RefreshCw,
+  ExternalLink,
 } from 'lucide-react';
 import { Modal } from '../components/Modal';
 import {
   getStoredTimetableSessions,
   saveStoredTimetableSessions,
-  WEEKLY_ACTIVITY_DATA,
+  PERIODS,
+  WEEKDAYS,
   FACULTY_DATA,
-  STUDENT_GROUPS,
   ROOMS_DATA,
 } from '../services/mockData';
 import './FacultyDashboardPage.css';
@@ -109,10 +116,69 @@ const INITIAL_DAILY_NOTICES = [
   },
 ];
 
+// Sample Pending Swaps
+const SAMPLE_SWAP_REQUESTS = [
+  {
+    id: 'sw-1',
+    dept: 'CSE',
+    faculty: 'Dr. P. Mishra',
+    time: '09:00 AM Lab (CS305L)',
+    target: 'Monday P2 Lecture (CS302)',
+    status: 'Swap Pending',
+    reason: 'Urgent Departmental Committee Hearing',
+  },
+  {
+    id: 'sw-2',
+    dept: 'ME',
+    faculty: 'Prof. K. Das',
+    time: '11:00 AM Lecture (ME201)',
+    target: 'Tuesday P4 Tutorial (ME203)',
+    status: 'Swap Pending',
+    reason: 'Accreditation Lab Inspection Duty',
+  },
+  {
+    id: 'sw-3',
+    dept: 'ECE',
+    faculty: 'Prof. Ananya Sen',
+    time: '02:00 PM Signals (EC204)',
+    target: 'Wednesday P1 Circuits (EC201)',
+    status: 'Swap Pending',
+    reason: 'Guest Lecturer Accompaniment',
+  },
+];
+
+// Sample System Notifications
+const SAMPLE_SYSTEM_NOTIFICATIONS = [
+  {
+    id: 'notif-sys-1',
+    type: 'schedule',
+    title: 'Timetable Matrix Synchronized',
+    time: '17m ago',
+    desc: 'Real time updated Dr. A. Sharma schedule • 0 clash violations detected across 189 slots.',
+    icon: 'bell',
+  },
+  {
+    id: 'notif-sys-2',
+    type: 'ai',
+    title: 'AI Assistant Suggestion',
+    time: '12m ago',
+    desc: 'Real time updates tomorrow: Room Lab-1 has a 1-hour free window at Wednesday P4.',
+    icon: 'bot',
+  },
+  {
+    id: 'notif-sys-3',
+    type: 'venue',
+    title: 'Auditorium Booking Confirmed',
+    time: '45m ago',
+    desc: 'Central Auditorium cleared for Spectra Tech Fest rehearsal at 18:00 (P10).',
+    icon: 'building',
+  },
+];
+
 export function FacultyDashboardPage({ currentUser, onNavigate }) {
   const [sessions, setSessions] = useState(getStoredTimetableSessions);
   const [activeWeekdayId, setActiveWeekdayId] = useState('mon');
-  const [hoveredSlice, setHoveredSlice] = useState(null);
+  const [activeSlideIndex, setActiveSlideIndex] = useState(0);
 
   // 1. Sliding Daily Notice State
   const [dailyNotices, setDailyNotices] = useState(() => {
@@ -189,7 +255,6 @@ export function FacultyDashboardPage({ currentUser, onNavigate }) {
   };
 
   // 2. Real Working Calendar State
-  // Default to November 2026 (CIT Academic Semester)
   const [calendarDate, setCalendarDate] = useState(new Date(2026, 10, 1));
   const [selectedCalendarDay, setSelectedCalendarDay] = useState(1);
 
@@ -221,7 +286,6 @@ export function FacultyDashboardPage({ currentUser, onNavigate }) {
   const [newNoteInput, setNewNoteInput] = useState('');
   const [newNotePriority, setNewNotePriority] = useState('normal');
 
-  // Selected date key: "YYYY-M-D"
   const currentSelectedDateKey = `${calendarDate.getFullYear()}-${calendarDate.getMonth() + 1}-${selectedCalendarDay}`;
   const notesForSelectedDate = calendarNotes[currentSelectedDateKey] || [];
 
@@ -269,7 +333,6 @@ export function FacultyDashboardPage({ currentUser, onNavigate }) {
     localStorage.setItem('cit_calendar_notes_v2', JSON.stringify(updated));
   };
 
-  // Month navigation
   const handlePrevMonth = () => {
     setCalendarDate(new Date(calendarDate.getFullYear(), calendarDate.getMonth() - 1, 1));
     setSelectedCalendarDay(1);
@@ -280,7 +343,6 @@ export function FacultyDashboardPage({ currentUser, onNavigate }) {
     setSelectedCalendarDay(1);
   };
 
-  // Calendar Grid math
   const daysInMonth = new Date(calendarDate.getFullYear(), calendarDate.getMonth() + 1, 0).getDate();
   const firstDayOfWeek = new Date(calendarDate.getFullYear(), calendarDate.getMonth(), 1).getDay();
   const monthNames = [
@@ -303,7 +365,6 @@ export function FacultyDashboardPage({ currentUser, onNavigate }) {
     });
   }, [facultyDeptFilter, facultySearch]);
 
-  // Classes for active weekday
   const weekdayNames = {
     mon: 'Monday',
     tue: 'Tuesday',
@@ -335,220 +396,457 @@ export function FacultyDashboardPage({ currentUser, onNavigate }) {
   const completedCount = dailyClasses.filter((c) => c.status === 'completed').length;
   const completionPercentage = dailyClasses.length > 0 ? Math.round((completedCount / dailyClasses.length) * 100) : 0;
 
-  // Donut chart categories
-  const pieCategories = [
-    { id: 'lectures', name: 'Regular Lectures', count: 110, percent: 58.2, color: '#c54a26' },
-    { id: 'labs', name: 'Specialized Labs', count: 48, percent: 25.4, color: '#db822a' },
-    { id: 'tutorials', name: 'Cohort Tutorials', count: 20, percent: 10.6, color: '#4e7561' },
-    { id: 'exams', name: 'Events & Colloquia', count: 11, percent: 5.8, color: '#3a2216' },
-  ];
-
   const currentNotice = activeNotices[currentNoticeIndex] || activeNotices[0] || INITIAL_DAILY_NOTICES[0];
 
+  // Weekday navigation for Schedule Section
+  const weekdayList = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+  const handlePrevDay = () => {
+    const idx = weekdayList.indexOf(activeWeekdayId);
+    const newIdx = (idx - 1 + weekdayList.length) % weekdayList.length;
+    setActiveWeekdayId(weekdayList[newIdx]);
+    setActiveSlideIndex(0);
+  };
+  const handleNextDay = () => {
+    const idx = weekdayList.indexOf(activeWeekdayId);
+    const newIdx = (idx + 1) % weekdayList.length;
+    setActiveWeekdayId(weekdayList[newIdx]);
+    setActiveSlideIndex(0);
+  };
+
   return (
-    <div className="faculty-dashboard-container animate-fade-in-up">
-      {/* 1. Daily Notice Banner: Clean, Minimalist */}
-      <div className="daily-notice-clean">
-        <div className="notice-top-clean">
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            <span className={`notice-category-tag ${currentNotice.category}`}>
-              {currentNotice.categoryName || 'Notice'}
+    <div className="faculty-dashboard-container animate-fade-in-up" style={{ paddingBottom: 40 }}>
+      {/* ==========================================================================
+          TOP GREETING & ROLE INDICATOR BAR
+          ========================================================================== */}
+      <div
+        style={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          flexWrap: 'wrap',
+          gap: 12,
+          marginBottom: 18,
+        }}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+          <h2 style={{ fontSize: 24, fontWeight: 900, color: 'var(--text-primary)', margin: 0 }}>
+            Welcome back, {currentUser?.name || 'Dr. A. Sharma'}! 👋
+          </h2>
+          <span
+            style={{
+              fontSize: 12,
+              fontWeight: 800,
+              background: '#fff0eb',
+              color: 'var(--accent-terracotta)',
+              border: '1.5px solid #fed7aa',
+              padding: '3px 12px',
+              borderRadius: 9999,
+            }}
+          >
+            Lecturer Mode
+          </span>
+          <span
+            style={{
+              fontSize: 11.5,
+              fontWeight: 700,
+              background: '#f1f5f9',
+              color: '#475569',
+              padding: '3px 10px',
+              borderRadius: 9999,
+            }}
+          >
+            HOD CSE • Cabin A-201
+          </span>
+        </div>
+
+        <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+          <button
+            type="button"
+            className="app-btn-outline"
+            style={{ fontSize: 12, padding: '7px 14px' }}
+            onClick={() => onNavigate?.('timetable')}
+          >
+            <Clock size={14} />
+            <span>Master Schedule (P1–P13)</span>
+          </button>
+          <button
+            type="button"
+            className="app-btn-lime"
+            style={{ fontSize: 12, padding: '7px 14px' }}
+            onClick={() => setIsPostNoticeOpen(true)}
+          >
+            <Plus size={14} />
+            <span>Post Daily Notice</span>
+          </button>
+        </div>
+      </div>
+
+      {/* ==========================================================================
+          1. Hero Animated Sliding Daily Notice Board
+          ========================================================================== */}
+      <div className="daily-notice-hero-card">
+        <div className="notice-hero-top">
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <span className="notice-badge-pulsing">
+              <span className="pulse-dot-red" />
+              <span>LIVE CAMPUS DAILY NOTICES &amp; UPDATES</span>
             </span>
-            <span style={{ fontSize: 12, color: '#64748b' }}>
-              <Clock size={12} style={{ display: 'inline', marginRight: 4, verticalAlign: 'middle' }} />
-              {currentNotice.time}
+            <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>
+              Real-time faculty absences, extra class swaps, and visiting dignitaries
             </span>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            {['all', 'absence', 'extra', 'guest'].map((cat) => (
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            {/* Category filter pills */}
+            <div className="clean-mode-pill-container" style={{ padding: 2 }}>
               <button
-                key={cat}
                 type="button"
-                className={`venue-filter-btn-clean ${noticeFilter === cat ? 'active' : ''}`}
-                style={{ padding: '2px 8px', fontSize: 11 }}
+                className={`mode-toggle-btn ${noticeFilter === 'all' ? 'active' : ''}`}
+                style={{ padding: '4px 10px', fontSize: 11 }}
                 onClick={() => {
-                  setNoticeFilter(cat);
+                  setNoticeFilter('all');
                   setCurrentNoticeIndex(0);
                 }}
               >
-                {cat === 'all' ? 'All' : cat === 'absence' ? 'Absences' : cat === 'extra' ? 'Extra' : 'Guests'}
+                All ({dailyNotices.length})
               </button>
-            ))}
-
-            <button
-              type="button"
-              className="venue-btn-subtle"
-              style={{ padding: '3px 8px', fontSize: 11 }}
-              onClick={() => setIsPostNoticeOpen(true)}
-            >
-              <Plus size={12} />
-              <span>Post</span>
-            </button>
-          </div>
-        </div>
-
-        <div className="notice-body-clean">
-          <div className="notice-title-clean">{currentNotice.title}</div>
-          <div className="notice-detail-clean">{currentNotice.details}</div>
-        </div>
-
-        <div className="notice-footer-clean">
-          <span style={{ fontSize: 11.5, color: '#94a3b8' }}>
-            {currentNoticeIndex + 1} of {activeNotices.length} updates
-          </span>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <button
-              type="button"
-              className="notice-arrow-btn-clean"
-              onClick={handlePrevNotice}
-              title="Previous"
-            >
-              <ChevronLeft size={14} />
-            </button>
-            <button
-              type="button"
-              className="notice-arrow-btn-clean"
-              onClick={handleNextNotice}
-              title="Next"
-            >
-              <ChevronRight size={14} />
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* 2. Faculty Statistics: Minimalist Metric Strip (Zero visual clutter) */}
-      <div className="faculty-metrics-strip">
-        <div className="faculty-metric-col">
-          <div className="faculty-metric-number">40</div>
-          <div className="faculty-metric-label">Total Faculty</div>
-          <div className="faculty-metric-sub">38 on campus &bull; 2 on leave</div>
-        </div>
-        <div className="faculty-metric-col">
-          <div className="faculty-metric-number">243h</div>
-          <div className="faculty-metric-label">Weekly Teaching Load</div>
-          <div className="faculty-metric-sub">189 Mon–Sat sessions</div>
-        </div>
-        <div className="faculty-metric-col">
-          <div className="faculty-metric-number">3.8h</div>
-          <div className="faculty-metric-label">Daily Average per Faculty</div>
-          <div className="faculty-metric-sub">Statutory limit: 5.0h</div>
-        </div>
-        <div className="faculty-metric-col">
-          <div className="faculty-metric-number">100%</div>
-          <div className="faculty-metric-label">Policy Adherence</div>
-          <div className="faculty-metric-sub">0 active collisions</div>
-        </div>
-      </div>
-
-      {/* 3. Department Workload Distribution (Single Clean Card) */}
-      <div className="dept-distribution-clean">
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span style={{ fontSize: 13, fontWeight: 700, color: '#0f172a' }}>Department Workload Distribution</span>
-          <span style={{ fontSize: 11.5, color: '#64748b' }}>5 academic departments</span>
-        </div>
-        {[
-          { name: 'Computer Science (CSE)', faculty: 10, hours: 62, width: '85%' },
-          { name: 'Electronics & Comm (ECE)', faculty: 8, hours: 54, width: '74%' },
-          { name: 'Mechanical Eng (ME)', faculty: 7, hours: 46, width: '63%' },
-          { name: 'Information Tech (IT)', faculty: 8, hours: 48, width: '66%' },
-          { name: 'General & Sciences', faculty: 7, hours: 33, width: '45%' },
-        ].map((d) => (
-          <div key={d.name} className="dept-row-clean">
-            <span className="dept-name-clean">{d.name}</span>
-            <div className="dept-bar-track-clean">
-              <div className="dept-bar-fill-clean" style={{ width: d.width }} />
+              <button
+                type="button"
+                className={`mode-toggle-btn ${noticeFilter === 'absence' ? 'active' : ''}`}
+                style={{ padding: '4px 10px', fontSize: 11 }}
+                onClick={() => {
+                  setNoticeFilter('absence');
+                  setCurrentNoticeIndex(0);
+                }}
+              >
+                Absences (2)
+              </button>
+              <button
+                type="button"
+                className={`mode-toggle-btn ${noticeFilter === 'extra' ? 'active' : ''}`}
+                style={{ padding: '4px 10px', fontSize: 11 }}
+                onClick={() => {
+                  setNoticeFilter('extra');
+                  setCurrentNoticeIndex(0);
+                }}
+              >
+                Extra Classes (2)
+              </button>
+              <button
+                type="button"
+                className={`mode-toggle-btn ${noticeFilter === 'guest' ? 'active' : ''}`}
+                style={{ padding: '4px 10px', fontSize: 11 }}
+                onClick={() => {
+                  setNoticeFilter('guest');
+                  setCurrentNoticeIndex(0);
+                }}
+              >
+                Guest Speakers (2)
+              </button>
             </div>
-            <span className="dept-count-clean">{d.faculty} fac &bull; {d.hours}h</span>
-          </div>
-        ))}
-      </div>
-
-      {/* 4. Real Working Calendar & Notes Workspace (Clean Minimalist) */}
-      <div className="calendar-workspace-clean">
-        <div className="calendar-header-clean">
-          <div className="calendar-month-text">
-            {monthNames[calendarDate.getMonth()]} {calendarDate.getFullYear()} &bull; Agenda &amp; Tasks
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-            <button
-              type="button"
-              className="notice-arrow-btn-clean"
-              onClick={handlePrevMonth}
-              title="Previous Month"
-            >
-              <ChevronLeft size={14} />
-            </button>
-            <button
-              type="button"
-              className="venue-filter-btn-clean"
-              style={{ fontSize: 11.5 }}
-              onClick={() => {
-                setCalendarDate(new Date(2026, 10, 1));
-                setSelectedCalendarDay(1);
-              }}
-            >
-              Today
-            </button>
-            <button
-              type="button"
-              className="notice-arrow-btn-clean"
-              onClick={handleNextMonth}
-              title="Next Month"
-            >
-              <ChevronRight size={14} />
-            </button>
           </div>
         </div>
 
-        {/* 2-Column Split: Calendar Grid on Left + Notes on Right */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: 16 }}>
-          {/* Calendar Grid */}
+        {/* Sliding Card Viewport */}
+        <div className="notice-carousel-viewport">
+          {currentNotice && (
+            <div
+              key={currentNotice.id}
+              className={`notice-slide-card notice-type-${currentNotice.category} animate-fade-in`}
+            >
+              <div className="notice-header-row">
+                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                  <span className="notice-category-pill">
+                    {currentNotice.category === 'absence' && '🔴 ABSENCE NOTICE'}
+                    {currentNotice.category === 'extra' && '⚡ EXTRA CLASS'}
+                    {currentNotice.category === 'guest' && '🌟 DISTINGUISHED GUEST'}
+                    {currentNotice.category === 'event' && '✦ SPECIAL EVENT'}
+                  </span>
+                  <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)' }}>
+                    {currentNotice.categoryName}
+                  </span>
+                </div>
+
+                <div className="notice-time-pill">
+                  <Clock size={13} />
+                  <span>{currentNotice.time}</span>
+                </div>
+              </div>
+
+              <div className="notice-title-main">{currentNotice.title}</div>
+              <div className="notice-detail-text">{currentNotice.details}</div>
+            </div>
+          )}
+        </div>
+
+        {/* Carousel Bottom Controls */}
+        <div className="notice-controls-row">
+          <div className="notice-indicators-wrap">
+            {activeNotices.map((_, idx) => (
+              <button
+                key={idx}
+                type="button"
+                className={`notice-indicator-dot ${currentNoticeIndex === idx ? 'active' : ''}`}
+                onClick={() => setCurrentNoticeIndex(idx)}
+                title={`Go to notice ${idx + 1}`}
+              />
+            ))}
+          </div>
+
+          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+            <button
+              type="button"
+              className="prompt-chip-btn"
+              onClick={() => setIsNoticeAutoPlay(!isNoticeAutoPlay)}
+              style={{ fontSize: 11, padding: '3px 8px', display: 'flex', alignItems: 'center', gap: 4 }}
+            >
+              {isNoticeAutoPlay ? <Pause size={11} /> : <Play size={11} />}
+              <span>{isNoticeAutoPlay ? 'Auto-Sliding' : 'Paused'}</span>
+            </button>
+
+            <div className="notice-nav-arrows">
+              <button
+                type="button"
+                className="notice-arrow-btn"
+                onClick={handlePrevNotice}
+                title="Previous Notice"
+              >
+                <ChevronLeft size={16} />
+              </button>
+              <button
+                type="button"
+                className="notice-arrow-btn"
+                onClick={handleNextNotice}
+                title="Next Notice"
+              >
+                <ChevronRight size={16} />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ==========================================================================
+          2. Weekly Teaching Overview & Institutional Stats
+          ========================================================================== */}
+      <div className="dashboard-scroll-section">
+        <div className="dashboard-section-header">
           <div>
-            <table className="calendar-grid-clean">
+            <h3 className="dashboard-section-title">
+              <BarChart3 size={20} color="var(--accent-terracotta)" />
+              <span>Weekly Teaching Overview &amp; Faculty Workload</span>
+            </h3>
+            <p className="dashboard-section-sub">
+              189 teaching sessions across 40 senior faculty &bull; 100% Conflict-Free Scheduling Matrix
+            </p>
+          </div>
+
+          <button
+            type="button"
+            className="app-btn-outline"
+            style={{ fontSize: 12, padding: '6px 12px' }}
+            onClick={() => onNavigate?.('settings')}
+          >
+            <SettingsIcon size={14} />
+            <span>Overview Settings</span>
+          </button>
+        </div>
+
+        {/* 4 Core KPI Stat Cards */}
+        <div className="faculty-stats-grid-cards">
+          <div className="fac-stat-box">
+            <div className="fac-stat-icon-wrap" style={{ background: '#fdf2ed', color: '#c54a26' }}>
+              <CalendarIcon size={22} />
+            </div>
+            <div>
+              <div className="fac-stat-val">189 Sessions</div>
+              <div className="fac-stat-label">243 Weekly Teaching Hours</div>
+              <div className="fac-stat-sub">
+                <strong style={{ color: '#16a34a' }}>100% Scheduled</strong> &bull; 0 Hard Clashes
+              </div>
+            </div>
+          </div>
+
+          <div className="fac-stat-box">
+            <div className="fac-stat-icon-wrap" style={{ background: '#eff6f2', color: '#2d5a45' }}>
+              <Clock size={22} />
+            </div>
+            <div>
+              <div className="fac-stat-val">243 Teaching Hrs</div>
+              <div className="fac-stat-label">Weekly Academic Load</div>
+              <div className="fac-stat-sub">Across 189 Mon–Sat Sessions</div>
+            </div>
+          </div>
+
+          <div className="fac-stat-box">
+            <div className="fac-stat-icon-wrap" style={{ background: '#fef7ee', color: '#9c5912' }}>
+              <Zap size={22} />
+            </div>
+            <div>
+              <div className="fac-stat-val">40 Faculty</div>
+              <div className="fac-stat-label">Senior Teaching Staff</div>
+              <div className="fac-stat-sub">38 On-Campus &bull; 2 On Leave</div>
+            </div>
+          </div>
+
+          <div className="fac-stat-box">
+            <div className="fac-stat-icon-wrap" style={{ background: '#faf2f4', color: '#84283c' }}>
+              <Award size={22} />
+            </div>
+            <div>
+              <div className="fac-stat-val">100% Compliance</div>
+              <div className="fac-stat-label">AI Matrix Governance</div>
+              <div className="fac-stat-sub">0 Clash &bull; Real-time Swap Hub</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Department Workload Distribution Bars */}
+        <div className="dept-workload-bars-grid">
+          <div className="dept-bar-card">
+            <div className="dept-bar-header">
+              <span style={{ color: 'var(--text-primary)' }}>Computer Science (CSE)</span>
+              <span style={{ color: '#c54a26' }}>10 Faculty • 62h</span>
+            </div>
+            <div className="dept-progress-track">
+              <div className="dept-progress-fill" style={{ width: '85%', background: '#c54a26' }} />
+            </div>
+          </div>
+
+          <div className="dept-bar-card">
+            <div className="dept-bar-header">
+              <span style={{ color: 'var(--text-primary)' }}>Electronics &amp; Comm (ECE)</span>
+              <span style={{ color: '#db822a' }}>8 Faculty • 54h</span>
+            </div>
+            <div className="dept-progress-track">
+              <div className="dept-progress-fill" style={{ width: '74%', background: '#db822a' }} />
+            </div>
+          </div>
+
+          <div className="dept-bar-card">
+            <div className="dept-bar-header">
+              <span style={{ color: 'var(--text-primary)' }}>Mechanical Eng (ME)</span>
+              <span style={{ color: '#4e7561' }}>7 Faculty • 46h</span>
+            </div>
+            <div className="dept-progress-track">
+              <div className="dept-progress-fill" style={{ width: '63%', background: '#4e7561' }} />
+            </div>
+          </div>
+
+          <div className="dept-bar-card">
+            <div className="dept-bar-header">
+              <span style={{ color: 'var(--text-primary)' }}>Information Tech (IT)</span>
+              <span style={{ color: '#3a2216' }}>8 Faculty • 48h</span>
+            </div>
+            <div className="dept-progress-track">
+              <div className="dept-progress-fill" style={{ width: '66%', background: '#3a2216' }} />
+            </div>
+          </div>
+
+          <div className="dept-bar-card">
+            <div className="dept-bar-header">
+              <span style={{ color: 'var(--text-primary)' }}>General &amp; EE/Civil</span>
+              <span style={{ color: '#834f96' }}>7 Faculty • 33h</span>
+            </div>
+            <div className="dept-progress-track">
+              <div className="dept-progress-fill" style={{ width: '45%', background: '#834f96' }} />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ==========================================================================
+          3. Weekly Session Activity Matrix (Mon to Sat across P1 to P13)
+          ========================================================================== */}
+      <div className="dashboard-scroll-section">
+        <div className="weekly-activity-card">
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 10 }}>
+            <div>
+              <h3 style={{ fontSize: 17, fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
+                Weekly Session Activity
+              </h3>
+              <span style={{ fontSize: 12.5, color: 'var(--text-secondary)' }}>
+                Monday to Saturday session distribution across periods P1–P13
+              </span>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: 12, fontSize: 11, fontWeight: 700 }}>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                <span style={{ width: 10, height: 10, borderRadius: 3, background: '#c54a26' }} /> CSE
+              </span>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                <span style={{ width: 10, height: 10, borderRadius: 3, background: '#d9822b' }} /> Lab
+              </span>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                <span style={{ width: 10, height: 10, borderRadius: 3, background: '#ea580c' }} /> Busy
+              </span>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                <span style={{ width: 10, height: 10, borderRadius: 3, background: '#9333ea' }} /> Event
+              </span>
+              <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                <span style={{ width: 10, height: 10, borderRadius: 3, background: '#e2e8f0' }} /> Free
+              </span>
+            </div>
+          </div>
+
+          <div className="activity-matrix-scroll">
+            <table className="activity-matrix-table">
               <thead>
                 <tr>
-                  <th className="calendar-th-clean">S</th>
-                  <th className="calendar-th-clean">M</th>
-                  <th className="calendar-th-clean">T</th>
-                  <th className="calendar-th-clean">W</th>
-                  <th className="calendar-th-clean">T</th>
-                  <th className="calendar-th-clean">F</th>
-                  <th className="calendar-th-clean">S</th>
+                  <th style={{ textAlign: 'left', paddingLeft: 10 }}>Day</th>
+                  {PERIODS.map((p) => (
+                    <th key={p.id}>
+                      <div>{p.name}</div>
+                      <div style={{ fontSize: 9.5, opacity: 0.75 }}>{p.time.split(' ')[0]}</div>
+                    </th>
+                  ))}
                 </tr>
               </thead>
               <tbody>
-                {Array.from({ length: 5 }).map((_, weekIdx) => {
+                {['mon', 'tue', 'wed', 'thu', 'fri', 'sat'].map((dayKey) => {
+                  const daySessions = sessions.filter((s) => s.day === dayKey);
+
                   return (
-                    <tr key={weekIdx}>
-                      {Array.from({ length: 7 }).map((_, dayIdx) => {
-                        const cellIndex = weekIdx * 7 + dayIdx;
-                        const dayNum = cellIndex - firstDayOfWeek + 1;
-                        const isCurrentMonth = dayNum > 0 && dayNum <= daysInMonth;
-                        const isSelected = isCurrentMonth && dayNum === selectedCalendarDay;
-                        const isToday = isCurrentMonth && dayNum === 1 && calendarDate.getMonth() === 10;
+                    <tr key={dayKey}>
+                      <td className="day-col">{dayKey.charAt(0).toUpperCase() + dayKey.slice(1)}</td>
+                      {PERIODS.map((p) => {
+                        const match = daySessions.find((s) => s.periodId === p.id);
+                        const isEventSlot = p.type === 'event' || match?.type === 'event';
 
-                        const dateKey = `${calendarDate.getFullYear()}-${calendarDate.getMonth() + 1}-${dayNum}`;
-                        const notesCount = (calendarNotes[dateKey] || []).length;
+                        let cellClass = 'cell-free';
+                        let label = 'Free';
 
-                        if (!isCurrentMonth) {
-                          return <td key={dayIdx} className="calendar-td-clean other-month" />;
+                        if (match) {
+                          if (match.type === 'lab') {
+                            cellClass = 'cell-lab';
+                            label = `${match.code} Lab`;
+                          } else if (isEventSlot) {
+                            cellClass = 'cell-event';
+                            label = match.code;
+                          } else if (match.group?.includes('CSE') || match.code.startsWith('CS')) {
+                            cellClass = 'cell-cse';
+                            label = 'CSE';
+                          } else {
+                            cellClass = 'cell-busy';
+                            label = match.code.substring(0, 5);
+                          }
                         }
 
                         return (
-                          <td
-                            key={dayIdx}
-                            className={`calendar-td-clean ${isSelected ? 'selected' : ''} ${isToday ? 'today' : ''}`}
-                            onClick={() => setSelectedCalendarDay(dayNum)}
-                          >
-                            <span className="cal-date-number">{dayNum}</span>
-                            {notesCount > 0 && (
-                              <div style={{ marginTop: 2 }}>
-                                <span className="cal-note-indicator" title={`${notesCount} notes`} />
-                              </div>
-                            )}
+                          <td key={p.id}>
+                            <div
+                              className={`activity-matrix-cell ${cellClass}`}
+                              onClick={() => {
+                                setActiveWeekdayId(dayKey);
+                              }}
+                              title={
+                                match
+                                  ? `${match.code}: ${match.title}\nFaculty: ${match.faculty}\nRoom: ${match.room} (${p.time})`
+                                  : `${dayKey.toUpperCase()} ${p.name}: Available period`
+                              }
+                            >
+                              {label}
+                            </div>
                           </td>
                         );
                       })}
@@ -558,345 +856,642 @@ export function FacultyDashboardPage({ currentUser, onNavigate }) {
               </tbody>
             </table>
           </div>
-
-          {/* Clean Day Notes Panel */}
-          <div className="day-notes-clean">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <span style={{ fontSize: 13, fontWeight: 700, color: '#0f172a' }}>
-                {monthNames[calendarDate.getMonth()]} {selectedCalendarDay}: Notes ({notesForSelectedDate.length})
-              </span>
-            </div>
-
-            {/* Add Note Input */}
-            <form onSubmit={handleAddCalendarNote} style={{ display: 'flex', gap: 6 }}>
-              <input
-                type="text"
-                className="app-input-field"
-                placeholder="Add task or note..."
-                value={newNoteInput}
-                onChange={(e) => setNewNoteInput(e.target.value)}
-                style={{ flex: 1, padding: '5px 10px', fontSize: 12 }}
-              />
-              <button type="submit" className="venue-btn-primary" style={{ padding: '4px 10px', fontSize: 11.5 }}>
-                Add
-              </button>
-            </form>
-
-            {/* Notes List */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: 4, maxHeight: 220, overflowY: 'auto' }}>
-              {notesForSelectedDate.length === 0 ? (
-                <div style={{ padding: '16px 8px', color: '#94a3b8', fontSize: 12, textAlign: 'center' }}>
-                  No tasks for this day.
-                </div>
-              ) : (
-                notesForSelectedDate.map((note) => (
-                  <div key={note.id} className="day-note-row">
-                    <button
-                      type="button"
-                      onClick={() => handleToggleCalendarNote(note.id)}
-                      style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
-                    >
-                      {note.done ? (
-                        <CheckCircle2 size={15} color="#16a34a" />
-                      ) : (
-                        <Circle size={15} color="#94a3b8" />
-                      )}
-                    </button>
-                    <span className={`day-note-text ${note.done ? 'done' : ''}`}>
-                      {note.text}
-                    </span>
-                    <button
-                      type="button"
-                      onClick={() => handleDeleteCalendarNote(note.id)}
-                      style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#cbd5e1', padding: 2 }}
-                    >
-                      <Trash2 size={12} />
-                    </button>
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
         </div>
       </div>
 
       {/* ==========================================================================
-          4. Live Classes & Venue Occupancy Row (Weekday Sessions)
+          4. Day's Schedule with Day Picker & Carousel Slider
           ========================================================================== */}
-      <div className="dashboard-main-grid" style={{ display: 'flex', gap: 20 }}>
-        {/* Left Column: Active Weekday's Schedule */}
-        <div className="white-app-card" style={{ flex: 1.4 }}>
-          <div className="section-title-wrap" style={{ marginBottom: 14 }}>
+      <div className="dashboard-scroll-section">
+        <div className="day-schedule-card">
+          <div className="day-picker-row">
             <div>
-              <h3 className="section-title" style={{ fontSize: 18 }}>
-                {weekdayNames[activeWeekdayId]}'s Teaching Schedule
-              </h3>
-              <span style={{ fontSize: 12.5, color: 'var(--text-secondary)' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <h3 style={{ fontSize: 18, fontWeight: 900, color: 'var(--text-primary)', margin: 0 }}>
+                  {weekdayNames[activeWeekdayId]}'s Schedule with Day Picker
+                </h3>
+                <span style={{ fontSize: 14, color: '#94a3b8' }}>⌵</span>
+              </div>
+              <span style={{ fontSize: 12.5, color: 'var(--text-secondary)', marginTop: 2, display: 'block' }}>
                 {dailyClasses.length} Scheduled Sessions &bull; {completedCount} Completed ({completionPercentage}%)
               </span>
             </div>
 
-            <div className="weekday-pill-selector">
-              {['mon', 'tue', 'wed', 'thu', 'fri', 'sat'].map((w) => (
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              {/* Day Pills [MON] [TUE] [WED] [THU] [FRI] [SAT] */}
+              <div className="day-picker-pills">
+                {['mon', 'tue', 'wed', 'thu', 'fri', 'sat'].map((w) => (
+                  <button
+                    key={w}
+                    type="button"
+                    className={`day-picker-btn ${activeWeekdayId === w ? 'active' : ''}`}
+                    onClick={() => {
+                      setActiveWeekdayId(w);
+                      setActiveSlideIndex(0);
+                    }}
+                  >
+                    {w.toUpperCase()}
+                  </button>
+                ))}
+              </div>
+
+              {/* Prev / Next day switcher */}
+              <div style={{ display: 'flex', gap: 4 }}>
                 <button
-                  key={w}
                   type="button"
-                  className={`weekday-pill-btn ${activeWeekdayId === w ? 'active' : ''}`}
-                  onClick={() => setActiveWeekdayId(w)}
+                  className="notice-arrow-btn"
+                  onClick={handlePrevDay}
+                  title="Previous Day"
                 >
-                  {w.toUpperCase()}
+                  <ChevronLeft size={15} />
                 </button>
-              ))}
+                <button
+                  type="button"
+                  className="notice-arrow-btn"
+                  onClick={handleNextDay}
+                  title="Next Day"
+                >
+                  <ChevronRight size={15} />
+                </button>
+              </div>
             </div>
           </div>
 
-          <div key={activeWeekdayId} className="daily-schedule-list tab-motion-content" style={{ maxHeight: 360, overflowY: 'auto' }}>
+          {/* Sliding Session Cards Viewport */}
+          <div className="schedule-slider-viewport">
             {dailyClasses.length === 0 ? (
-              <div style={{ padding: '40px 16px', textAlign: 'center', color: 'var(--text-muted)' }}>
-                <CalendarIcon size={32} style={{ margin: '0 auto 8px auto', opacity: 0.5 }} />
-                <p>No classes scheduled for this day.</p>
+              <div style={{ gridColumn: '1 / -1', padding: '30px 10px', textAlign: 'center', color: '#94a3b8' }}>
+                No academic sessions scheduled for this day.
               </div>
             ) : (
               dailyClasses.map((item) => {
                 const isCompleted = item.status === 'completed';
-                const isEvent = item.type === 'event';
+                const periodObj = PERIODS.find((p) => p.id === item.periodId);
+
                 return (
-                  <div
-                    key={item.id}
-                    className={`schedule-row-item ${isCompleted ? 'class-done-row' : ''}`}
-                    style={{
-                      transition: 'all 0.2s',
-                      background: isCompleted ? 'var(--accent-sage-light)' : '#ffffff',
-                      border: '1px solid var(--border-default)',
-                      borderRadius: 10,
-                      padding: '10px 14px',
-                      marginBottom: 8,
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'space-between',
-                    }}
-                  >
-                    <div className="schedule-row-left" style={{ flex: 1, display: 'flex', alignItems: 'center', gap: 12 }}>
+                  <div key={item.id} className="schedule-item-card">
+                    <div className="schedule-item-time">
+                      <span>{periodObj?.time || '09:00 AM – 10:00 AM'}</span>
+                      <span className="schedule-item-tag">{item.type}</span>
+                    </div>
+
+                    <h4 className="schedule-item-title">
+                      {item.code}: {item.title}
+                    </h4>
+
+                    <div className="schedule-item-meta">
+                      <span>Room: <strong>{item.room}</strong></span>
+                      <span>&bull;</span>
+                      <span>Group: <strong>{item.group}</strong></span>
+                    </div>
+
+                    <div className="schedule-item-meta" style={{ marginTop: 'auto', paddingTop: 6 }}>
+                      <span>👤 {item.faculty}</span>
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 6, paddingTop: 8, borderTop: '1px solid #ebdcd0' }}>
                       <button
                         type="button"
                         onClick={() => handleToggleClassDone(item.id)}
-                        className={`class-check-btn ${isCompleted ? 'btn-checked' : ''}`}
-                        title={isCompleted ? 'Mark as Incomplete' : 'Mark as Completed'}
-                        style={{ cursor: 'pointer', border: 'none', background: 'transparent' }}
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          gap: 6,
+                          fontSize: 11.5,
+                          fontWeight: 700,
+                          color: isCompleted ? '#16a34a' : '#64748b',
+                        }}
                       >
-                        {isCompleted ? (
-                          <CheckCircle2 size={18} color="var(--accent-sage)" />
-                        ) : (
-                          <Circle size={18} color="var(--text-muted)" />
-                        )}
+                        {isCompleted ? <CheckCircle2 size={16} color="#16a34a" /> : <Circle size={16} />}
+                        <span>{isCompleted ? 'Completed' : 'Mark Done'}</span>
                       </button>
 
-                      <div style={{ minWidth: 0, flex: 1 }}>
-                        <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                          <span
-                            style={{
-                              fontSize: 11,
-                              fontWeight: 700,
-                              color: isEvent ? 'var(--accent-terracotta)' : 'var(--text-primary)',
-                              background: isEvent ? 'var(--accent-terracotta-light)' : 'var(--bg-card-subtle)',
-                              border: `1px solid ${isEvent ? 'var(--accent-terracotta-border)' : 'var(--border-default)'}`,
-                              padding: '2px 7px',
-                              borderRadius: 4,
-                            }}
-                          >
-                            {item.periodId}
-                          </span>
-                          <span
-                            className="schedule-name-text"
-                            style={{
-                              textDecoration: isCompleted ? 'line-through' : 'none',
-                              color: isCompleted ? 'var(--text-muted)' : 'var(--text-primary)',
-                              fontWeight: 600,
-                              fontSize: 13.5,
-                            }}
-                          >
-                            {item.code} &bull; {item.title}
-                          </span>
-                        </div>
-                        <div style={{ fontSize: 12, color: 'var(--text-secondary)', marginTop: 3 }}>
-                          <strong>{item.faculty}</strong> &bull; {item.room} &bull; {item.group}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div>
-                      <span className={`assignment-status-pill ${isCompleted ? 'status-completed' : 'status-upcoming'}`}>
-                        {isCompleted ? 'Completed ✓' : 'Upcoming'}
-                      </span>
+                      <button
+                        type="button"
+                        className="prompt-chip-btn"
+                        style={{ fontSize: 11, padding: '3px 8px' }}
+                        onClick={() => onNavigate?.('rescheduling')}
+                      >
+                        Swap Block
+                      </button>
                     </div>
                   </div>
                 );
               })
             )}
           </div>
+        </div>
+      </div>
 
-          <div style={{ marginTop: 14, display: 'flex', justifyContent: 'flex-end' }}>
+      {/* ==========================================================================
+          5. Swaps Requests & System Notifications Feed Grid
+          ========================================================================== */}
+      <div className="dashboard-scroll-section">
+        <div className="swaps-notifications-row">
+          {/* Left Column: Swaps Request Hub */}
+          <div className="swaps-card">
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <RefreshCw size={17} color="var(--accent-terracotta)" />
+                <h3 style={{ fontSize: 16, fontWeight: 800, margin: 0, color: 'var(--text-primary)' }}>
+                  Swaps Request
+                </h3>
+              </div>
+              <span style={{ fontSize: 11.5, fontWeight: 700, color: '#c54a26', background: '#fbf0ea', padding: '2px 8px', borderRadius: 9999 }}>
+                3 Pending
+              </span>
+            </div>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {SAMPLE_SWAP_REQUESTS.map((swap) => (
+                <div key={swap.id} className="swap-item-row">
+                  <div className="swap-dept-badge">{swap.dept}</div>
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ fontSize: 13, fontWeight: 800, color: '#0f172a' }}>
+                      Swaps Request - {swap.dept}
+                    </div>
+                    <div style={{ fontSize: 11.5, color: '#64748b' }}>
+                      <strong>{swap.faculty}</strong> &bull; {swap.time}
+                    </div>
+                    <div style={{ fontSize: 11, color: '#94a3b8', fontStyle: 'italic', marginTop: 2 }}>
+                      Reason: {swap.reason}
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: 4 }}>
+                    <button
+                      type="button"
+                      className="app-btn-lime"
+                      style={{ fontSize: 11, padding: '4px 10px' }}
+                      onClick={() => onNavigate?.('rescheduling')}
+                    >
+                      Review
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
             <button
               type="button"
               className="app-btn-outline"
-              onClick={() => onNavigate?.('timetable')}
-              style={{ fontSize: 13 }}
+              style={{ width: '100%', justifyContent: 'center', fontSize: 12 }}
+              onClick={() => onNavigate?.('rescheduling')}
             >
-              <span>View Master Timetable Matrix (P1–P13)</span>
-              <ArrowRight size={14} style={{ marginLeft: 6 }} />
+              <span>Open Swaps Negotiation Center</span>
+              <ArrowRight size={13} style={{ marginLeft: 6 }} />
             </button>
           </div>
-        </div>
 
-        {/* Right Column: Faculty Live Status Roster */}
-        <div className="white-app-card" style={{ flex: 1, display: 'flex', flexDirection: 'column' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
-              <Users size={16} color="var(--accent-terracotta)" />
-              <h3 className="section-title" style={{ fontSize: 15, margin: 0 }}>
-                Faculty Roster &amp; Status
-              </h3>
+          {/* Right Column: System Notifications & AI Assistant Suggestions */}
+          <div className="notifications-card">
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <Bell size={17} color="#0284c7" />
+                <h3 style={{ fontSize: 16, fontWeight: 800, margin: 0, color: 'var(--text-primary)' }}>
+                  System Notifications
+                </h3>
+              </div>
+              <button
+                type="button"
+                className="app-btn-lime"
+                style={{ fontSize: 11, padding: '4px 10px' }}
+                onClick={() => onNavigate?.('ai-assistant')}
+              >
+                <Bot size={13} />
+                <span>Ai assistant suggest</span>
+              </button>
             </div>
-            <span style={{ fontSize: 11, fontWeight: 700, color: 'var(--accent-sage)', background: 'var(--accent-sage-light)', padding: '2px 6px', borderRadius: 4 }}>
-              40 Lecturers
-            </span>
+
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
+              {SAMPLE_SYSTEM_NOTIFICATIONS.map((notif) => (
+                <div key={notif.id} className="notification-item-row">
+                  <div
+                    className="notification-icon-wrap"
+                    style={{
+                      background: notif.type === 'ai' ? '#f0fdf4' : notif.type === 'venue' ? '#fff7ed' : '#eff6ff',
+                      color: notif.type === 'ai' ? '#16a34a' : notif.type === 'venue' ? '#ea580c' : '#0284c7',
+                    }}
+                  >
+                    {notif.type === 'ai' ? <Bot size={18} /> : notif.type === 'venue' ? <Building2 size={18} /> : <Bell size={18} />}
+                  </div>
+
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                      <span style={{ fontSize: 13, fontWeight: 800, color: '#0f172a' }}>
+                        {notif.title}
+                      </span>
+                      <span style={{ fontSize: 11, color: '#94a3b8' }}>{notif.time}</span>
+                    </div>
+                    <div style={{ fontSize: 12, color: '#475569', marginTop: 2 }}>
+                      {notif.desc}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginTop: 'auto' }}>
+              <button
+                type="button"
+                className="prompt-chip-btn"
+                style={{ fontSize: 11.5 }}
+                onClick={() => onNavigate?.('ai-assistant')}
+              >
+                Ask AI Assistant for Timetable Optimization →
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ==========================================================================
+          6. Real Working Calendar with Interactive Note Adder & Workspace
+          ========================================================================== */}
+      <div className="dashboard-scroll-section">
+        <div className="calendar-workspace-card">
+          <div className="calendar-top-header">
+            <div className="calendar-month-title">
+              <CalendarIcon size={20} color="var(--accent-terracotta)" />
+              <span>
+                {monthNames[calendarDate.getMonth()]} {calendarDate.getFullYear()} Academic Calendar &amp; Notes
+              </span>
+            </div>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+              <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>
+                Click any date to add or manage day-specific agenda &amp; duties
+              </span>
+
+              <div className="calendar-nav-btn-group">
+                <button
+                  type="button"
+                  className="notice-arrow-btn"
+                  onClick={handlePrevMonth}
+                  title="Previous Month"
+                >
+                  <ChevronLeft size={15} />
+                </button>
+                <button
+                  type="button"
+                  className="prompt-chip-btn"
+                  style={{ fontSize: 12, padding: '4px 10px' }}
+                  onClick={() => {
+                    setCalendarDate(new Date(2026, 10, 1));
+                    setSelectedCalendarDay(1);
+                  }}
+                >
+                  Today (Nov 01)
+                </button>
+                <button
+                  type="button"
+                  className="notice-arrow-btn"
+                  onClick={handleNextMonth}
+                  title="Next Month"
+                >
+                  <ChevronRight size={15} />
+                </button>
+              </div>
+            </div>
           </div>
 
-          {/* Search & Dept Selector */}
-          <div style={{ display: 'flex', gap: 6, marginBottom: 10 }}>
-            <input
-              type="text"
-              placeholder="Search faculty..."
-              className="app-input-field"
-              value={facultySearch}
-              onChange={(e) => setFacultySearch(e.target.value)}
-              style={{ flex: 1, padding: '5px 10px', fontSize: 11.5 }}
-            />
-            <select
-              className="app-select-field"
-              value={facultyDeptFilter}
-              onChange={(e) => setFacultyDeptFilter(e.target.value)}
-              style={{ padding: '5px 8px', fontSize: 11.5 }}
-            >
-              <option value="all">All Depts</option>
-              <option value="CSE">CSE</option>
-              <option value="ECE">ECE</option>
-              <option value="ME">ME</option>
-              <option value="IT">IT</option>
-            </select>
+          {/* 2-Column Split: Calendar Grid on Left (60%) + Selected Date Notes on Right (40%) */}
+          <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: 20 }}>
+            {/* Calendar Grid */}
+            <div>
+              <table className="calendar-grid-table">
+                <thead>
+                  <tr>
+                    <th className="calendar-th-day">Sun</th>
+                    <th className="calendar-th-day">Mon</th>
+                    <th className="calendar-th-day">Tue</th>
+                    <th className="calendar-th-day">Wed</th>
+                    <th className="calendar-th-day">Thu</th>
+                    <th className="calendar-th-day">Fri</th>
+                    <th className="calendar-th-day">Sat</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {Array.from({ length: 5 }).map((_, weekIdx) => {
+                    return (
+                      <tr key={weekIdx}>
+                        {Array.from({ length: 7 }).map((_, dayIdx) => {
+                          const cellIndex = weekIdx * 7 + dayIdx;
+                          const dayNum = cellIndex - firstDayOfWeek + 1;
+                          const isCurrentMonth = dayNum > 0 && dayNum <= daysInMonth;
+                          const isSelected = isCurrentMonth && dayNum === selectedCalendarDay;
+                          const isToday = isCurrentMonth && dayNum === 1 && calendarDate.getMonth() === 10;
+
+                          const dateKey = `${calendarDate.getFullYear()}-${calendarDate.getMonth() + 1}-${dayNum}`;
+                          const notesCount = (calendarNotes[dateKey] || []).length;
+
+                          if (!isCurrentMonth) {
+                            return <td key={dayIdx} className="calendar-day-cell other-month" />;
+                          }
+
+                          return (
+                            <td
+                              key={dayIdx}
+                              className={`calendar-day-cell ${isSelected ? 'selected' : ''} ${isToday ? 'today' : ''}`}
+                              onClick={() => setSelectedCalendarDay(dayNum)}
+                            >
+                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <span className="cal-day-num">{dayNum}</span>
+                                {isToday && (
+                                  <span style={{ fontSize: 8.5, background: 'var(--accent-sage-light)', color: 'var(--accent-sage)', padding: '1px 4px', borderRadius: 3, fontWeight: 800 }}>
+                                    TODAY
+                                  </span>
+                                )}
+                              </div>
+
+                              <div className="cal-day-badge-wrap">
+                                {notesCount > 0 && (
+                                  <span className="cal-count-pill" title={`${notesCount} notes`}>
+                                    {notesCount} note{notesCount > 1 ? 's' : ''}
+                                  </span>
+                                )}
+                                {dayNum >= 2 && dayNum <= 7 && (
+                                  <span className="cal-event-dot" title="Classes in session" />
+                                )}
+                              </div>
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Interactive Notes Panel for Selected Date */}
+            <div className="day-notes-panel">
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border-default)', paddingBottom: 8 }}>
+                <div>
+                  <h4 style={{ margin: 0, fontSize: 14.5, fontWeight: 800, color: 'var(--text-primary)' }}>
+                    Notes &amp; Agenda: {monthNames[calendarDate.getMonth()]} {selectedCalendarDay}, {calendarDate.getFullYear()}
+                  </h4>
+                  <span style={{ fontSize: 11.5, color: 'var(--text-secondary)' }}>
+                    {notesForSelectedDate.length} item{notesForSelectedDate.length !== 1 ? 's' : ''} recorded for this date
+                  </span>
+                </div>
+              </div>
+
+              {/* Add New Note Input Form */}
+              <form onSubmit={handleAddCalendarNote} style={{ display: 'flex', gap: 6 }}>
+                <input
+                  type="text"
+                  className="app-input-field"
+                  placeholder="Add a task, reminder, or note..."
+                  value={newNoteInput}
+                  onChange={(e) => setNewNoteInput(e.target.value)}
+                  style={{ flex: 1, padding: '7px 12px', fontSize: 12.5 }}
+                />
+
+                <select
+                  className="app-select-field"
+                  value={newNotePriority}
+                  onChange={(e) => setNewNotePriority(e.target.value)}
+                  style={{ padding: '7px 8px', fontSize: 12 }}
+                >
+                  <option value="normal">Normal</option>
+                  <option value="high">High</option>
+                  <option value="urgent">Urgent</option>
+                </select>
+
+                <button type="submit" className="app-btn-lime" style={{ padding: '7px 14px', fontSize: 12 }}>
+                  <Plus size={14} />
+                  <span>Add</span>
+                </button>
+              </form>
+
+              {/* List of Notes for Selected Date */}
+              <div className="notes-list-scroll">
+                {notesForSelectedDate.length === 0 ? (
+                  <div style={{ padding: '24px 10px', textAlign: 'center', color: 'var(--text-muted)' }}>
+                    <CalendarIcon size={24} style={{ margin: '0 auto 6px auto', opacity: 0.5 }} />
+                    <p style={{ margin: 0, fontSize: 12.5 }}>No notes for this date yet. Type above to add one!</p>
+                  </div>
+                ) : (
+                  notesForSelectedDate.map((note) => (
+                    <div key={note.id} className={`cal-note-item ${note.done ? 'completed' : ''}`}>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, flex: 1 }}>
+                        <button
+                          type="button"
+                          onClick={() => handleToggleCalendarNote(note.id)}
+                          style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+                          title={note.done ? 'Mark pending' : 'Mark done'}
+                        >
+                          {note.done ? (
+                            <CheckCircle2 size={16} color="var(--accent-sage)" />
+                          ) : (
+                            <Circle size={16} color="var(--text-muted)" />
+                          )}
+                        </button>
+
+                        <div style={{ flex: 1 }}>
+                          <span className={`cal-note-text ${note.done ? 'done' : ''}`}>
+                            {note.text}
+                          </span>
+                          {note.priority === 'urgent' && (
+                            <span style={{ fontSize: 9.5, fontWeight: 800, color: '#dc2626', background: '#fee2e2', padding: '1px 5px', borderRadius: 4, marginLeft: 6 }}>
+                              URGENT
+                            </span>
+                          )}
+                          {note.priority === 'high' && (
+                            <span style={{ fontSize: 9.5, fontWeight: 800, color: '#d97706', background: '#fef3c7', padding: '1px 5px', borderRadius: 4, marginLeft: 6 }}>
+                              HIGH
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      <button
+                        type="button"
+                        onClick={() => handleDeleteCalendarNote(note.id)}
+                        style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8', padding: 2 }}
+                        title="Delete note"
+                      >
+                        <Trash2 size={13} />
+                      </button>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* ==========================================================================
+          7. 40-Faculty Live Roster & Cabin Directory
+          ========================================================================== */}
+      <div className="dashboard-scroll-section">
+        <div className="white-app-card" style={{ padding: 22 }}>
+          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 10, marginBottom: 14 }}>
+            <div>
+              <h3 style={{ fontSize: 18, fontWeight: 900, color: 'var(--text-primary)', margin: 0 }}>
+                Faculty Directory &amp; Live Campus Roster
+              </h3>
+              <span style={{ fontSize: 12.5, color: 'var(--text-secondary)' }}>
+                40 senior faculty members across CSE, ECE, Mechanical, IT, and Basic Sciences
+              </span>
+            </div>
+
+            <div style={{ display: 'flex', gap: 8 }}>
+              <input
+                type="text"
+                placeholder="Search faculty by name, dept, cabin..."
+                className="app-input-field"
+                value={facultySearch}
+                onChange={(e) => setFacultySearch(e.target.value)}
+                style={{ padding: '6px 14px', borderRadius: 9999, fontSize: 12, minWidth: 220 }}
+              />
+              <select
+                className="app-select-field"
+                value={facultyDeptFilter}
+                onChange={(e) => setFacultyDeptFilter(e.target.value)}
+                style={{ padding: '6px 12px', fontSize: 12 }}
+              >
+                <option value="all">All Departments</option>
+                <option value="CSE">CSE</option>
+                <option value="ECE">ECE</option>
+                <option value="ME">ME</option>
+                <option value="IT">IT</option>
+              </select>
+            </div>
           </div>
 
-          {/* Faculty Mini Table */}
-          <div style={{ flex: 1, overflowY: 'auto', maxHeight: 310, display: 'flex', flexDirection: 'column', gap: 6 }}>
-            {filteredFacultyList.slice(0, 8).map((f) => (
+          {/* Grid of Faculty Cards */}
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(260px, 1fr))', gap: 12 }}>
+            {filteredFacultyList.map((f) => (
               <div
                 key={f.id}
                 style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  padding: '7px 10px',
-                  borderRadius: 8,
                   background: '#f8fafc',
-                  border: '1px solid var(--border-default)',
-                  fontSize: 12,
+                  border: '1.5px solid var(--border-default)',
+                  borderRadius: 12,
+                  padding: '12px 14px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: 6,
+                  transition: 'all 0.15s ease',
                 }}
               >
-                <div>
-                  <div style={{ fontWeight: 700, color: 'var(--text-primary)' }}>{f.name}</div>
-                  <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>
-                    {f.dept} &bull; Cabin: {f.cabin}
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
+                  <div>
+                    <strong style={{ fontSize: 13.5, color: '#0f172a' }}>{f.name}</strong>
+                    <div style={{ fontSize: 11, color: '#64748b' }}>
+                      {f.dept} &bull; {f.designation}
+                    </div>
                   </div>
-                </div>
-
-                <div>
                   {f.status === 'Available' ? (
-                    <span className="status-badge-clean available">
-                      Available
+                    <span style={{ fontSize: 10, fontWeight: 800, color: '#166534', background: '#dcfce7', padding: '2px 6px', borderRadius: 9999 }}>
+                      🟢 Available
                     </span>
                   ) : f.status === 'In Class' ? (
-                    <span className="status-badge-clean in-class">
-                      In Class
+                    <span style={{ fontSize: 10, fontWeight: 800, color: '#9a3412', background: '#ffedd5', padding: '2px 6px', borderRadius: 9999 }}>
+                      🟠 In Class
                     </span>
                   ) : (
-                    <span className="status-badge-clean office">
-                      Office Hours
+                    <span style={{ fontSize: 10, fontWeight: 800, color: '#1e3a8a', background: '#dbeafe', padding: '2px 6px', borderRadius: 9999 }}>
+                      🔵 Office Hours
                     </span>
                   )}
                 </div>
+
+                <div style={{ fontSize: 11.5, color: '#475569', display: 'flex', justifyContent: 'space-between', marginTop: 4 }}>
+                  <span>Cabin: <strong>{f.cabin}</strong></span>
+                  <span>{f.phone}</span>
+                </div>
+
+                <button
+                  type="button"
+                  className="app-btn-outline"
+                  style={{ width: '100%', justifyContent: 'center', fontSize: 11, padding: '4px 8px', marginTop: 4 }}
+                  onClick={() => onNavigate?.('rescheduling')}
+                >
+                  <MessageSquare size={12} />
+                  <span>Request Class Swap</span>
+                </button>
               </div>
             ))}
           </div>
         </div>
       </div>
 
-      {/* Post Daily Notice Modal */}
+      {/* ==========================================================================
+          POST DAILY NOTICE MODAL
+          ========================================================================== */}
       <Modal
         isOpen={isPostNoticeOpen}
         onClose={() => setIsPostNoticeOpen(false)}
-        title="Post New Campus Daily Notice"
+        title="Post Institutional Daily Notice"
       >
         <form onSubmit={handleCreateNotice} style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
           <div>
-            <label style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase' }}>
+            <label style={{ fontSize: 12, fontWeight: 700, display: 'block', marginBottom: 4 }}>
               Notice Category *
             </label>
             <select
               className="app-select-field"
-              style={{ width: '100%', marginTop: 4 }}
+              style={{ width: '100%' }}
               value={newNoticeForm.category}
               onChange={(e) => setNewNoticeForm({ ...newNoticeForm, category: e.target.value })}
             >
               <option value="absence">Faculty Absence &amp; Substitute Assignment</option>
-              <option value="extra">Extra / Remedial Class</option>
+              <option value="extra">Extra / Remedial Class Announcement</option>
               <option value="guest">Distinguished Guest Keynote / Industry Speaker</option>
-              <option value="event">Special Campus &amp; Spectra Event</option>
+              <option value="event">Campus Event / Cultural Society Rehearsal</option>
             </select>
           </div>
 
           <div>
-            <label style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase' }}>
-              Notice Headline / Title *
+            <label style={{ fontSize: 12, fontWeight: 700, display: 'block', marginBottom: 4 }}>
+              Notice Headline *
             </label>
             <input
               type="text"
               required
-              placeholder="e.g. Dr. A. Sharma Extra Tutorial for CSE-3 in LH-101"
               className="app-input-field"
+              placeholder="e.g. Dr. A. Sharma taking extra remedial class in LH-101 at 15:00"
               value={newNoticeForm.title}
               onChange={(e) => setNewNoticeForm({ ...newNoticeForm, title: e.target.value })}
             />
           </div>
 
           <div>
-            <label style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase' }}>
-              Timing &amp; Period *
-            </label>
-            <input
-              type="text"
-              required
-              placeholder="e.g. Today • 14:00 – 15:00 (Period 6)"
-              className="app-input-field"
-              value={newNoticeForm.time}
-              onChange={(e) => setNewNoticeForm({ ...newNoticeForm, time: e.target.value })}
-            />
-          </div>
-
-          <div>
-            <label style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)', textTransform: 'uppercase' }}>
-              Notice Details &amp; Instructions
+            <label style={{ fontSize: 12, fontWeight: 700, display: 'block', marginBottom: 4 }}>
+              Detailed Instructions &amp; Venue *
             </label>
             <textarea
-              rows={3}
-              placeholder="Specify room venue, affected student groups, substitute faculty, or guest credentials..."
+              required
               className="app-input-field"
-              style={{ resize: 'vertical' }}
+              rows={3}
+              placeholder="Provide exact classroom, substitute faculty name, cohort, and guidelines..."
               value={newNoticeForm.details}
               onChange={(e) => setNewNoticeForm({ ...newNoticeForm, details: e.target.value })}
             />
           </div>
 
-          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10, marginTop: 8 }}>
+          <div>
+            <label style={{ fontSize: 12, fontWeight: 700, display: 'block', marginBottom: 4 }}>
+              Timing / Slot *
+            </label>
+            <input
+              type="text"
+              required
+              className="app-input-field"
+              placeholder="e.g. Today • 15:00 – 16:00 (P7)"
+              value={newNoticeForm.time}
+              onChange={(e) => setNewNoticeForm({ ...newNoticeForm, time: e.target.value })}
+            />
+          </div>
+
+          <div style={{ display: 'flex', justifyContent: 'flex-end', gap: 10, marginTop: 10 }}>
             <button
               type="button"
               className="app-btn-outline"
@@ -905,8 +1500,7 @@ export function FacultyDashboardPage({ currentUser, onNavigate }) {
               Cancel
             </button>
             <button type="submit" className="app-btn-lime">
-              <Send size={14} />
-              <span>Broadcast Notice</span>
+              Broadcast Live Notice
             </button>
           </div>
         </form>

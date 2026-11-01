@@ -6,7 +6,6 @@ import {
   Eye,
   EyeOff,
   ArrowRight,
-  ArrowLeft,
   Calendar,
   Clock,
   BookOpen,
@@ -21,6 +20,7 @@ import {
   ChevronRight,
   Menu,
   X,
+  Camera,
 } from 'lucide-react';
 import { CitLogo } from '../components/CitLogo';
 import { CitCampusBuilding } from '../components/CitCampusBuilding';
@@ -109,14 +109,6 @@ export function LandingPage({ currentUser, onEnterPortal, onNavigate }) {
     }
   };
 
-  const handleCitBackClick = () => {
-    if (window.history.length > 1) {
-      window.history.back();
-    } else {
-      onNavigate?.('dashboard');
-    }
-  };
-
   const currentProfile = ROLE_PROFILES[selectedRole];
 
   return (
@@ -166,8 +158,7 @@ export function LandingPage({ currentUser, onEnterPortal, onNavigate }) {
           {/* Logo & Institute Name */}
           <div
             className="cit-brand"
-            onClick={handleCitBackClick}
-            title="Chilika Institute of Technology - Click to go back"
+            onClick={() => scrollToSection('overview')}
             role="button"
             tabIndex={0}
           >
@@ -175,12 +166,9 @@ export function LandingPage({ currentUser, onEnterPortal, onNavigate }) {
             <div className="cit-brand-text">
               <div className="cit-brand-title">CHILIKA INSTITUTE OF TECHNOLOGY</div>
               <div className="cit-brand-sub">
-                Autonomous Institution &bull; Estd. 1988 &bull; Govt. of Odisha Approved
+                AUTONOMOUS INSTITUTION &bull; ESTD. 1988
               </div>
             </div>
-            <span className="cit-back-badge">
-              <ArrowLeft size={12} /> Back
-            </span>
           </div>
 
           {/* Desktop Navigation Links */}
@@ -270,141 +258,96 @@ export function LandingPage({ currentUser, onEnterPortal, onNavigate }) {
         {/* The Grand Architectural College Building in Background */}
         <CitCampusBuilding />
 
-        <div className="cit-building-label-pill">
-          <Building size={14} style={{ color: '#db822a' }} />
-          <span>CHILIKA INSTITUTE OF TECHNOLOGY (CIT) &bull; HERITAGE CENTRAL ACADEMIC BLOCK</span>
-        </div>
         <div className="cit-hero-container">
-          {/* Left Column: Institutional Prestige & Academic Overview */}
+          {/* Left Column: Glassmorphic Institutional Card */}
           <div className="cit-hero-left">
             <div className="cit-prestige-ribbon">
               <span className="cit-prestige-badge">
-                <Sparkles size={13} style={{ marginRight: 5, color: '#db822a' }} />
+                <Sparkles size={13} style={{ marginRight: 6, color: '#c54a26' }} />
                 Autonomous Academic Governance &bull; AY 2026–27
               </span>
             </div>
 
             <h1 className="cit-hero-title">
-              <span className="cit-hero-title-main">CHILIKA INSTITUTE</span>
-              <span className="cit-hero-title-sub">OF TECHNOLOGY</span>
+              <span className="cit-hero-title-word">CHILIKA</span>
+              <span className="cit-hero-title-word">INSTITUTE OF</span>
+              <span className="cit-hero-title-word">TECHNOLOGY</span>
             </h1>
 
             <p className="cit-hero-lead">
               A premier autonomous engineering and technical research institute on the shores of Chilika Lake.
               Governed by an automated, conflict-free academic orchestration matrix coordinating 189 weekly
-              sessions, 41 midsem examination slots, 27 academic venues (including 7 specialized research laboratories).
+              sessions, 27 academic venues (including 7 specialized research laboratories).
             </p>
 
-            {/* Institutional Stats Counters */}
-            <div className="cit-stats-row">
-              <div className="cit-stat-badge">
-                <div className="cit-stat-num">189</div>
-                <div className="cit-stat-label">Weekly Sessions</div>
-              </div>
-              <div className="cit-stat-badge">
-                <div className="cit-stat-num">27 + 7</div>
-                <div className="cit-stat-label">Venues &amp; Labs</div>
-              </div>
-              <div className="cit-stat-badge">
-                <div className="cit-stat-num">40+</div>
-                <div className="cit-stat-label">Senior Faculty</div>
-              </div>
-              <div className="cit-stat-badge highlight">
-                <div className="cit-stat-num">0</div>
-                <div className="cit-stat-label">Hard Clashes</div>
-              </div>
-            </div>
-
-            {/* Quick Action Navigation Buttons */}
-            <div className="cit-hero-actions">
-              <button
-                type="button"
-                className="cit-btn-primary"
-                onClick={() => {
-                  onEnterPortal?.(ROLE_PROFILES.faculty);
-                  onNavigate?.('dashboard');
-                }}
-              >
-                <span>Enter Academic Dashboard</span>
-                <ArrowRight size={16} style={{ marginLeft: 8 }} />
-              </button>
-
-              <button
-                type="button"
-                className="cit-btn-secondary"
-                onClick={() => {
-                  onEnterPortal?.(ROLE_PROFILES.faculty);
-                  onNavigate?.('timetable');
-                }}
-              >
-                <Clock size={16} style={{ marginRight: 8 }} />
-                <span>Master Timetable (P1–P13)</span>
-              </button>
+            <div className="cit-building-pill">
+              <Camera size={14} style={{ marginRight: 6, color: '#c54a26' }} />
+              <span>Heritage Central Academic Block</span>
             </div>
           </div>
 
-          {/* Right Column: Embedded CIT Collegiate Portal Login Box */}
+          {/* Right Column: Glassmorphic CIT Collegiate Portal Login Box */}
           <div id="login-box" className="cit-hero-right">
             <div className="cit-login-card">
-              {/* Card Institutional Top Banner */}
+              {/* Card Header */}
               <div className="cit-login-header">
-                <div className="cit-login-brand">
-                  <CitLogo size={36} />
-                  <div>
-                    <h3 className="cit-login-title">CIT Campus Portal</h3>
-                    <p className="cit-login-sub">Single Sign-On (SSO) &bull; Academic Year 2026–27</p>
-                  </div>
+                <div>
+                  <h3 className="cit-login-title">CIT Campus Portal</h3>
+                  <p className="cit-login-sub">Single Sign-On (SSO) &bull;</p>
                 </div>
                 <div className="cit-login-shield">
-                  <Shield size={14} style={{ color: '#4e7561' }} />
+                  <Shield size={12} style={{ color: '#059669', marginRight: 4 }} />
                   <span>Secure 256-bit</span>
                 </div>
               </div>
 
-              {/* Role Switcher Tabs */}
-              <div className="cit-role-tabs">
-                <button
-                  type="button"
-                  className={`cit-role-tab ${selectedRole === 'faculty' ? 'active' : ''}`}
-                  onClick={() => handleRoleSelect('faculty')}
-                >
-                  <User size={13} style={{ marginRight: 5 }} />
-                  Faculty
-                </button>
-                <button
-                  type="button"
-                  className={`cit-role-tab ${selectedRole === 'student' ? 'active' : ''}`}
-                  onClick={() => handleRoleSelect('student')}
-                >
-                  <GraduationCap size={13} style={{ marginRight: 5 }} />
-                  Student
-                </button>
-                <button
-                  type="button"
-                  className={`cit-role-tab ${selectedRole === 'admin' ? 'active' : ''}`}
-                  onClick={() => handleRoleSelect('admin')}
-                >
-                  <Building size={13} style={{ marginRight: 5 }} />
-                  Dean / Admin
-                </button>
+              {/* User Type Section */}
+              <div className="cit-user-type-group">
+                <label className="cit-user-type-label">User Type</label>
+                <div className="cit-role-tabs">
+                  <button
+                    type="button"
+                    className={`cit-role-tab ${selectedRole === 'faculty' ? 'active' : ''}`}
+                    onClick={() => handleRoleSelect('faculty')}
+                  >
+                    <User size={13} style={{ marginRight: 5 }} />
+                    Faculty
+                  </button>
+                  <button
+                    type="button"
+                    className={`cit-role-tab ${selectedRole === 'student' ? 'active' : ''}`}
+                    onClick={() => handleRoleSelect('student')}
+                  >
+                    <GraduationCap size={13} style={{ marginRight: 5 }} />
+                    Student
+                  </button>
+                  <button
+                    type="button"
+                    className={`cit-role-tab ${selectedRole === 'admin' ? 'active' : ''}`}
+                    onClick={() => handleRoleSelect('admin')}
+                  >
+                    <Building size={13} style={{ marginRight: 5 }} />
+                    Dean / Admin
+                  </button>
+                </div>
               </div>
 
-              {/* Active Profile Info Banner */}
-              <div className="cit-active-profile-pill">
-                <div className="cit-profile-avatar">{currentProfile.avatarInitials}</div>
-                <div className="cit-profile-details">
-                  <div className="cit-profile-name">{currentProfile.name}</div>
-                  <div className="cit-profile-role">{currentProfile.role}</div>
+              {/* Quick Profile Match */}
+              <div className="cit-quick-profile-group">
+                <label className="cit-user-type-label">Quick Profile Match</label>
+                <div className="cit-active-profile-pill" onClick={() => handleRoleSelect(selectedRole)}>
+                  <div className="cit-profile-avatar">{currentProfile.avatarInitials}</div>
+                  <div className="cit-profile-details">
+                    <div className="cit-profile-name">{currentProfile.name}</div>
+                    <div className="cit-profile-role">{currentProfile.role}</div>
+                  </div>
+                  <span className="cit-profile-badge">{currentProfile.badge}</span>
                 </div>
-                <span className="cit-profile-badge">{currentProfile.badge}</span>
               </div>
 
               {/* Login Form */}
               <form onSubmit={handleLoginSubmit} className="cit-login-form">
                 <div className="cit-form-group">
-                  <label htmlFor="cit-email" className="cit-form-label">
-                    Institutional Email / ID
-                  </label>
                   <div className="cit-input-wrapper">
                     <User size={16} className="cit-input-icon" />
                     <input
@@ -413,7 +356,7 @@ export function LandingPage({ currentUser, onEnterPortal, onNavigate }) {
                       className="cit-form-input"
                       value={emailInput}
                       onChange={(e) => setEmailInput(e.target.value)}
-                      placeholder="e.g. yourname@cit.edu.in"
+                      placeholder="Institutional Email"
                       required
                     />
                   </div>
@@ -434,7 +377,7 @@ export function LandingPage({ currentUser, onEnterPortal, onNavigate }) {
                       className="cit-form-input"
                       value={passwordInput}
                       onChange={(e) => setPasswordInput(e.target.value)}
-                      placeholder="Enter institutional password"
+                      placeholder="••••••••••••"
                       required
                     />
                     <button
@@ -448,38 +391,15 @@ export function LandingPage({ currentUser, onEnterPortal, onNavigate }) {
                   </div>
                 </div>
 
-                <div className="cit-form-options">
-                  <label className="cit-checkbox-label">
-                    <input
-                      type="checkbox"
-                      checked={rememberMe}
-                      onChange={(e) => setRememberMe(e.target.checked)}
-                    />
-                    <span>Remember institutional session</span>
-                  </label>
-                </div>
-
-                {/* Primary Login Button */}
+                {/* Submit Button */}
                 <button
                   type="submit"
                   className="cit-login-submit-btn"
                   disabled={isLoggingIn}
                 >
-                  {isLoggingIn ? (
-                    <span>Authenticating CIT Credentials...</span>
-                  ) : (
-                    <>
-                      <span>Log In to Campus Portal</span>
-                      <ArrowRight size={16} style={{ marginLeft: 8 }} />
-                    </>
-                  )}
+                  <span>{isLoggingIn ? 'Authenticating...' : 'Login to Portal →'}</span>
                 </button>
               </form>
-
-              <div className="cit-login-footer" style={{ marginTop: 16 }}>
-                <Shield size={12} style={{ color: '#4e7561', marginRight: 4 }} />
-                <span>Protected by CIT Central Authentication &bull; IT Support ext: 404</span>
-              </div>
             </div>
           </div>
         </div>

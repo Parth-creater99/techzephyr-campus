@@ -12,7 +12,6 @@ import {
   Menu,
   X,
   Search,
-  ArrowLeft,
   Shield,
   User,
   Key,
@@ -50,14 +49,6 @@ export function AppLayout({
     setMobileMenuOpen(false);
   };
 
-  const handleCitBackClick = () => {
-    if (window.history.length > 1) {
-      window.history.back();
-    } else {
-      handleNavClick('dashboard');
-    }
-  };
-
   return (
     <div className="app-viewport-wrapper">
       {/* Mobile Backdrop */}
@@ -73,14 +64,13 @@ export function AppLayout({
       <aside className={`app-sidebar ${mobileMenuOpen ? 'sidebar-open' : ''}`}>
         <div style={{ display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-between' }}>
           <div>
-            {/* Logo - CHILIKA INSTITUTE OF TECHNOLOGY (Clicking goes back) */}
+            {/* Logo - CHILIKA INSTITUTE OF TECHNOLOGY */}
             <div className="sidebar-logo-area">
               <div
                 className="brand-logo-wrap"
-                onClick={handleCitBackClick}
+                onClick={() => handleNavClick('dashboard')}
                 role="button"
                 tabIndex={0}
-                title="Click to go back"
                 style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 10 }}
               >
                 <CitLogo size={36} />
@@ -92,9 +82,6 @@ export function AppLayout({
                     of Technology
                   </span>
                 </div>
-                <span className="back-hint-badge" title="Click to go back">
-                  <ArrowLeft size={12} />
-                </span>
               </div>
               <button
                 type="button"

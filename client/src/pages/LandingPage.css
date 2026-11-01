@@ -157,26 +157,6 @@
   margin-top: 2px;
 }
 
-.cit-back-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  background: #fbf0ea;
-  color: #c54a26;
-  border: 1px solid rgba(197, 74, 38, 0.3);
-  font-size: 11px;
-  font-weight: 700;
-  padding: 3px 8px;
-  border-radius: 9999px;
-  transition: all 0.15s ease;
-  margin-left: 4px;
-}
-
-.cit-brand:hover .cit-back-badge {
-  background: #c54a26;
-  color: #ffffff;
-}
-
 .cit-nav {
   display: flex;
   align-items: center;
@@ -304,15 +284,18 @@
   }
 }
 
-/* Left Column: Institutional Prestige */
+/* Left Column: Glassmorphic Institutional Card */
 .cit-hero-left {
-  background: rgba(250, 246, 239, 0.88);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  padding: 36px;
-  border-radius: 20px;
-  border: 1px solid rgba(229, 222, 210, 0.9);
-  box-shadow: 0 12px 32px rgba(58, 34, 22, 0.06);
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  padding: 42px 38px;
+  border-radius: 28px;
+  border: 1.5px solid rgba(255, 255, 255, 0.9);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 @media (max-width: 640px) {
@@ -323,149 +306,60 @@
 
 .cit-prestige-ribbon {
   display: inline-flex;
-  margin-bottom: 14px;
 }
 
 .cit-prestige-badge {
   display: inline-flex;
   align-items: center;
   background: #ffffff;
-  border: 1px solid #db822a;
-  color: #3a2216;
+  border: 1px solid #ea580c;
+  color: #1e293b;
   font-size: 12px;
   font-weight: 800;
-  letter-spacing: 0.04em;
-  padding: 5px 12px;
+  letter-spacing: 0.03em;
+  padding: 5px 14px;
   border-radius: 9999px;
-  box-shadow: 0 2px 6px rgba(219, 130, 42, 0.15);
+  box-shadow: 0 2px 6px rgba(234, 88, 12, 0.15);
 }
 
 .cit-hero-title {
-  margin: 0 0 16px 0;
+  margin: 0;
   display: flex;
   flex-direction: column;
+  gap: 2px;
 }
 
-.cit-hero-title-main {
-  font-size: clamp(32px, 4.4vw, 54px);
+.cit-hero-title-word {
+  font-size: clamp(38px, 4.8vw, 62px);
   font-weight: 950;
-  letter-spacing: -0.02em;
+  letter-spacing: -0.025em;
   line-height: 1.05;
   color: #c54a26;
-  text-shadow: 0 2px 4px rgba(197, 74, 38, 0.08);
-}
-
-.cit-hero-title-sub {
-  font-size: clamp(28px, 3.8vw, 46px);
-  font-weight: 900;
-  letter-spacing: -0.02em;
-  line-height: 1.1;
-  color: #1c1815;
+  text-transform: uppercase;
+  display: block;
 }
 
 .cit-hero-lead {
-  font-size: 15.5px;
-  line-height: 1.6;
-  color: #54463d;
-  margin: 0 0 28px 0;
-  max-width: 620px;
+  font-size: 15px;
+  line-height: 1.65;
+  color: #475569;
+  margin: 0;
+  max-width: 580px;
 }
 
-.cit-stats-row {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 12px;
-  margin-bottom: 28px;
-}
-
-@media (max-width: 580px) {
-  .cit-stats-row {
-    grid-template-columns: repeat(2, 1fr);
-  }
-}
-
-.cit-stat-badge {
-  background: #ffffff;
-  border: 1px solid #e5ded2;
-  border-radius: 12px;
-  padding: 12px 10px;
-  text-align: center;
-  box-shadow: 0 2px 8px rgba(58, 34, 22, 0.04);
-}
-
-.cit-stat-badge.highlight {
-  border-color: #4e7561;
-  background: #f1f7f4;
-}
-
-.cit-stat-num {
-  font-size: 22px;
-  font-weight: 900;
-  color: #c54a26;
-  line-height: 1.1;
-}
-
-.cit-stat-badge.highlight .cit-stat-num {
-  color: #4e7561;
-}
-
-.cit-stat-label {
-  font-size: 11px;
+.cit-building-pill {
+  display: inline-flex;
+  align-items: center;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(226, 232, 240, 0.9);
+  color: #475569;
+  font-size: 12px;
   font-weight: 700;
-  color: #54463d;
-  margin-top: 4px;
-}
-
-.cit-hero-actions {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  flex-wrap: wrap;
-}
-
-.cit-btn-primary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #c54a26;
-  color: #ffffff;
-  border: 1.5px solid #c54a26;
-  padding: 12px 26px;
+  padding: 6px 14px;
   border-radius: 9999px;
-  font-size: 14px;
-  font-weight: 800;
-  cursor: pointer;
-  box-shadow: 0 6px 16px rgba(197, 74, 38, 0.28);
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-}
-
-.cit-btn-primary:hover {
-  background-color: #aa3d1d;
-  border-color: #aa3d1d;
-  transform: translateY(-2px);
-  box-shadow: 0 8px 22px rgba(197, 74, 38, 0.36);
-}
-
-.cit-btn-secondary {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  background-color: #ffffff;
-  color: #3a2216;
-  border: 1.5px solid #ded5c6;
-  padding: 12px 22px;
-  border-radius: 9999px;
-  font-size: 14px;
-  font-weight: 750;
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(58, 34, 22, 0.05);
-  transition: all 0.2s ease;
-}
-
-.cit-btn-secondary:hover {
-  border-color: #c54a26;
-  color: #c54a26;
-  transform: translateY(-1px);
+  width: fit-content;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  margin-top: 6px;
 }
 
 /* ========================================================
@@ -479,67 +373,77 @@
 .cit-login-card {
   width: 100%;
   max-width: 440px;
-  background: #ffffff;
-  border-radius: 20px;
-  border: 1.5px solid #e5ded2;
-  box-shadow: 0 20px 45px rgba(58, 34, 22, 0.14), 0 4px 12px rgba(197, 74, 38, 0.08);
-  padding: 28px 26px;
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-radius: 28px;
+  border: 1.5px solid rgba(255, 255, 255, 0.95);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.12);
+  padding: 32px 28px;
   position: relative;
   z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
 }
 
 .cit-login-header {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
-  margin-bottom: 18px;
-  padding-bottom: 14px;
-  border-bottom: 1px solid #f0e9dd;
-}
-
-.cit-login-brand {
-  display: flex;
-  align-items: center;
-  gap: 12px;
 }
 
 .cit-login-title {
   margin: 0;
-  font-size: 17px;
+  font-size: 18px;
   font-weight: 900;
-  color: #1c1815;
+  color: #0f172a;
   letter-spacing: -0.01em;
 }
 
 .cit-login-sub {
-  margin: 2px 0 0 0;
-  font-size: 11px;
+  margin: 3px 0 0 0;
+  font-size: 11.5px;
   font-weight: 700;
-  color: #db822a;
+  color: #64748b;
 }
 
 .cit-login-shield {
   display: inline-flex;
   align-items: center;
   gap: 4px;
-  background: #f1f7f4;
-  color: #4e7561;
-  border: 1px solid rgba(78, 117, 97, 0.3);
-  font-size: 10.5px;
+  background: #ecfdf5;
+  color: #059669;
+  border: 1px solid #a7f3d0;
+  font-size: 11px;
   font-weight: 800;
-  padding: 4px 8px;
+  padding: 4px 10px;
   border-radius: 9999px;
+}
+
+/* User Type & Profile Match */
+.cit-user-type-group,
+.cit-quick-profile-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.cit-user-type-label {
+  font-size: 12px;
+  font-weight: 800;
+  color: #0f172a;
 }
 
 /* Role Selector Tabs */
 .cit-role-tabs {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  background: #f7f2e8;
+  background: rgba(241, 245, 249, 0.7);
+  border: 1px solid #e2e8f0;
   padding: 4px;
-  border-radius: 12px;
+  border-radius: 9999px;
   gap: 4px;
-  margin-bottom: 16px;
 }
 
 .cit-role-tab {
@@ -548,46 +452,53 @@
   justify-content: center;
   background: transparent;
   border: none;
-  border-radius: 8px;
+  border-radius: 9999px;
   font-size: 12px;
-  font-weight: 750;
-  color: #54463d;
-  padding: 8px 6px;
+  font-weight: 700;
+  color: #475569;
+  padding: 7px 10px;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.2s ease;
 }
 
 .cit-role-tab:hover {
-  color: #1c1815;
+  color: #0f172a;
 }
 
 .cit-role-tab.active {
-  background: #ffffff;
-  color: #c54a26;
+  background: #ea580c;
+  color: #ffffff;
   font-weight: 800;
-  box-shadow: 0 2px 6px rgba(58, 34, 22, 0.08);
+  box-shadow: 0 2px 8px rgba(234, 88, 12, 0.35);
 }
 
 /* Active Profile Pill */
 .cit-active-profile-pill {
   display: flex;
   align-items: center;
-  gap: 10px;
-  background: #faf6ef;
-  border: 1px solid #e8dfd2;
-  border-radius: 10px;
-  padding: 10px 12px;
-  margin-bottom: 18px;
+  gap: 12px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1.5px solid #fed7aa;
+  border-radius: 14px;
+  padding: 10px 14px;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.03);
+  transition: all 0.15s ease;
+}
+
+.cit-active-profile-pill:hover {
+  border-color: #ea580c;
+  transform: translateY(-1px);
 }
 
 .cit-profile-avatar {
-  width: 34px;
-  height: 34px;
+  width: 38px;
+  height: 38px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #c54a26, #db822a);
+  background: #ea580c;
   color: #ffffff;
   font-weight: 900;
-  font-size: 13px;
+  font-size: 13.5px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -600,9 +511,9 @@
 }
 
 .cit-profile-name {
-  font-size: 13px;
+  font-size: 13.5px;
   font-weight: 850;
-  color: #1c1815;
+  color: #0f172a;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -610,21 +521,51 @@
 
 .cit-profile-role {
   font-size: 11px;
-  color: #54463d;
+  color: #64748b;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
 .cit-profile-badge {
-  font-size: 10px;
+  font-size: 10.5px;
   font-weight: 800;
-  background: #fbf0ea;
-  color: #c54a26;
-  border: 1px solid rgba(197, 74, 38, 0.25);
-  padding: 3px 6px;
+  background: #fff7ed;
+  color: #c2410c;
+  border: 1px solid #fed7aa;
+  padding: 3px 8px;
   border-radius: 6px;
   white-space: nowrap;
+}
+
+.cit-login-submit-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
+  color: #ffffff;
+  border: none;
+  padding: 13px 22px;
+  border-radius: 9999px;
+  font-size: 14.5px;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  cursor: pointer;
+  box-shadow: 0 6px 18px rgba(234, 88, 12, 0.35);
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  margin-top: 6px;
+  width: 100%;
+}
+
+.cit-login-submit-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
+  transform: translateY(-1px);
+  box-shadow: 0 8px 24px rgba(234, 88, 12, 0.45);
+}
+
+.cit-login-submit-btn:disabled {
+  opacity: 0.75;
+  cursor: not-allowed;
 }
 
 /* Form inputs */
@@ -678,19 +619,19 @@
 
 .cit-form-input {
   width: 100%;
-  padding: 10px 12px 10px 36px;
-  background: #ffffff;
-  border: 1.5px solid #ded5c6;
-  border-radius: 10px;
+  padding: 11px 14px 11px 38px;
+  background: rgba(255, 255, 255, 0.95);
+  border: 1.5px solid #cbd5e1;
+  border-radius: 9999px;
   font-size: 13.5px;
-  color: #1c1815;
+  color: #0f172a;
   outline: none;
   transition: all 0.15s ease;
 }
 
 .cit-form-input:focus {
-  border-color: #c54a26;
-  box-shadow: 0 0 0 3px rgba(197, 74, 38, 0.15);
+  border-color: #ea580c;
+  box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.18);
 }
 
 .cit-password-toggle {
