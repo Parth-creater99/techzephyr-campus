@@ -347,344 +347,176 @@ export function FacultyDashboardPage({ currentUser, onNavigate }) {
 
   return (
     <div className="faculty-dashboard-container animate-fade-in-up">
-      {/* ==========================================================================
-          1. Hero Animated Sliding Daily Notice Board
-          ========================================================================== */}
-      <div className="daily-notice-hero-card">
-        <div className="notice-hero-top">
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <span className="notice-badge-pulsing">
-              <span className="pulse-dot-red" />
-              <span>LIVE CAMPUS DAILY NOTICES &amp; UPDATES</span>
+      {/* 1. Daily Notice Banner: Clean, Minimalist */}
+      <div className="daily-notice-clean">
+        <div className="notice-top-clean">
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <span className={`notice-category-tag ${currentNotice.category}`}>
+              {currentNotice.categoryName || 'Notice'}
             </span>
-            <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>
-              Real-time faculty absences, extra class swaps, and visiting dignitaries
+            <span style={{ fontSize: 12, color: '#64748b' }}>
+              <Clock size={12} style={{ display: 'inline', marginRight: 4, verticalAlign: 'middle' }} />
+              {currentNotice.time}
             </span>
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-            {/* Category filter pills */}
-            <div className="clean-mode-pill-container" style={{ padding: 2 }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            {['all', 'absence', 'extra', 'guest'].map((cat) => (
               <button
+                key={cat}
                 type="button"
-                className={`mode-toggle-btn ${noticeFilter === 'all' ? 'active' : ''}`}
-                style={{ padding: '4px 10px', fontSize: 11 }}
+                className={`venue-filter-btn-clean ${noticeFilter === cat ? 'active' : ''}`}
+                style={{ padding: '2px 8px', fontSize: 11 }}
                 onClick={() => {
-                  setNoticeFilter('all');
+                  setNoticeFilter(cat);
                   setCurrentNoticeIndex(0);
                 }}
               >
-                All ({dailyNotices.length})
+                {cat === 'all' ? 'All' : cat === 'absence' ? 'Absences' : cat === 'extra' ? 'Extra' : 'Guests'}
               </button>
-              <button
-                type="button"
-                className={`mode-toggle-btn ${noticeFilter === 'absence' ? 'active' : ''}`}
-                style={{ padding: '4px 10px', fontSize: 11 }}
-                onClick={() => {
-                  setNoticeFilter('absence');
-                  setCurrentNoticeIndex(0);
-                }}
-              >
-                Absences (2)
-              </button>
-              <button
-                type="button"
-                className={`mode-toggle-btn ${noticeFilter === 'extra' ? 'active' : ''}`}
-                style={{ padding: '4px 10px', fontSize: 11 }}
-                onClick={() => {
-                  setNoticeFilter('extra');
-                  setCurrentNoticeIndex(0);
-                }}
-              >
-                Extra Classes (2)
-              </button>
-              <button
-                type="button"
-                className={`mode-toggle-btn ${noticeFilter === 'guest' ? 'active' : ''}`}
-                style={{ padding: '4px 10px', fontSize: 11 }}
-                onClick={() => {
-                  setNoticeFilter('guest');
-                  setCurrentNoticeIndex(0);
-                }}
-              >
-                Guest Speakers (2)
-              </button>
-            </div>
+            ))}
 
             <button
               type="button"
-              className="app-btn-lime"
-              style={{ padding: '5px 12px', fontSize: 12 }}
+              className="venue-btn-subtle"
+              style={{ padding: '3px 8px', fontSize: 11 }}
               onClick={() => setIsPostNoticeOpen(true)}
             >
-              <Plus size={13} />
-              <span>Post Notice</span>
+              <Plus size={12} />
+              <span>Post</span>
             </button>
           </div>
         </div>
 
-        {/* Sliding Card Viewport */}
-        <div className="notice-carousel-viewport">
-          {currentNotice && (
-            <div
-              key={currentNotice.id}
-              className={`notice-slide-card notice-type-${currentNotice.category} animate-fade-in`}
-            >
-              <div className="notice-header-row">
-                <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                  <span className="notice-category-pill">
-                    {currentNotice.category === 'absence' && '🔴 ABSENCE NOTICE'}
-                    {currentNotice.category === 'extra' && '⚡ EXTRA CLASS'}
-                    {currentNotice.category === 'guest' && '🌟 DISTINGUISHED GUEST'}
-                    {currentNotice.category === 'event' && '✦ SPECIAL EVENT'}
-                  </span>
-                  <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)' }}>
-                    {currentNotice.categoryName}
-                  </span>
-                </div>
-
-                <div className="notice-time-pill">
-                  <Clock size={13} />
-                  <span>{currentNotice.time}</span>
-                </div>
-              </div>
-
-              <div className="notice-title-main">{currentNotice.title}</div>
-              <div className="notice-detail-text">{currentNotice.details}</div>
-            </div>
-          )}
+        <div className="notice-body-clean">
+          <div className="notice-title-clean">{currentNotice.title}</div>
+          <div className="notice-detail-clean">{currentNotice.details}</div>
         </div>
 
-        {/* Carousel Bottom Controls */}
-        <div className="notice-controls-row">
-          <div className="notice-indicators-wrap">
-            {activeNotices.map((_, idx) => (
-              <button
-                key={idx}
-                type="button"
-                className={`notice-indicator-dot ${currentNoticeIndex === idx ? 'active' : ''}`}
-                onClick={() => setCurrentNoticeIndex(idx)}
-                title={`Go to notice ${idx + 1}`}
-              />
-            ))}
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+        <div className="notice-footer-clean">
+          <span style={{ fontSize: 11.5, color: '#94a3b8' }}>
+            {currentNoticeIndex + 1} of {activeNotices.length} updates
+          </span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
             <button
               type="button"
-              className="prompt-chip-btn"
-              onClick={() => setIsNoticeAutoPlay(!isNoticeAutoPlay)}
-              style={{ fontSize: 11, padding: '3px 8px', display: 'flex', alignItems: 'center', gap: 4 }}
+              className="notice-arrow-btn-clean"
+              onClick={handlePrevNotice}
+              title="Previous"
             >
-              {isNoticeAutoPlay ? <Pause size={11} /> : <Play size={11} />}
-              <span>{isNoticeAutoPlay ? 'Auto-Sliding' : 'Paused'}</span>
+              <ChevronLeft size={14} />
             </button>
-
-            <div className="notice-nav-arrows">
-              <button
-                type="button"
-                className="notice-arrow-btn"
-                onClick={handlePrevNotice}
-                title="Previous Notice"
-              >
-                <ChevronLeft size={16} />
-              </button>
-              <button
-                type="button"
-                className="notice-arrow-btn"
-                onClick={handleNextNotice}
-                title="Next Notice"
-              >
-                <ChevronRight size={16} />
-              </button>
-            </div>
+            <button
+              type="button"
+              className="notice-arrow-btn-clean"
+              onClick={handleNextNotice}
+              title="Next"
+            >
+              <ChevronRight size={14} />
+            </button>
           </div>
         </div>
       </div>
 
-      {/* ==========================================================================
-          2. Comprehensive Faculty Stats Overview (Workload, Compliance & Departments)
-          ========================================================================== */}
-      <div className="faculty-stats-section">
-        <div className="section-title-wrap" style={{ marginBottom: 12 }}>
-          <div>
-            <h3 className="section-title" style={{ fontSize: 18, margin: 0 }}>
-              Faculty Statistics &amp; Academic Workload Hub
-            </h3>
-            <span style={{ fontSize: 12.5, color: 'var(--text-secondary)' }}>
-              Real-time faculty metrics across 40 professors, 5 academic departments, and 27 venues
-            </span>
-          </div>
-
-          <span style={{ fontSize: 11.5, fontWeight: 700, color: 'var(--accent-sage)', background: 'var(--accent-sage-light)', padding: '4px 10px', borderRadius: 9999, border: '1px solid var(--accent-sage-border)' }}>
-            ✓ 0 Active Violations &bull; 100% Policy Adherence
-          </span>
+      {/* 2. Faculty Statistics: Minimalist Metric Strip (Zero visual clutter) */}
+      <div className="faculty-metrics-strip">
+        <div className="faculty-metric-col">
+          <div className="faculty-metric-number">40</div>
+          <div className="faculty-metric-label">Total Faculty</div>
+          <div className="faculty-metric-sub">38 on campus &bull; 2 on leave</div>
         </div>
-
-        {/* 4 Core Faculty KPI Cards */}
-        <div className="faculty-stats-grid-cards">
-          <div className="fac-stat-box">
-            <div className="fac-stat-icon-wrap" style={{ background: '#fdf2ed', color: '#c54a26' }}>
-              <Users size={22} />
-            </div>
-            <div>
-              <div className="fac-stat-val">40 Faculty</div>
-              <div className="fac-stat-label">Total Teaching Staff</div>
-              <div className="fac-stat-sub">38 On-Campus &bull; 2 On Leave</div>
-            </div>
-          </div>
-
-          <div className="fac-stat-box">
-            <div className="fac-stat-icon-wrap" style={{ background: '#eff6f2', color: '#2d5a45' }}>
-              <Clock size={22} />
-            </div>
-            <div>
-              <div className="fac-stat-val">243 Teaching Hrs</div>
-              <div className="fac-stat-label">Weekly Academic Load</div>
-              <div className="fac-stat-sub">Across 189 Mon–Sat Sessions</div>
-            </div>
-          </div>
-
-          <div className="fac-stat-box">
-            <div className="fac-stat-icon-wrap" style={{ background: '#fef7ee', color: '#9c5912' }}>
-              <Zap size={22} />
-            </div>
-            <div>
-              <div className="fac-stat-val">3.8 Hrs / Day</div>
-              <div className="fac-stat-label">Average Faculty Load</div>
-              <div className="fac-stat-sub">Below 5.0h statutory hard limit</div>
-            </div>
-          </div>
-
-          <div className="fac-stat-box">
-            <div className="fac-stat-icon-wrap" style={{ background: '#faf2f4', color: '#84283c' }}>
-              <Award size={22} />
-            </div>
-            <div>
-              <div className="fac-stat-val">98.4% Score</div>
-              <div className="fac-stat-label">Faculty Satisfaction</div>
-              <div className="fac-stat-sub">0 Clash &bull; 1 Swap Executed</div>
-            </div>
-          </div>
+        <div className="faculty-metric-col">
+          <div className="faculty-metric-number">243h</div>
+          <div className="faculty-metric-label">Weekly Teaching Load</div>
+          <div className="faculty-metric-sub">189 Mon–Sat sessions</div>
         </div>
-
-        {/* Department Workload Distribution Bars */}
-        <div className="dept-workload-bars-grid">
-          <div className="dept-bar-card">
-            <div className="dept-bar-header">
-              <span style={{ color: 'var(--text-primary)' }}>Computer Science (CSE)</span>
-              <span style={{ color: '#c54a26' }}>10 Faculty • 62h</span>
-            </div>
-            <div className="dept-progress-track">
-              <div className="dept-progress-fill" style={{ width: '85%', background: '#c54a26' }} />
-            </div>
-          </div>
-
-          <div className="dept-bar-card">
-            <div className="dept-bar-header">
-              <span style={{ color: 'var(--text-primary)' }}>Electronics &amp; Comm (ECE)</span>
-              <span style={{ color: '#db822a' }}>8 Faculty • 54h</span>
-            </div>
-            <div className="dept-progress-track">
-              <div className="dept-progress-fill" style={{ width: '74%', background: '#db822a' }} />
-            </div>
-          </div>
-
-          <div className="dept-bar-card">
-            <div className="dept-bar-header">
-              <span style={{ color: 'var(--text-primary)' }}>Mechanical Eng (ME)</span>
-              <span style={{ color: '#4e7561' }}>7 Faculty • 46h</span>
-            </div>
-            <div className="dept-progress-track">
-              <div className="dept-progress-fill" style={{ width: '63%', background: '#4e7561' }} />
-            </div>
-          </div>
-
-          <div className="dept-bar-card">
-            <div className="dept-bar-header">
-              <span style={{ color: 'var(--text-primary)' }}>Information Tech (IT)</span>
-              <span style={{ color: '#3a2216' }}>8 Faculty • 48h</span>
-            </div>
-            <div className="dept-progress-track">
-              <div className="dept-progress-fill" style={{ width: '66%', background: '#3a2216' }} />
-            </div>
-          </div>
-
-          <div className="dept-bar-card">
-            <div className="dept-bar-header">
-              <span style={{ color: 'var(--text-primary)' }}>General &amp; EE/Civil</span>
-              <span style={{ color: '#834f96' }}>7 Faculty • 33h</span>
-            </div>
-            <div className="dept-progress-track">
-              <div className="dept-progress-fill" style={{ width: '45%', background: '#834f96' }} />
-            </div>
-          </div>
+        <div className="faculty-metric-col">
+          <div className="faculty-metric-number">3.8h</div>
+          <div className="faculty-metric-label">Daily Average per Faculty</div>
+          <div className="faculty-metric-sub">Statutory limit: 5.0h</div>
+        </div>
+        <div className="faculty-metric-col">
+          <div className="faculty-metric-number">100%</div>
+          <div className="faculty-metric-label">Policy Adherence</div>
+          <div className="faculty-metric-sub">0 active collisions</div>
         </div>
       </div>
 
-      {/* ==========================================================================
-          3. Real Working Calendar with Interactive Note Adder & Workspace
-          ========================================================================== */}
-      <div className="calendar-workspace-card" style={{ marginBottom: 22 }}>
-        <div className="calendar-top-header">
-          <div className="calendar-month-title">
-            <CalendarIcon size={20} color="var(--accent-terracotta)" />
-            <span>
-              {monthNames[calendarDate.getMonth()]} {calendarDate.getFullYear()} Calendar &amp; Agenda
-            </span>
+      {/* 3. Department Workload Distribution (Single Clean Card) */}
+      <div className="dept-distribution-clean">
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+          <span style={{ fontSize: 13, fontWeight: 700, color: '#0f172a' }}>Department Workload Distribution</span>
+          <span style={{ fontSize: 11.5, color: '#64748b' }}>5 academic departments</span>
+        </div>
+        {[
+          { name: 'Computer Science (CSE)', faculty: 10, hours: 62, width: '85%' },
+          { name: 'Electronics & Comm (ECE)', faculty: 8, hours: 54, width: '74%' },
+          { name: 'Mechanical Eng (ME)', faculty: 7, hours: 46, width: '63%' },
+          { name: 'Information Tech (IT)', faculty: 8, hours: 48, width: '66%' },
+          { name: 'General & Sciences', faculty: 7, hours: 33, width: '45%' },
+        ].map((d) => (
+          <div key={d.name} className="dept-row-clean">
+            <span className="dept-name-clean">{d.name}</span>
+            <div className="dept-bar-track-clean">
+              <div className="dept-bar-fill-clean" style={{ width: d.width }} />
+            </div>
+            <span className="dept-count-clean">{d.faculty} fac &bull; {d.hours}h</span>
+          </div>
+        ))}
+      </div>
+
+      {/* 4. Real Working Calendar & Notes Workspace (Clean Minimalist) */}
+      <div className="calendar-workspace-clean">
+        <div className="calendar-header-clean">
+          <div className="calendar-month-text">
+            {monthNames[calendarDate.getMonth()]} {calendarDate.getFullYear()} &bull; Agenda &amp; Tasks
           </div>
 
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>
-              Click any date to view and add personal reminders &amp; tasks
-            </span>
-
-            <div className="calendar-nav-btn-group">
-              <button
-                type="button"
-                className="notice-arrow-btn"
-                onClick={handlePrevMonth}
-                title="Previous Month"
-              >
-                <ChevronLeft size={15} />
-              </button>
-              <button
-                type="button"
-                className="prompt-chip-btn"
-                style={{ fontSize: 12, padding: '4px 10px' }}
-                onClick={() => {
-                  setCalendarDate(new Date(2026, 10, 1));
-                  setSelectedCalendarDay(1);
-                }}
-              >
-                Today (Nov 01)
-              </button>
-              <button
-                type="button"
-                className="notice-arrow-btn"
-                onClick={handleNextMonth}
-                title="Next Month"
-              >
-                <ChevronRight size={15} />
-              </button>
-            </div>
+          <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+            <button
+              type="button"
+              className="notice-arrow-btn-clean"
+              onClick={handlePrevMonth}
+              title="Previous Month"
+            >
+              <ChevronLeft size={14} />
+            </button>
+            <button
+              type="button"
+              className="venue-filter-btn-clean"
+              style={{ fontSize: 11.5 }}
+              onClick={() => {
+                setCalendarDate(new Date(2026, 10, 1));
+                setSelectedCalendarDay(1);
+              }}
+            >
+              Today
+            </button>
+            <button
+              type="button"
+              className="notice-arrow-btn-clean"
+              onClick={handleNextMonth}
+              title="Next Month"
+            >
+              <ChevronRight size={14} />
+            </button>
           </div>
         </div>
 
-        {/* 2-Column Split: Calendar Grid on Left (60%) + Selected Date Notes on Right (40%) */}
-        <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: 20 }}>
+        {/* 2-Column Split: Calendar Grid on Left + Notes on Right */}
+        <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: 16 }}>
           {/* Calendar Grid */}
           <div>
-            <table className="calendar-grid-table">
+            <table className="calendar-grid-clean">
               <thead>
                 <tr>
-                  <th className="calendar-th-day">Sun</th>
-                  <th className="calendar-th-day">Mon</th>
-                  <th className="calendar-th-day">Tue</th>
-                  <th className="calendar-th-day">Wed</th>
-                  <th className="calendar-th-day">Thu</th>
-                  <th className="calendar-th-day">Fri</th>
-                  <th className="calendar-th-day">Sat</th>
+                  <th className="calendar-th-clean">S</th>
+                  <th className="calendar-th-clean">M</th>
+                  <th className="calendar-th-clean">T</th>
+                  <th className="calendar-th-clean">W</th>
+                  <th className="calendar-th-clean">T</th>
+                  <th className="calendar-th-clean">F</th>
+                  <th className="calendar-th-clean">S</th>
                 </tr>
               </thead>
               <tbody>
@@ -702,34 +534,21 @@ export function FacultyDashboardPage({ currentUser, onNavigate }) {
                         const notesCount = (calendarNotes[dateKey] || []).length;
 
                         if (!isCurrentMonth) {
-                          return <td key={dayIdx} className="calendar-day-cell other-month" />;
+                          return <td key={dayIdx} className="calendar-td-clean other-month" />;
                         }
 
                         return (
                           <td
                             key={dayIdx}
-                            className={`calendar-day-cell ${isSelected ? 'selected' : ''} ${isToday ? 'today' : ''}`}
+                            className={`calendar-td-clean ${isSelected ? 'selected' : ''} ${isToday ? 'today' : ''}`}
                             onClick={() => setSelectedCalendarDay(dayNum)}
                           >
-                            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                              <span className="cal-day-num">{dayNum}</span>
-                              {isToday && (
-                                <span style={{ fontSize: 8.5, background: 'var(--accent-sage-light)', color: 'var(--accent-sage)', padding: '1px 4px', borderRadius: 3, fontWeight: 800 }}>
-                                  TODAY
-                                </span>
-                              )}
-                            </div>
-
-                            <div className="cal-day-badge-wrap">
-                              {notesCount > 0 && (
-                                <span className="cal-count-pill" title={`${notesCount} notes`}>
-                                  {notesCount} note{notesCount > 1 ? 's' : ''}
-                                </span>
-                              )}
-                              {dayNum >= 2 && dayNum <= 7 && (
-                                <span className="cal-event-dot" title="Classes in session" />
-                              )}
-                            </div>
+                            <span className="cal-date-number">{dayNum}</span>
+                            {notesCount > 0 && (
+                              <div style={{ marginTop: 2 }}>
+                                <span className="cal-note-indicator" title={`${notesCount} notes`} />
+                              </div>
+                            )}
                           </td>
                         );
                       })}
@@ -740,95 +559,58 @@ export function FacultyDashboardPage({ currentUser, onNavigate }) {
             </table>
           </div>
 
-          {/* Interactive Notes Panel for Selected Date */}
-          <div className="day-notes-panel">
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border-default)', paddingBottom: 8 }}>
-              <div>
-                <h4 style={{ margin: 0, fontSize: 14.5, fontWeight: 800, color: 'var(--text-primary)' }}>
-                  Notes &amp; Agenda: {monthNames[calendarDate.getMonth()]} {selectedCalendarDay}, {calendarDate.getFullYear()}
-                </h4>
-                <span style={{ fontSize: 11.5, color: 'var(--text-secondary)' }}>
-                  {notesForSelectedDate.length} item{notesForSelectedDate.length !== 1 ? 's' : ''} recorded for this date
-                </span>
-              </div>
+          {/* Clean Day Notes Panel */}
+          <div className="day-notes-clean">
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+              <span style={{ fontSize: 13, fontWeight: 700, color: '#0f172a' }}>
+                {monthNames[calendarDate.getMonth()]} {selectedCalendarDay}: Notes ({notesForSelectedDate.length})
+              </span>
             </div>
 
-            {/* Add New Note Input Form */}
+            {/* Add Note Input */}
             <form onSubmit={handleAddCalendarNote} style={{ display: 'flex', gap: 6 }}>
               <input
                 type="text"
                 className="app-input-field"
-                placeholder="Add a task, reminder, or note..."
+                placeholder="Add task or note..."
                 value={newNoteInput}
                 onChange={(e) => setNewNoteInput(e.target.value)}
-                style={{ flex: 1, padding: '7px 12px', fontSize: 12.5 }}
+                style={{ flex: 1, padding: '5px 10px', fontSize: 12 }}
               />
-
-              <select
-                className="app-select-field"
-                value={newNotePriority}
-                onChange={(e) => setNewNotePriority(e.target.value)}
-                style={{ padding: '7px 8px', fontSize: 12 }}
-              >
-                <option value="normal">Normal</option>
-                <option value="high">High</option>
-                <option value="urgent">Urgent</option>
-              </select>
-
-              <button type="submit" className="app-btn-lime" style={{ padding: '7px 14px', fontSize: 12 }}>
-                <Plus size={14} />
-                <span>Add</span>
+              <button type="submit" className="venue-btn-primary" style={{ padding: '4px 10px', fontSize: 11.5 }}>
+                Add
               </button>
             </form>
 
-            {/* List of Notes for Selected Date */}
-            <div className="notes-list-scroll">
+            {/* Notes List */}
+            <div style={{ display: 'flex', flexDirection: 'column', gap: 4, maxHeight: 220, overflowY: 'auto' }}>
               {notesForSelectedDate.length === 0 ? (
-                <div style={{ padding: '24px 10px', textAlign: 'center', color: 'var(--text-muted)' }}>
-                  <CalendarIcon size={24} style={{ margin: '0 auto 6px auto', opacity: 0.5 }} />
-                  <p style={{ margin: 0, fontSize: 12.5 }}>No notes for this date yet. Type above to add one!</p>
+                <div style={{ padding: '16px 8px', color: '#94a3b8', fontSize: 12, textAlign: 'center' }}>
+                  No tasks for this day.
                 </div>
               ) : (
                 notesForSelectedDate.map((note) => (
-                  <div key={note.id} className={`cal-note-item ${note.done ? 'completed' : ''}`}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: 8, flex: 1 }}>
-                      <button
-                        type="button"
-                        onClick={() => handleToggleCalendarNote(note.id)}
-                        style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
-                        title={note.done ? 'Mark pending' : 'Mark done'}
-                      >
-                        {note.done ? (
-                          <CheckCircle2 size={16} color="var(--accent-sage)" />
-                        ) : (
-                          <Circle size={16} color="var(--text-muted)" />
-                        )}
-                      </button>
-
-                      <div style={{ flex: 1 }}>
-                        <span className={`cal-note-text ${note.done ? 'done' : ''}`}>
-                          {note.text}
-                        </span>
-                        {note.priority === 'urgent' && (
-                          <span style={{ fontSize: 9.5, fontWeight: 800, color: '#dc2626', background: '#fee2e2', padding: '1px 5px', borderRadius: 4, marginLeft: 6 }}>
-                            URGENT
-                          </span>
-                        )}
-                        {note.priority === 'high' && (
-                          <span style={{ fontSize: 9.5, fontWeight: 800, color: '#d97706', background: '#fef3c7', padding: '1px 5px', borderRadius: 4, marginLeft: 6 }}>
-                            HIGH
-                          </span>
-                        )}
-                      </div>
-                    </div>
-
+                  <div key={note.id} className="day-note-row">
+                    <button
+                      type="button"
+                      onClick={() => handleToggleCalendarNote(note.id)}
+                      style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
+                    >
+                      {note.done ? (
+                        <CheckCircle2 size={15} color="#16a34a" />
+                      ) : (
+                        <Circle size={15} color="#94a3b8" />
+                      )}
+                    </button>
+                    <span className={`day-note-text ${note.done ? 'done' : ''}`}>
+                      {note.text}
+                    </span>
                     <button
                       type="button"
                       onClick={() => handleDeleteCalendarNote(note.id)}
-                      style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8', padding: 2 }}
-                      title="Delete note"
+                      style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#cbd5e1', padding: 2 }}
                     >
-                      <Trash2 size={13} />
+                      <Trash2 size={12} />
                     </button>
                   </div>
                 ))
@@ -1029,16 +811,16 @@ export function FacultyDashboardPage({ currentUser, onNavigate }) {
 
                 <div>
                   {f.status === 'Available' ? (
-                    <span style={{ fontSize: 10.5, fontWeight: 700, color: '#166534', background: '#dcfce7', padding: '2px 6px', borderRadius: 9999 }}>
-                      🟢 Available
+                    <span className="status-badge-clean available">
+                      Available
                     </span>
                   ) : f.status === 'In Class' ? (
-                    <span style={{ fontSize: 10.5, fontWeight: 700, color: '#9a3412', background: '#ffedd5', padding: '2px 6px', borderRadius: 9999 }}>
-                      🟠 In Class
+                    <span className="status-badge-clean in-class">
+                      In Class
                     </span>
                   ) : (
-                    <span style={{ fontSize: 10.5, fontWeight: 700, color: '#1e3a8a', background: '#dbeafe', padding: '2px 6px', borderRadius: 9999 }}>
-                      🔵 Office Hours
+                    <span className="status-badge-clean office">
+                      Office Hours
                     </span>
                   )}
                 </div>

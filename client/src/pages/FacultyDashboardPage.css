@@ -1,478 +1,376 @@
-/* Faculty Dashboard & Real Working Calendar Styles */
-
 /* ==========================================================================
-   Hero Animated Sliding Daily Notice Carousel
+   Precise & Minimalist Faculty Dashboard Styles
    ========================================================================== */
-.daily-notice-hero-card {
-  background: linear-gradient(135deg, #ffffff 0%, #fdfbf7 100%);
-  border: 1.5px solid var(--border-default);
-  border-radius: var(--radius-xl);
-  padding: 18px 22px;
-  box-shadow: 0 4px 20px rgba(31, 28, 26, 0.05);
-  margin-bottom: 20px;
-  position: relative;
-  overflow: hidden;
-}
 
-.notice-hero-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 14px;
-}
-
-.notice-badge-pulsing {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 12px;
-  border-radius: 9999px;
-  background: rgba(197, 74, 38, 0.1);
-  color: var(--accent-terracotta);
-  font-size: 11.5px;
-  font-weight: 800;
-  letter-spacing: 0.5px;
-  border: 1px solid rgba(197, 74, 38, 0.25);
-}
-
-.pulse-dot-red {
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background-color: var(--accent-terracotta);
-  animation: noticePulse 1.8s infinite ease-in-out;
-}
-
-@keyframes noticePulse {
-  0% { transform: scale(0.9); opacity: 0.8; }
-  50% { transform: scale(1.3); opacity: 1; }
-  100% { transform: scale(0.9); opacity: 0.8; }
-}
-
-.notice-carousel-viewport {
-  position: relative;
-  min-height: 120px;
-  overflow: hidden;
-}
-
-.notice-slide-card {
-  border-radius: var(--radius-lg);
-  padding: 16px 20px;
+.faculty-dashboard-container {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
-  border-left: 4.5px solid var(--accent-terracotta);
+  gap: 20px;
+  width: 100%;
+  max-width: 1560px;
+  margin: 0 auto;
 }
 
-.notice-type-absence {
-  background: #fdf5f3;
-  border-color: #e57352;
+/* 1. Daily Notice Banner: Clean, flat, calm */
+.daily-notice-clean {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 14px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
-.notice-type-extra {
-  background: #fbf7ee;
-  border-color: #d9822b;
-}
-
-.notice-type-guest {
-  background: #f2f7f4;
-  border-color: #4e7c67;
-}
-
-.notice-type-event {
-  background: #f6f3f8;
-  border-color: #834f96;
-}
-
-.notice-header-row {
+.notice-top-clean {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
   flex-wrap: wrap;
+  gap: 10px;
 }
 
-.notice-category-pill {
-  font-size: 10.5px;
-  font-weight: 800;
-  text-transform: uppercase;
-  padding: 3px 8px;
-  border-radius: 6px;
-  letter-spacing: 0.4px;
-}
-
-.notice-type-absence .notice-category-pill {
-  background: #f7dcd5;
-  color: #a23b18;
-}
-
-.notice-type-extra .notice-category-pill {
-  background: #fae8ce;
-  color: #8c5208;
-}
-
-.notice-type-guest .notice-category-pill {
-  background: #d4e8dd;
-  color: #1e5c3e;
-}
-
-.notice-type-event .notice-category-pill {
-  background: #ebdcf2;
-  color: #5c2670;
-}
-
-.notice-time-pill {
-  font-size: 11.5px;
+.notice-category-tag {
+  font-size: 11px;
   font-weight: 700;
-  color: var(--text-secondary);
+  text-transform: uppercase;
+  padding: 2px 8px;
+  border-radius: 4px;
+  background: #f1f5f9;
+  color: #475569;
+  letter-spacing: 0.3px;
+}
+
+.notice-category-tag.absence {
+  background: #fef2f2;
+  color: #991b1b;
+}
+
+.notice-category-tag.extra {
+  background: #fffbeb;
+  color: #92400e;
+}
+
+.notice-category-tag.guest {
+  background: #f0fdf4;
+  color: #166534;
+}
+
+.notice-category-tag.event {
+  background: #f8fafc;
+  color: #334155;
+}
+
+.notice-body-clean {
   display: flex;
-  align-items: center;
+  flex-direction: column;
   gap: 4px;
 }
 
-.notice-title-main {
-  font-size: 16.5px;
-  font-weight: 800;
-  color: var(--text-primary);
+.notice-title-clean {
+  font-size: 15px;
+  font-weight: 700;
+  color: #0f172a;
   line-height: 1.3;
 }
 
-.notice-detail-text {
-  font-size: 13.5px;
-  color: var(--text-secondary);
+.notice-detail-clean {
+  font-size: 13px;
+  color: #475569;
   line-height: 1.5;
 }
 
-.notice-controls-row {
+.notice-footer-clean {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  margin-top: 14px;
-  padding-top: 10px;
-  border-top: 1px solid var(--border-subtle);
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.notice-indicators-wrap {
-  display: flex;
-  gap: 6px;
-}
-
-.notice-indicator-dot {
-  width: 8px;
-  height: 8px;
-  border-radius: 9999px;
-  background: var(--border-default);
-  cursor: pointer;
-  transition: all 0.25s ease;
-  border: none;
-  padding: 0;
-}
-
-.notice-indicator-dot.active {
-  width: 22px;
-  background: var(--accent-terracotta);
-}
-
-.notice-nav-arrows {
-  display: flex;
-  gap: 6px;
-}
-
-.notice-arrow-btn {
-  width: 32px;
-  height: 32px;
-  border-radius: 8px;
-  border: 1px solid var(--border-default);
-  background: #ffffff;
-  color: var(--text-primary);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.notice-arrow-btn:hover {
-  background: var(--bg-card-subtle);
-  border-color: var(--accent-terracotta);
-  color: var(--accent-terracotta);
-}
-
-/* ==========================================================================
-   Comprehensive Faculty Statistics Section
-   ========================================================================== */
-.faculty-stats-section {
-  margin-bottom: 22px;
-}
-
-.faculty-stats-grid-cards {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-  gap: 14px;
-  margin-bottom: 18px;
-}
-
-.fac-stat-box {
-  background: #ffffff;
-  border: 1px solid var(--border-default);
-  border-radius: var(--radius-lg);
-  padding: 16px;
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  box-shadow: 0 1px 3px rgba(31, 28, 26, 0.03);
-  transition: transform 0.2s ease;
-}
-
-.fac-stat-box:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(31, 28, 26, 0.06);
-}
-
-.fac-stat-icon-wrap {
-  width: 44px;
-  height: 44px;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-shrink: 0;
-}
-
-.fac-stat-val {
-  font-size: 20px;
-  font-weight: 900;
-  color: var(--text-primary);
-  line-height: 1.1;
-}
-
-.fac-stat-label {
-  font-size: 11.5px;
-  font-weight: 700;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.3px;
+  border-top: 1px solid #f1f5f9;
+  padding-top: 8px;
   margin-top: 2px;
 }
 
-.fac-stat-sub {
-  font-size: 11px;
-  color: var(--text-muted);
-}
-
-/* Department Faculty Breakdown */
-.dept-workload-bars-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 12px;
-  background: #ffffff;
-  border: 1px solid var(--border-default);
-  border-radius: var(--radius-lg);
-  padding: 16px;
-}
-
-.dept-bar-card {
+.notice-pagination {
+  font-size: 11.5px;
+  color: #64748b;
   display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.dept-bar-header {
-  display: flex;
-  justify-content: space-between;
   align-items: center;
-  font-size: 12.5px;
-  font-weight: 700;
+  gap: 8px;
 }
 
-.dept-progress-track {
-  width: 100%;
-  height: 7px;
-  border-radius: 9999px;
-  background: var(--border-subtle);
+.notice-arrow-btn-clean {
+  width: 24px;
+  height: 24px;
+  border-radius: 4px;
+  border: 1px solid #cbd5e1;
+  background: #ffffff;
+  color: #334155;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.notice-arrow-btn-clean:hover {
+  background: #f8fafc;
+  color: #0f172a;
+}
+
+/* 2. Faculty Stats: Minimalist Flat Metric Bar */
+.faculty-metrics-strip {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
   overflow: hidden;
 }
 
-.dept-progress-fill {
+.faculty-metric-col {
+  padding: 14px 18px;
+  border-right: 1px solid #f1f5f9;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.faculty-metric-col:last-child {
+  border-right: none;
+}
+
+.faculty-metric-number {
+  font-size: 22px;
+  font-weight: 800;
+  color: #0f172a;
+  letter-spacing: -0.5px;
+  line-height: 1.1;
+}
+
+.faculty-metric-label {
+  font-size: 12px;
+  font-weight: 600;
+  color: #475569;
+}
+
+.faculty-metric-sub {
+  font-size: 11px;
+  color: #94a3b8;
+}
+
+/* 3. Department Distribution: Single flat card with clean rows */
+.dept-distribution-clean {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 14px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.dept-row-clean {
+  display: grid;
+  grid-template-columns: 140px 1fr 100px;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+}
+
+.dept-name-clean {
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.dept-bar-track-clean {
+  height: 6px;
+  border-radius: 9999px;
+  background: #f1f5f9;
+  overflow: hidden;
+}
+
+.dept-bar-fill-clean {
   height: 100%;
   border-radius: 9999px;
-  transition: width 0.8s ease;
+  background: #475569;
 }
 
-/* ==========================================================================
-   Real Interactive Working Calendar with Notes
-   ========================================================================== */
-.calendar-workspace-card {
+.dept-count-clean {
+  text-align: right;
+  color: #64748b;
+  font-size: 11.5px;
+}
+
+/* 4. Calendar & Notes Workspace: Clean split */
+.calendar-workspace-clean {
   background: #ffffff;
-  border: 1.5px solid var(--border-default);
-  border-radius: var(--radius-xl);
-  padding: 18px 22px;
-  box-shadow: 0 2px 14px rgba(31, 28, 26, 0.04);
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  padding: 16px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
-.calendar-top-header {
+.calendar-header-clean {
   display: flex;
   align-items: center;
   justify-content: space-between;
   flex-wrap: wrap;
   gap: 10px;
-  margin-bottom: 16px;
 }
 
-.calendar-month-title {
-  font-size: 18px;
-  font-weight: 800;
-  color: var(--text-primary);
-  display: flex;
-  align-items: center;
-  gap: 8px;
+.calendar-month-text {
+  font-size: 16px;
+  font-weight: 700;
+  color: #0f172a;
 }
 
-.calendar-nav-btn-group {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.calendar-grid-table {
+.calendar-grid-clean {
   width: 100%;
-  border-collapse: separate;
-  border-spacing: 4px;
+  border-collapse: collapse;
 }
 
-.calendar-th-day {
-  text-align: center;
+.calendar-th-clean {
   font-size: 11px;
-  font-weight: 800;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
+  font-weight: 600;
+  color: #64748b;
+  text-align: center;
   padding: 6px 0;
+  border-bottom: 1px solid #e2e8f0;
 }
 
-.calendar-day-cell {
-  height: 64px;
-  border-radius: 10px;
-  border: 1px solid var(--border-default);
-  background: #ffffff;
+.calendar-td-clean {
+  height: 52px;
+  border: 1px solid #f1f5f9;
+  text-align: left;
   vertical-align: top;
   padding: 4px 6px;
   cursor: pointer;
-  transition: all 0.15s ease;
-  position: relative;
+  background: #ffffff;
+  transition: background-color 0.1s ease;
 }
 
-.calendar-day-cell:hover {
-  background: #fbf7f2;
-  border-color: var(--accent-terracotta);
-  transform: translateY(-1px);
+.calendar-td-clean:hover {
+  background: #f8fafc;
 }
 
-.calendar-day-cell.selected {
-  border: 2px solid var(--accent-terracotta);
-  background: #fdf5f2;
-  box-shadow: 0 2px 8px rgba(197, 74, 38, 0.15);
+.calendar-td-clean.selected {
+  background: #f1f5f9;
+  font-weight: 700;
 }
 
-.calendar-day-cell.today {
-  border-color: var(--accent-sage);
-  background: #f3f8f5;
+.calendar-td-clean.today {
+  border-color: #0f172a;
 }
 
-.calendar-day-cell.other-month {
-  opacity: 0.35;
-  background: var(--bg-card-subtle);
+.calendar-td-clean.other-month {
+  color: #cbd5e1;
+  background: #fafafa;
   cursor: default;
 }
 
-.cal-day-num {
+.cal-date-number {
   font-size: 12px;
-  font-weight: 800;
-  color: var(--text-primary);
+  color: #0f172a;
 }
 
-.cal-day-badge-wrap {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 3px;
-  margin-top: 3px;
-}
-
-.cal-note-dot {
-  width: 6px;
-  height: 6px;
+.cal-note-indicator {
+  display: inline-block;
+  width: 5px;
+  height: 5px;
   border-radius: 50%;
-  background-color: var(--accent-terracotta);
+  background: #0284c7;
+  margin-top: 4px;
 }
 
-.cal-event-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background-color: var(--accent-sage);
-}
-
-.cal-count-pill {
-  font-size: 8.5px;
-  font-weight: 800;
-  background: #fae8ce;
-  color: #8c5208;
-  padding: 1px 4px;
-  border-radius: 4px;
-}
-
-/* Day Notes & Tasks Workspace Panel */
-.day-notes-panel {
-  background: #fbf9f6;
-  border: 1.5px solid var(--border-default);
-  border-radius: var(--radius-lg);
-  padding: 16px;
+/* Day Notes Panel */
+.day-notes-clean {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 10px;
 }
 
-.notes-list-scroll {
-  max-height: 240px;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.cal-note-item {
-  background: #ffffff;
-  border: 1px solid var(--border-default);
-  border-radius: 8px;
-  padding: 8px 12px;
+.day-note-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 10px;
-  transition: all 0.15s ease;
+  gap: 8px;
+  padding: 6px 8px;
+  border-radius: 6px;
+  background: #f8fafc;
+  font-size: 12.5px;
 }
 
-.cal-note-item:hover {
-  border-color: var(--accent-terracotta);
+.day-note-row:hover {
+  background: #f1f5f9;
 }
 
-.cal-note-item.completed {
-  background: #f1f5f2;
-  opacity: 0.75;
+.day-note-text {
+  color: #0f172a;
+  flex: 1;
 }
 
-.cal-note-text {
-  font-size: 13px;
-  color: var(--text-primary);
+.day-note-text.done {
+  text-decoration: line-through;
+  color: #94a3b8;
+}
+
+/* 5. Minimalist Faculty Roster Table */
+.faculty-table-clean {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 12px;
+}
+
+.faculty-table-clean th {
+  text-align: left;
+  padding: 8px 10px;
+  background: #f8fafc;
+  color: #475569;
+  font-weight: 600;
+  border-bottom: 1px solid #e2e8f0;
+}
+
+.faculty-table-clean td {
+  padding: 8px 10px;
+  border-bottom: 1px solid #f1f5f9;
+  color: #334155;
+}
+
+.faculty-table-clean tr:hover td {
+  background: #f8fafc;
+}
+
+.status-badge-clean {
+  display: inline-block;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-size: 10.5px;
   font-weight: 600;
 }
 
-.cal-note-text.done {
-  text-decoration: line-through;
-  color: var(--text-muted);
+.status-badge-clean.available {
+  background: #f0fdf4;
+  color: #166534;
+}
+
+.status-badge-clean.in-class {
+  background: #f1f5f9;
+  color: #334155;
+}
+
+.status-badge-clean.office {
+  background: #fffbeb;
+  color: #92400e;
+}
+
+@media (max-width: 900px) {
+  .faculty-metrics-strip {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 500px) {
+  .faculty-metrics-strip {
+    grid-template-columns: 1fr;
+  }
 }
