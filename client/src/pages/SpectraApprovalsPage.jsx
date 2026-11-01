@@ -15,7 +15,7 @@ import {
 } from 'lucide-react';
 import { PRIORITY_LEVELS, ROOMS_DATA } from '../services/mockData';
 
-export function SpectraApprovalsPage() {
+export function SpectraApprovalsPage({ currentUser, onNavigate, onRequireAdmin, onSwitchRole }) {
   const [requests, setRequests] = useState([
     {
       id: 'spec-1',

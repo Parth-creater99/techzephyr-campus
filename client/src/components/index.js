@@ -17,3 +17,4 @@ export { EmptyState } from './EmptyState';
 export { PageHeading } from './PageHeading';
 export { CitLogo } from './CitLogo';
 export { CitCampusBuilding } from './CitCampusBuilding';
+export { AdminAccessNoticeModal } from './AdminAccessNoticeModal';

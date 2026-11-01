@@ -1,7 +1,7 @@
 import React from 'react';
 import { LogOut, User, Shield, Lock } from 'lucide-react';
 
-export function SettingsPage({ currentUser, onLogout, onNavigate }) {
+export function SettingsPage({ currentUser, onLogout, onNavigate, onRequireAdmin, onSwitchRole }) {
   const handleLogoutClick = () => {
     if (window.confirm('Are you sure you want to log out of CIT Campus Portal?')) {
       onLogout?.();
@@ -135,6 +135,39 @@ export function SettingsPage({ currentUser, onLogout, onNavigate }) {
                 Full-Time Academic Faculty (4 Courses Assigned)
               </div>
             </div>
+
+            <button
+              type="button"
+              onClick={() => {
+                if (currentUser?.roleType !== 'admin') {
+                  onRequireAdmin?.(
+                    'Alter Institutional Parameters & Policy',
+                    'CIT Institutional Parameters (Mandatory Lunch Intermission 12:55–13:45, Class Window P1–P13, and Term Dates) are locked by Academic Senate Statute. These parameters can only be altered by the Institute Administrator / Academic Dean.'
+                  );
+                  return;
+                }
+                alert('Administrator Policy Override Mode: Parameters unlocked for editing.');
+              }}
+              style={{
+                marginTop: 6,
+                background: currentUser?.roleType === 'admin' ? 'var(--accent-sage-light)' : 'var(--accent-terracotta-light)',
+                color: currentUser?.roleType === 'admin' ? 'var(--accent-sage)' : 'var(--accent-terracotta)',
+                border: `1.5px solid ${currentUser?.roleType === 'admin' ? 'var(--accent-sage-border)' : 'var(--accent-terracotta-border)'}`,
+                borderRadius: 10,
+                padding: '10px 14px',
+                fontSize: 12.5,
+                fontWeight: 700,
+                cursor: 'pointer',
+                display: 'inline-flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                gap: 6,
+                transition: 'all 0.15s',
+              }}
+            >
+              <Lock size={14} />
+              <span>{currentUser?.roleType === 'admin' ? 'Dean Override: Parameters Unlocked' : 'Alter Parameters (Admin Clearance Required)'}</span>
+            </button>
           </div>
         </div>
       </div>

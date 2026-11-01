@@ -270,6 +270,10 @@ export function LandingPage({ currentUser, onEnterPortal, onNavigate }) {
         {/* The Grand Architectural College Building in Background */}
         <CitCampusBuilding />
 
+        <div className="cit-building-label-pill">
+          <Building size={14} style={{ color: '#db822a' }} />
+          <span>CHILIKA INSTITUTE OF TECHNOLOGY (CIT) &bull; HERITAGE CENTRAL ACADEMIC BLOCK</span>
+        </div>
         <div className="cit-hero-container">
           {/* Left Column: Institutional Prestige & Academic Overview */}
           <div className="cit-hero-left">
@@ -485,7 +489,7 @@ export function LandingPage({ currentUser, onEnterPortal, onNavigate }) {
                       onNavigate?.('dashboard');
                     }}
                   >
-                    Dr. A. Sharma (HOD CSE)
+                    Dr. A. Sharma (Lecturer)
                   </button>
                   <button
                     type="button"
@@ -496,7 +500,7 @@ export function LandingPage({ currentUser, onEnterPortal, onNavigate }) {
                       onNavigate?.('dashboard');
                     }}
                   >
-                    Dean Patnaik
+                    Dean Patnaik (Admin)
                   </button>
                   <button
                     type="button"

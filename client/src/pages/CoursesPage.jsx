@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { BookOpen, Users, Clock, ArrowUpRight, Search, Filter, Layers, Sparkles } from 'lucide-react';
+import { BookOpen, Users, Clock, ArrowUpRight, Search, Filter, Layers, Sparkles, Lock } from 'lucide-react';
 import { COURSES_CATALOG, CIT_DATASET_METRICS } from '../services/mockData';
 
-export function CoursesPage({ onNavigate }) {
+export function CoursesPage({ currentUser, onNavigate, onRequireAdmin, onSwitchRole }) {
   const [search, setSearch] = useState('');
   const [selectedDept, setSelectedDept] = useState('all');
 

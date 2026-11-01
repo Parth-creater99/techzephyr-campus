@@ -402,6 +402,15 @@ export function CitCampusBuilding({ className = '', style = {} }) {
           {/* Intermediate Horizontal Cornice */}
           <rect x="515" y="425" width="570" height="12" fill="#dfd5c5" stroke="#3a2216" strokeWidth="1.5" />
 
+          {/* Bold Institutional Nameplate Plaque on Main Facade */}
+          <g id="citCentralNameplate">
+            <rect x="690" y="415" width="220" height="28" rx="6" fill="#c54a26" stroke="#3a2216" strokeWidth="2" />
+            <rect x="694" y="419" width="212" height="20" rx="4" fill="none" stroke="#db822a" strokeWidth="1" />
+            <text x="800" y="434" textAnchor="middle" fill="#ffffff" fontSize="14" fontWeight="900" letterSpacing="4" fontFamily="'Cinzel', Georgia, serif">
+              CIT • CENTRAL BLOCK
+            </text>
+          </g>
+
           {/* ========================================================
               GRAND COLONNADE - TALL CLASSICAL PILLARS (PORTICO)
               ======================================================== */}

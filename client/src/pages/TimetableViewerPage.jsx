@@ -17,6 +17,7 @@ import {
   TrendingUp,
   RefreshCw,
   Info,
+  Lock,
 } from 'lucide-react';
 import { Modal } from '../components/Modal';
 import {
@@ -34,7 +35,7 @@ import {
 } from '../services/mockData';
 import './TimetableViewerPage.css';
 
-export function TimetableViewerPage({ currentUser, onNavigate }) {
+export function TimetableViewerPage({ currentUser, onNavigate, onRequireAdmin, onSwitchRole }) {
   const [sessions, setSessions] = useState(getStoredTimetableSessions);
 
   // View Mode: 'group' | 'faculty' | 'room'
@@ -199,6 +200,30 @@ export function TimetableViewerPage({ currentUser, onNavigate }) {
               Midsem Exams (Week 2)
             </button>
           </div>
+
+          <button
+            type="button"
+            className="app-btn-outline"
+            onClick={() => {
+              if (currentUser?.roleType !== 'admin') {
+                onRequireAdmin?.(
+                  'Admin Solver Override & Slot Locking',
+                  'Re-solving the entire 189-session matrix or locking period slots is an administrative prerogative reserved for the Institute Administrator.'
+                );
+                return;
+              }
+              setSolverStatus('✓ Admin Solver Override applied: Period constraints locked.');
+              setTimeout(() => setSolverStatus(null), 4000);
+            }}
+          >
+            {currentUser?.roleType !== 'admin' ? <Lock size={15} color="var(--accent-terracotta)" /> : <Sparkles size={15} />}
+            <span>Admin Override / Slot Lock</span>
+            {currentUser?.roleType !== 'admin' && (
+              <span style={{ fontSize: 10, background: 'var(--accent-terracotta-light)', color: 'var(--accent-terracotta)', padding: '2px 6px', borderRadius: 6, fontWeight: 700 }}>
+                Admin
+              </span>
+            )}
+          </button>
 
           <button
             type="button"

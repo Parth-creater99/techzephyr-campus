@@ -29,7 +29,7 @@ import {
 } from '../services/mockData';
 import './ReschedulingPage.css';
 
-export function ReschedulingPage({ currentUser, onNavigate }) {
+export function ReschedulingPage({ currentUser, onNavigate, onRequireAdmin, onSwitchRole }) {
   const [swaps, setSwaps] = useState(getStoredLectureSwaps);
   const [sessions, setSessions] = useState(getStoredTimetableSessions);
   const [activeTab, setActiveTab] = useState('pending'); // 'pending' | 'disruptions' | 'history'
@@ -353,10 +353,25 @@ export function ReschedulingPage({ currentUser, onNavigate }) {
           <button
             type="button"
             className="app-btn-outline"
-            onClick={() => setIsJudgesModalOpen(true)}
+            onClick={() => {
+              if (currentUser?.roleType !== 'admin') {
+                onRequireAdmin?.(
+                  'Apply Change File (.json)',
+                  'Batch timetable disruption ingestion (.json) modifies systemic hall allocations across cohorts. Under CIT Academic Statute Clause 14.3, this action is restricted to the Institute Administrator / Academic Dean.'
+                );
+                return;
+              }
+              setIsJudgesModalOpen(true);
+            }}
+            title={currentUser?.roleType !== 'admin' ? 'Admin clearance required to apply change files' : 'Apply JSON Change File'}
           >
-            <Upload size={15} />
+            {currentUser?.roleType !== 'admin' ? <Lock size={15} color="var(--accent-terracotta)" /> : <Upload size={15} />}
             <span>Apply Change File (.json)</span>
+            {currentUser?.roleType !== 'admin' && (
+              <span style={{ fontSize: 10, background: 'var(--accent-terracotta-light)', color: 'var(--accent-terracotta)', padding: '2px 6px', borderRadius: 6, fontWeight: 700, marginLeft: 4 }}>
+                Admin
+              </span>
+            )}
           </button>
 
           <button
@@ -605,7 +620,7 @@ export function ReschedulingPage({ currentUser, onNavigate }) {
                     onClick={() => handleApproveDisruption('leave')}
                   >
                     <ShieldCheck size={16} />
-                    <span>Admin Approve &amp; Commit Schedule</span>
+                    <span>{currentUser?.roleType !== 'admin' ? 'Admin Clearance Required' : 'Admin Approve & Commit Schedule'}</span>
                   </button>
                 )}
               </div>
@@ -691,7 +706,7 @@ export function ReschedulingPage({ currentUser, onNavigate }) {
                     onClick={() => handleApproveDisruption('room')}
                   >
                     <ShieldCheck size={16} />
-                    <span>Admin Approve &amp; Commit Schedule</span>
+                    <span>{currentUser?.roleType !== 'admin' ? 'Admin Clearance Required' : 'Admin Approve & Commit Schedule'}</span>
                   </button>
                 )}
               </div>
@@ -777,7 +792,7 @@ export function ReschedulingPage({ currentUser, onNavigate }) {
                     onClick={() => handleApproveDisruption('extra')}
                   >
                     <ShieldCheck size={16} />
-                    <span>Admin Approve &amp; Commit Schedule</span>
+                    <span>{currentUser?.roleType !== 'admin' ? 'Admin Clearance Required' : 'Admin Approve & Commit Schedule'}</span>
                   </button>
                 )}
               </div>
