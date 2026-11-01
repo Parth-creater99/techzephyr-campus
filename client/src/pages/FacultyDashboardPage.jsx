@@ -254,101 +254,8 @@ export function FacultyDashboardPage({ currentUser, onNavigate }) {
     setNewNoticeForm({ category: 'extra', title: '', details: '', time: 'Today • 15:00' });
   };
 
-  // 2. Real Working Calendar State
-  const [calendarDate, setCalendarDate] = useState(new Date(2026, 10, 1));
-  const [selectedCalendarDay, setSelectedCalendarDay] = useState(1);
-
-  // Persistent Calendar Notes stored in localStorage
-  const [calendarNotes, setCalendarNotes] = useState(() => {
-    try {
-      const saved = localStorage.getItem('cit_calendar_notes_v2');
-      if (saved) return JSON.parse(saved);
-    } catch (e) {
-      console.warn(e);
-    }
-    return {
-      '2026-11-1': [
-        { id: 'cn-1', text: 'Grade CS301 OS Lab 2 submissions and review reports', done: true, priority: 'normal' },
-        { id: 'cn-2', text: 'Faculty Council meeting with Dean at 4:30 PM in Conf-1', done: false, priority: 'high' },
-      ],
-      '2026-11-2': [
-        { id: 'cn-3', text: 'Distribute Midsem examination timetable copies to CSE-3', done: false, priority: 'high' },
-      ],
-      '2026-11-4': [
-        { id: 'cn-4', text: 'Hardware audit for CS Systems Lab (Lab-1 & Lab-3)', done: false, priority: 'normal' },
-      ],
-      '2026-11-7': [
-        { id: 'cn-5', text: 'Spectra National Hackathon 24hr evaluation panel', done: false, priority: 'urgent' },
-      ],
-    };
-  });
-
-  const [newNoteInput, setNewNoteInput] = useState('');
-  const [newNotePriority, setNewNotePriority] = useState('normal');
-
-  const currentSelectedDateKey = `${calendarDate.getFullYear()}-${calendarDate.getMonth() + 1}-${selectedCalendarDay}`;
-  const notesForSelectedDate = calendarNotes[currentSelectedDateKey] || [];
-
-  const handleAddCalendarNote = (e) => {
-    e.preventDefault();
-    if (!newNoteInput.trim()) return;
-
-    const newNote = {
-      id: `note-${Date.now()}`,
-      text: newNoteInput.trim(),
-      done: false,
-      priority: newNotePriority,
-      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-    };
-
-    const updated = {
-      ...calendarNotes,
-      [currentSelectedDateKey]: [...notesForSelectedDate, newNote],
-    };
-
-    setCalendarNotes(updated);
-    localStorage.setItem('cit_calendar_notes_v2', JSON.stringify(updated));
-    setNewNoteInput('');
-  };
-
-  const handleToggleCalendarNote = (noteId) => {
-    const updatedDateNotes = notesForSelectedDate.map((n) =>
-      n.id === noteId ? { ...n, done: !n.done } : n
-    );
-    const updated = {
-      ...calendarNotes,
-      [currentSelectedDateKey]: updatedDateNotes,
-    };
-    setCalendarNotes(updated);
-    localStorage.setItem('cit_calendar_notes_v2', JSON.stringify(updated));
-  };
-
-  const handleDeleteCalendarNote = (noteId) => {
-    const updatedDateNotes = notesForSelectedDate.filter((n) => n.id !== noteId);
-    const updated = {
-      ...calendarNotes,
-      [currentSelectedDateKey]: updatedDateNotes,
-    };
-    setCalendarNotes(updated);
-    localStorage.setItem('cit_calendar_notes_v2', JSON.stringify(updated));
-  };
-
-  const handlePrevMonth = () => {
-    setCalendarDate(new Date(calendarDate.getFullYear(), calendarDate.getMonth() - 1, 1));
-    setSelectedCalendarDay(1);
-  };
-
-  const handleNextMonth = () => {
-    setCalendarDate(new Date(calendarDate.getFullYear(), calendarDate.getMonth() + 1, 1));
-    setSelectedCalendarDay(1);
-  };
-
-  const daysInMonth = new Date(calendarDate.getFullYear(), calendarDate.getMonth() + 1, 0).getDate();
-  const firstDayOfWeek = new Date(calendarDate.getFullYear(), calendarDate.getMonth(), 1).getDay();
-  const monthNames = [
-    'January', 'February', 'March', 'April', 'May', 'June',
-    'July', 'August', 'September', 'October', 'November', 'December'
-  ];
+  // 2. Small Timetable with Subjects View Mode: 'day' (Day Subjects) | 'week' (Weekly Matrix)
+  const [ttViewMode, setTtViewMode] = useState('day');
 
   // 3. Faculty Roster & Workload Stats
   const [facultySearch, setFacultySearch] = useState('');
@@ -703,239 +610,223 @@ export function FacultyDashboardPage({ currentUser, onNavigate }) {
       </div>
 
       {/* ==========================================================================
-          3. Weekly Session Activity Matrix (Mon to Sat across P1 to P13)
+          3. New Small Timetable with Subjects (P1 to P13 • 09:00 - 22:00)
           ========================================================================== */}
       <div className="dashboard-scroll-section">
-        <div className="weekly-activity-card">
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 10 }}>
+        <div className="small-timetable-card">
+          {/* Header Row */}
+          <div className="small-timetable-header">
             <div>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <h3 style={{ fontSize: 16, fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
-                  Weekly Session Activity
+                <Clock size={18} color="var(--accent-terracotta)" />
+                <h3 className="small-timetable-title">
+                  Class Timetable &amp; Subjects
                 </h3>
-                <span className="mini-p13-badge">
+                <span className="small-tt-badge">
                   P1 to P13 (09:00 – 22:00)
                 </span>
               </div>
-              <span style={{ fontSize: 11.5, color: 'var(--text-secondary)', marginTop: 2, display: 'block' }}>
-                All 13 periods visible in one compact view • P10–P13 dedicated evening events
+              <span className="small-timetable-sub">
+                Compact schedule displaying full course subjects • 1-hour classes from 9:00 AM • Evening events (P10–P13)
               </span>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 10.5, fontWeight: 700 }}>
-              <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                <span style={{ width: 8, height: 8, borderRadius: 2, background: '#c54a26' }} /> Class
-              </span>
-              <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                <span style={{ width: 8, height: 8, borderRadius: 2, background: '#d9822b' }} /> Lab
-              </span>
-              <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                <span style={{ width: 8, height: 8, borderRadius: 2, background: '#9333ea' }} /> Event
-              </span>
-              <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                <span style={{ width: 8, height: 8, borderRadius: 2, background: '#cbd5e1' }} /> Free
-              </span>
-            </div>
-          </div>
-
-          <div className="activity-matrix-scroll">
-            <table className="activity-matrix-table">
-              <thead>
-                <tr>
-                  <th className="day-col-header">Day</th>
-                  {PERIODS.map((p) => {
-                    const isEvent = p.type === 'event';
-                    const shortTime = p.time.split(' - ')[0].replace(':00', '');
-                    return (
-                      <th key={p.id} className={isEvent ? 'th-matrix-event' : 'th-matrix-period'}>
-                        <div className="matrix-p-id">{p.id}</div>
-                        <div className="matrix-p-time">{shortTime}</div>
-                      </th>
-                    );
-                  })}
-                </tr>
-              </thead>
-              <tbody>
-                {['mon', 'tue', 'wed', 'thu', 'fri', 'sat'].map((dayKey) => {
-                  const daySessions = sessions.filter((s) => s.day === dayKey);
-
-                  return (
-                    <tr key={dayKey}>
-                      <td className="day-col">{dayKey.charAt(0).toUpperCase() + dayKey.slice(1, 3)}</td>
-                      {PERIODS.map((p) => {
-                        const match = daySessions.find((s) => s.periodId === p.id);
-                        const isEventSlot = p.type === 'event' || match?.type === 'event';
-
-                        let cellClass = 'cell-free';
-                        let label = '—';
-
-                        if (match) {
-                          if (match.type === 'lab') {
-                            cellClass = 'cell-lab';
-                            label = match.code.includes('LAB') ? match.code : `${match.code}`;
-                          } else if (isEventSlot) {
-                            cellClass = 'cell-event';
-                            label = match.code;
-                          } else if (match.type === 'exam') {
-                            cellClass = 'cell-exam';
-                            label = match.code;
-                          } else {
-                            cellClass = 'cell-lecture';
-                            label = match.code;
-                          }
-                        }
-
-                        return (
-                          <td key={p.id} className="activity-matrix-td">
-                            <div
-                              className={`activity-matrix-cell ${cellClass}`}
-                              onClick={() => {
-                                setActiveWeekdayId(dayKey);
-                              }}
-                              title={
-                                match
-                                  ? `${match.code}: ${match.title}\nType: ${match.type.toUpperCase()}\nFaculty: ${match.faculty}\nRoom: ${match.room} (${p.time})`
-                                  : `${dayKey.toUpperCase()} ${p.id} (${p.time}): Available period`
-                              }
-                            >
-                              {label}
-                            </div>
-                          </td>
-                        );
-                      })}
-                    </tr>
-                  );
-                })}
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
-
-      {/* ==========================================================================
-          4. Day's Schedule with Day Picker & Carousel Slider
-          ========================================================================== */}
-      <div className="dashboard-scroll-section">
-        <div className="day-schedule-card">
-          <div className="day-picker-row">
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                <h3 style={{ fontSize: 18, fontWeight: 900, color: 'var(--text-primary)', margin: 0 }}>
-                  {weekdayNames[activeWeekdayId]}'s Schedule with Day Picker
-                </h3>
-                <span style={{ fontSize: 14, color: '#94a3b8' }}>⌵</span>
-              </div>
-              <span style={{ fontSize: 12.5, color: 'var(--text-secondary)', marginTop: 2, display: 'block' }}>
-                {dailyClasses.length} Scheduled Sessions &bull; {completedCount} Completed ({completionPercentage}%)
-              </span>
-            </div>
-
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              {/* Day Pills [MON] [TUE] [WED] [THU] [FRI] [SAT] */}
-              <div className="day-picker-pills">
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
+              {/* Day Selector Pills: MON, TUE, WED, THU, FRI, SAT */}
+              <div className="small-tt-day-pills">
                 {['mon', 'tue', 'wed', 'thu', 'fri', 'sat'].map((w) => (
                   <button
                     key={w}
                     type="button"
-                    className={`day-picker-btn ${activeWeekdayId === w ? 'active' : ''}`}
-                    onClick={() => {
-                      setActiveWeekdayId(w);
-                      setActiveSlideIndex(0);
-                    }}
+                    className={`small-tt-day-btn ${activeWeekdayId === w ? 'active' : ''}`}
+                    onClick={() => setActiveWeekdayId(w)}
                   >
                     {w.toUpperCase()}
                   </button>
                 ))}
               </div>
 
-              {/* Prev / Next day switcher */}
-              <div style={{ display: 'flex', gap: 4 }}>
+              {/* View Mode Toggle: Day Subjects vs Weekly 6-Day Matrix */}
+              <div className="small-tt-view-toggle">
                 <button
                   type="button"
-                  className="notice-arrow-btn"
-                  onClick={handlePrevDay}
-                  title="Previous Day"
+                  className={`small-tt-toggle-btn ${ttViewMode === 'day' ? 'active' : ''}`}
+                  onClick={() => setTtViewMode('day')}
+                  title="View subjects for selected day"
                 >
-                  <ChevronLeft size={15} />
+                  Day Subjects
                 </button>
                 <button
                   type="button"
-                  className="notice-arrow-btn"
-                  onClick={handleNextDay}
-                  title="Next Day"
+                  className={`small-tt-toggle-btn ${ttViewMode === 'week' ? 'active' : ''}`}
+                  onClick={() => setTtViewMode('week')}
+                  title="View compact weekly grid across all days"
                 >
-                  <ChevronRight size={15} />
+                  Weekly Matrix
                 </button>
               </div>
+
+              {/* Master Schedule Link */}
+              <button
+                type="button"
+                className="app-btn-outline"
+                style={{ fontSize: 11, padding: '5px 10px' }}
+                onClick={() => onNavigate?.('timetable')}
+                title="Open full interactive master schedule"
+              >
+                <span>Full Timetable</span>
+                <ArrowRight size={12} style={{ marginLeft: 4 }} />
+              </button>
             </div>
           </div>
 
-          {/* Sliding Session Cards Viewport */}
-          <div className="schedule-slider-viewport">
-            {dailyClasses.length === 0 ? (
-              <div style={{ gridColumn: '1 / -1', padding: '30px 10px', textAlign: 'center', color: '#94a3b8' }}>
-                No academic sessions scheduled for this day.
+          {/* VIEW 1: DAY SUBJECTS (Default) - Compact grid of all 13 periods for that day */}
+          {ttViewMode === 'day' ? (
+            <div className="small-tt-day-content">
+              <div className="small-tt-day-banner">
+                <span style={{ fontWeight: 800, color: 'var(--text-primary)' }}>
+                  {weekdayNames[activeWeekdayId]} Subjects &amp; Classes
+                </span>
+                <span style={{ fontSize: 11.5, color: 'var(--text-secondary)' }}>
+                  {dailyClasses.length} Scheduled Sessions &bull; {completedCount} Completed ({completionPercentage}%)
+                </span>
               </div>
-            ) : (
-              dailyClasses.map((item) => {
-                const isCompleted = item.status === 'completed';
-                const periodObj = PERIODS.find((p) => p.id === item.periodId);
 
-                return (
-                  <div key={item.id} className="schedule-item-card">
-                    <div className="schedule-item-time">
-                      <span>{periodObj?.time || '09:00 AM – 10:00 AM'}</span>
-                      <span className="schedule-item-tag">{item.type}</span>
+              <div className="small-tt-subjects-grid">
+                {PERIODS.map((period) => {
+                  const match = dailyClasses.find((s) => s.periodId === period.id);
+                  const isEvent = period.type === 'event';
+                  const isDone = match?.status === 'completed';
+
+                  return (
+                    <div
+                      key={period.id}
+                      className={`small-tt-slot-card ${isEvent ? 'slot-event' : ''} ${match ? 'has-class' : 'is-empty'}`}
+                    >
+                      <div className="small-tt-slot-time">
+                        <span className="small-tt-pid">{period.id}</span>
+                        <span className="small-tt-time-range">{period.time}</span>
+                        {isEvent && <span className="small-tt-ev-tag">EVENT</span>}
+                      </div>
+
+                      {match ? (
+                        <div className="small-tt-slot-body">
+                          <div className="small-tt-subject-row">
+                            <span className="small-tt-subject-name" title={match.title}>
+                              {match.title}
+                            </span>
+                            <span className={`small-tt-type-pill pill-${match.type}`}>
+                              {match.type?.toUpperCase()}
+                            </span>
+                          </div>
+
+                          <div className="small-tt-meta-row">
+                            <span className="small-tt-code">{match.code}</span>
+                            <span className="small-tt-dot">&bull;</span>
+                            <span className="small-tt-room">Room {match.room}</span>
+                            <span className="small-tt-dot">&bull;</span>
+                            <span className="small-tt-group">{match.group}</span>
+                          </div>
+
+                          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 4, paddingTop: 4, borderTop: '1px solid #f1ede6' }}>
+                            <button
+                              type="button"
+                              onClick={() => handleToggleClassDone(match.id)}
+                              style={{
+                                background: 'none',
+                                border: 'none',
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: 4,
+                                fontSize: 10.5,
+                                fontWeight: 700,
+                                color: isDone ? '#16a34a' : '#64748b',
+                                padding: 0,
+                              }}
+                            >
+                              {isDone ? <CheckCircle2 size={13} color="#16a34a" /> : <Circle size={13} />}
+                              <span>{isDone ? 'Done' : 'Mark Done'}</span>
+                            </button>
+
+                            <button
+                              type="button"
+                              className="prompt-chip-btn"
+                              style={{ fontSize: 10, padding: '2px 6px' }}
+                              onClick={() => onNavigate?.('rescheduling')}
+                            >
+                              Swap Slot
+                            </button>
+                          </div>
+                        </div>
+                      ) : (
+                        <div className="small-tt-empty-text">
+                          Available Slot ({period.time})
+                        </div>
+                      )}
                     </div>
-
-                    <h4 className="schedule-item-title">
-                      {item.code}: {item.title}
-                    </h4>
-
-                    <div className="schedule-item-meta">
-                      <span>Room: <strong>{item.room}</strong></span>
-                      <span>&bull;</span>
-                      <span>Group: <strong>{item.group}</strong></span>
-                    </div>
-
-                    <div className="schedule-item-meta" style={{ marginTop: 'auto', paddingTop: 6 }}>
-                      <span>👤 {item.faculty}</span>
-                    </div>
-
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginTop: 6, paddingTop: 8, borderTop: '1px solid #ebdcd0' }}>
-                      <button
-                        type="button"
-                        onClick={() => handleToggleClassDone(item.id)}
-                        style={{
-                          background: 'none',
-                          border: 'none',
-                          cursor: 'pointer',
-                          display: 'flex',
-                          alignItems: 'center',
-                          gap: 6,
-                          fontSize: 11.5,
-                          fontWeight: 700,
-                          color: isCompleted ? '#16a34a' : '#64748b',
-                        }}
-                      >
-                        {isCompleted ? <CheckCircle2 size={16} color="#16a34a" /> : <Circle size={16} />}
-                        <span>{isCompleted ? 'Completed' : 'Mark Done'}</span>
-                      </button>
-
-                      <button
-                        type="button"
-                        className="prompt-chip-btn"
-                        style={{ fontSize: 11, padding: '3px 8px' }}
-                        onClick={() => onNavigate?.('rescheduling')}
-                      >
-                        Swap Block
-                      </button>
-                    </div>
-                  </div>
-                );
-              })
-            )}
-          </div>
+                  );
+                })}
+              </div>
+            </div>
+          ) : (
+            /* VIEW 2: WEEKLY 6-DAY MATRIX - 6 columns: Period, Mon, Tue, Wed, Thu, Fri, Sat */
+            <div className="small-tt-matrix-scroll">
+              <table className="small-tt-matrix-table">
+                <thead>
+                  <tr>
+                    <th style={{ width: 85, textAlign: 'left', paddingLeft: 8 }}>Period / Time</th>
+                    <th>Monday</th>
+                    <th>Tuesday</th>
+                    <th>Wednesday</th>
+                    <th>Thursday</th>
+                    <th>Friday</th>
+                    <th>Saturday</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {PERIODS.map((period) => {
+                    const isEvent = period.type === 'event';
+                    return (
+                      <tr key={period.id} className={isEvent ? 'matrix-event-row' : ''}>
+                        <td className="small-tt-matrix-time-col">
+                          <div style={{ fontWeight: 800, color: isEvent ? 'var(--accent-terracotta)' : 'var(--text-primary)' }}>
+                            {period.id}
+                          </div>
+                          <div style={{ fontSize: 9, color: 'var(--text-muted)' }}>
+                            {period.time.split(' - ')[0]}
+                          </div>
+                        </td>
+                        {['mon', 'tue', 'wed', 'thu', 'fri', 'sat'].map((dayKey) => {
+                          const match = sessions.find((s) => s.day === dayKey && s.periodId === period.id);
+                          return (
+                            <td key={dayKey} className="small-tt-matrix-cell-td">
+                              {match ? (
+                                <div
+                                  className={`small-tt-matrix-mini-card type-${match.type}`}
+                                  title={`${match.title} (${match.code})\nRoom: ${match.room} • Faculty: ${match.faculty}`}
+                                >
+                                  <div className="small-tt-matrix-subject">
+                                    {match.title}
+                                  </div>
+                                  <div className="small-tt-matrix-subinfo">
+                                    <span>{match.room}</span>
+                                    <span>{match.code}</span>
+                                  </div>
+                                </div>
+                              ) : (
+                                <div className="small-tt-matrix-free">&mdash;</div>
+                              )}
+                            </td>
+                          );
+                        })}
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          )}
         </div>
       </div>
 
@@ -1062,225 +953,7 @@ export function FacultyDashboardPage({ currentUser, onNavigate }) {
       </div>
 
       {/* ==========================================================================
-          6. Real Working Calendar with Interactive Note Adder & Workspace
-          ========================================================================== */}
-      <div className="dashboard-scroll-section">
-        <div className="calendar-workspace-card">
-          <div className="calendar-top-header">
-            <div className="calendar-month-title">
-              <CalendarIcon size={20} color="var(--accent-terracotta)" />
-              <span>
-                {monthNames[calendarDate.getMonth()]} {calendarDate.getFullYear()} Academic Calendar &amp; Notes
-              </span>
-            </div>
-
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <span style={{ fontSize: 12, color: 'var(--text-secondary)' }}>
-                Click any date to add or manage day-specific agenda &amp; duties
-              </span>
-
-              <div className="calendar-nav-btn-group">
-                <button
-                  type="button"
-                  className="notice-arrow-btn"
-                  onClick={handlePrevMonth}
-                  title="Previous Month"
-                >
-                  <ChevronLeft size={15} />
-                </button>
-                <button
-                  type="button"
-                  className="prompt-chip-btn"
-                  style={{ fontSize: 12, padding: '4px 10px' }}
-                  onClick={() => {
-                    setCalendarDate(new Date(2026, 10, 1));
-                    setSelectedCalendarDay(1);
-                  }}
-                >
-                  Today (Nov 01)
-                </button>
-                <button
-                  type="button"
-                  className="notice-arrow-btn"
-                  onClick={handleNextMonth}
-                  title="Next Month"
-                >
-                  <ChevronRight size={15} />
-                </button>
-              </div>
-            </div>
-          </div>
-
-          {/* 2-Column Split: Calendar Grid on Left (60%) + Selected Date Notes on Right (40%) */}
-          <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 0.8fr', gap: 20 }}>
-            {/* Calendar Grid */}
-            <div>
-              <table className="calendar-grid-table">
-                <thead>
-                  <tr>
-                    <th className="calendar-th-day">Sun</th>
-                    <th className="calendar-th-day">Mon</th>
-                    <th className="calendar-th-day">Tue</th>
-                    <th className="calendar-th-day">Wed</th>
-                    <th className="calendar-th-day">Thu</th>
-                    <th className="calendar-th-day">Fri</th>
-                    <th className="calendar-th-day">Sat</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {Array.from({ length: 5 }).map((_, weekIdx) => {
-                    return (
-                      <tr key={weekIdx}>
-                        {Array.from({ length: 7 }).map((_, dayIdx) => {
-                          const cellIndex = weekIdx * 7 + dayIdx;
-                          const dayNum = cellIndex - firstDayOfWeek + 1;
-                          const isCurrentMonth = dayNum > 0 && dayNum <= daysInMonth;
-                          const isSelected = isCurrentMonth && dayNum === selectedCalendarDay;
-                          const isToday = isCurrentMonth && dayNum === 1 && calendarDate.getMonth() === 10;
-
-                          const dateKey = `${calendarDate.getFullYear()}-${calendarDate.getMonth() + 1}-${dayNum}`;
-                          const notesCount = (calendarNotes[dateKey] || []).length;
-
-                          if (!isCurrentMonth) {
-                            return <td key={dayIdx} className="calendar-day-cell other-month" />;
-                          }
-
-                          return (
-                            <td
-                              key={dayIdx}
-                              className={`calendar-day-cell ${isSelected ? 'selected' : ''} ${isToday ? 'today' : ''}`}
-                              onClick={() => setSelectedCalendarDay(dayNum)}
-                            >
-                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                                <span className="cal-day-num">{dayNum}</span>
-                                {isToday && (
-                                  <span style={{ fontSize: 8.5, background: 'var(--accent-sage-light)', color: 'var(--accent-sage)', padding: '1px 4px', borderRadius: 3, fontWeight: 800 }}>
-                                    TODAY
-                                  </span>
-                                )}
-                              </div>
-
-                              <div className="cal-day-badge-wrap">
-                                {notesCount > 0 && (
-                                  <span className="cal-count-pill" title={`${notesCount} notes`}>
-                                    {notesCount} note{notesCount > 1 ? 's' : ''}
-                                  </span>
-                                )}
-                                {dayNum >= 2 && dayNum <= 7 && (
-                                  <span className="cal-event-dot" title="Classes in session" />
-                                )}
-                              </div>
-                            </td>
-                          );
-                        })}
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
-            </div>
-
-            {/* Interactive Notes Panel for Selected Date */}
-            <div className="day-notes-panel">
-              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', borderBottom: '1px solid var(--border-default)', paddingBottom: 8 }}>
-                <div>
-                  <h4 style={{ margin: 0, fontSize: 14.5, fontWeight: 800, color: 'var(--text-primary)' }}>
-                    Notes &amp; Agenda: {monthNames[calendarDate.getMonth()]} {selectedCalendarDay}, {calendarDate.getFullYear()}
-                  </h4>
-                  <span style={{ fontSize: 11.5, color: 'var(--text-secondary)' }}>
-                    {notesForSelectedDate.length} item{notesForSelectedDate.length !== 1 ? 's' : ''} recorded for this date
-                  </span>
-                </div>
-              </div>
-
-              {/* Add New Note Input Form */}
-              <form onSubmit={handleAddCalendarNote} style={{ display: 'flex', gap: 6 }}>
-                <input
-                  type="text"
-                  className="app-input-field"
-                  placeholder="Add a task, reminder, or note..."
-                  value={newNoteInput}
-                  onChange={(e) => setNewNoteInput(e.target.value)}
-                  style={{ flex: 1, padding: '7px 12px', fontSize: 12.5 }}
-                />
-
-                <select
-                  className="app-select-field"
-                  value={newNotePriority}
-                  onChange={(e) => setNewNotePriority(e.target.value)}
-                  style={{ padding: '7px 8px', fontSize: 12 }}
-                >
-                  <option value="normal">Normal</option>
-                  <option value="high">High</option>
-                  <option value="urgent">Urgent</option>
-                </select>
-
-                <button type="submit" className="app-btn-lime" style={{ padding: '7px 14px', fontSize: 12 }}>
-                  <Plus size={14} />
-                  <span>Add</span>
-                </button>
-              </form>
-
-              {/* List of Notes for Selected Date */}
-              <div className="notes-list-scroll">
-                {notesForSelectedDate.length === 0 ? (
-                  <div style={{ padding: '24px 10px', textAlign: 'center', color: 'var(--text-muted)' }}>
-                    <CalendarIcon size={24} style={{ margin: '0 auto 6px auto', opacity: 0.5 }} />
-                    <p style={{ margin: 0, fontSize: 12.5 }}>No notes for this date yet. Type above to add one!</p>
-                  </div>
-                ) : (
-                  notesForSelectedDate.map((note) => (
-                    <div key={note.id} className={`cal-note-item ${note.done ? 'completed' : ''}`}>
-                      <div style={{ display: 'flex', alignItems: 'center', gap: 8, flex: 1 }}>
-                        <button
-                          type="button"
-                          onClick={() => handleToggleCalendarNote(note.id)}
-                          style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
-                          title={note.done ? 'Mark pending' : 'Mark done'}
-                        >
-                          {note.done ? (
-                            <CheckCircle2 size={16} color="var(--accent-sage)" />
-                          ) : (
-                            <Circle size={16} color="var(--text-muted)" />
-                          )}
-                        </button>
-
-                        <div style={{ flex: 1 }}>
-                          <span className={`cal-note-text ${note.done ? 'done' : ''}`}>
-                            {note.text}
-                          </span>
-                          {note.priority === 'urgent' && (
-                            <span style={{ fontSize: 9.5, fontWeight: 800, color: '#dc2626', background: '#fee2e2', padding: '1px 5px', borderRadius: 4, marginLeft: 6 }}>
-                              URGENT
-                            </span>
-                          )}
-                          {note.priority === 'high' && (
-                            <span style={{ fontSize: 9.5, fontWeight: 800, color: '#d97706', background: '#fef3c7', padding: '1px 5px', borderRadius: 4, marginLeft: 6 }}>
-                              HIGH
-                            </span>
-                          )}
-                        </div>
-                      </div>
-
-                      <button
-                        type="button"
-                        onClick={() => handleDeleteCalendarNote(note.id)}
-                        style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94a3b8', padding: 2 }}
-                        title="Delete note"
-                      >
-                        <Trash2 size={13} />
-                      </button>
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* ==========================================================================
-          7. 40-Faculty Live Roster & Cabin Directory
+          5. 40-Faculty Live Roster & Cabin Directory
           ========================================================================== */}
       <div className="dashboard-scroll-section">
         <div className="white-app-card" style={{ padding: 22 }}>

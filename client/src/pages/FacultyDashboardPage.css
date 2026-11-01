@@ -305,179 +305,6 @@
 }
 
 /* ==========================================================================
-   Real Interactive Working Calendar with Notes
-   ========================================================================== */
-.calendar-workspace-card {
-  background: #ffffff;
-  border: 1.5px solid var(--border-default);
-  border-radius: var(--radius-xl);
-  padding: 18px 22px;
-  box-shadow: 0 2px 14px rgba(31, 28, 26, 0.04);
-}
-
-.calendar-top-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 16px;
-}
-
-.calendar-month-title {
-  font-size: 18px;
-  font-weight: 800;
-  color: var(--text-primary);
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.calendar-nav-btn-group {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.calendar-grid-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 4px;
-}
-
-.calendar-th-day {
-  text-align: center;
-  font-size: 11px;
-  font-weight: 800;
-  color: var(--text-secondary);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  padding: 6px 0;
-}
-
-.calendar-day-cell {
-  height: 64px;
-  border-radius: 10px;
-  border: 1px solid var(--border-default);
-  background: #ffffff;
-  vertical-align: top;
-  padding: 4px 6px;
-  cursor: pointer;
-  transition: all 0.15s ease;
-  position: relative;
-}
-
-.calendar-day-cell:hover {
-  background: #fbf7f2;
-  border-color: var(--accent-terracotta);
-  transform: translateY(-1px);
-}
-
-.calendar-day-cell.selected {
-  border: 2px solid var(--accent-terracotta);
-  background: #fdf5f2;
-  box-shadow: 0 2px 8px rgba(197, 74, 38, 0.15);
-}
-
-.calendar-day-cell.today {
-  border-color: var(--accent-sage);
-  background: #f3f8f5;
-}
-
-.calendar-day-cell.other-month {
-  opacity: 0.35;
-  background: var(--bg-card-subtle);
-  cursor: default;
-}
-
-.cal-day-num {
-  font-size: 12px;
-  font-weight: 800;
-  color: var(--text-primary);
-}
-
-.cal-day-badge-wrap {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 3px;
-  margin-top: 3px;
-}
-
-.cal-note-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background-color: var(--accent-terracotta);
-}
-
-.cal-event-dot {
-  width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background-color: var(--accent-sage);
-}
-
-.cal-count-pill {
-  font-size: 8.5px;
-  font-weight: 800;
-  background: #fae8ce;
-  color: #8c5208;
-  padding: 1px 4px;
-  border-radius: 4px;
-}
-
-/* Day Notes & Tasks Workspace Panel */
-.day-notes-panel {
-  background: #fbf9f6;
-  border: 1.5px solid var(--border-default);
-  border-radius: var(--radius-lg);
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.notes-list-scroll {
-  max-height: 240px;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-
-.cal-note-item {
-  background: #ffffff;
-  border: 1px solid var(--border-default);
-  border-radius: 8px;
-  padding: 8px 12px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 10px;
-  transition: all 0.15s ease;
-}
-
-.cal-note-item:hover {
-  border-color: var(--accent-terracotta);
-}
-
-.cal-note-item.completed {
-  background: #f1f5f2;
-  opacity: 0.75;
-}
-
-.cal-note-text {
-  font-size: 13px;
-  color: var(--text-primary);
-  font-weight: 600;
-}
-
-.cal-note-text.done {
-  text-decoration: line-through;
-  color: var(--text-muted);
-}
-
-/* ==========================================================================
    Spacious Section Containers (Scrollable, Not Cramped Boxes)
    ========================================================================== */
 .dashboard-scroll-section {
@@ -513,18 +340,34 @@
 }
 
 /* ==========================================================================
-   Weekly Session Activity Heatmap (Mon-Sat x P1-P13 Matrix) - Compact Fit
+   New Small Timetable with Subjects Component (Compact & Complete)
    ========================================================================== */
-.weekly-activity-card {
+.small-timetable-card {
   background: var(--card-bg, #ffffff);
   border: 1.5px solid var(--border-default);
   border-radius: var(--radius-xl);
-  padding: 16px 20px;
+  padding: 18px 22px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
 }
 
-.mini-p13-badge {
-  font-size: 10px;
+.small-timetable-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.small-timetable-title {
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+.small-tt-badge {
+  font-size: 11px;
   font-weight: 800;
   color: var(--accent-terracotta);
   background: #fdf2ed;
@@ -534,260 +377,334 @@
   letter-spacing: 0.2px;
 }
 
-.activity-matrix-scroll {
-  width: 100%;
-  max-width: 100%;
-  overflow-x: auto;
-  margin-top: 10px;
+.small-timetable-sub {
+  font-size: 12px;
+  color: var(--text-secondary);
+  display: block;
+  margin-top: 3px;
 }
 
-.activity-matrix-table {
-  width: 100%;
-  table-layout: fixed !important;
-  border-collapse: separate;
-  border-spacing: 3px;
-  font-size: 9.5px;
-  min-width: 0 !important;
+.small-tt-day-pills {
+  display: flex;
+  gap: 4px;
+  background: var(--bg-card-subtle);
+  padding: 3px;
+  border-radius: 9999px;
+  border: 1px solid var(--border-default);
 }
 
-.day-col-header {
-  width: 38px !important;
-  min-width: 38px !important;
-  max-width: 38px !important;
-  padding: 4px 2px !important;
-  font-size: 10px !important;
-  font-weight: 800 !important;
-  color: #475569 !important;
-  text-align: left !important;
+.small-tt-day-btn {
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 9999px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s ease;
 }
 
-.activity-matrix-table th {
-  padding: 3px 1px;
-  text-align: center;
-  font-weight: 800;
-  color: #64748b;
-  font-size: 9.5px;
-  white-space: nowrap;
+.small-tt-day-btn:hover {
+  color: var(--text-primary);
 }
 
-.th-matrix-period {
-  background: #f8fafc;
-  border-radius: 4px;
+.small-tt-day-btn.active {
+  background: var(--accent-terracotta);
+  color: #ffffff;
 }
 
-.th-matrix-event {
-  background: #fdf2ed;
-  border-radius: 4px;
-  border: 1px solid #fed7aa;
+.small-tt-view-toggle {
+  display: flex;
+  gap: 2px;
+  background: var(--bg-card-subtle);
+  padding: 3px;
+  border-radius: 8px;
+  border: 1px solid var(--border-default);
 }
 
-.matrix-p-id {
-  font-size: 10px;
-  font-weight: 900;
-  color: #1e293b;
-  line-height: 1.1;
+.small-tt-toggle-btn {
+  padding: 4px 10px;
+  font-size: 11px;
+  font-weight: 700;
+  border-radius: 6px;
+  border: none;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: all 0.15s ease;
 }
 
-.th-matrix-event .matrix-p-id {
-  color: #c54a26;
+.small-tt-toggle-btn.active {
+  background: #ffffff;
+  color: var(--text-primary);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
 }
 
-.matrix-p-time {
-  font-size: 8px;
-  color: #64748b;
-  font-weight: 600;
-  line-height: 1;
-  margin-top: 1px;
+/* Day Subjects View (Compact Grid) */
+.small-tt-day-banner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 8px 12px;
+  background: #fbf9f6;
+  border: 1px solid var(--border-subtle);
+  border-radius: 8px;
+  margin-bottom: 12px;
+  font-size: 12.5px;
 }
 
-.activity-matrix-table td.day-col {
-  font-weight: 900;
-  color: #0f172a;
-  text-align: left;
-  padding: 2px 2px;
-  font-size: 10px;
-  width: 38px !important;
-  min-width: 38px !important;
-  max-width: 38px !important;
-  white-space: nowrap;
+.small-tt-subjects-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(285px, 1fr));
+  gap: 10px;
 }
 
-.activity-matrix-td {
-  padding: 0;
-  text-align: center;
+.small-tt-slot-card {
+  border: 1px solid var(--border-default);
+  border-radius: 8px;
+  padding: 8px 12px;
+  background: #ffffff;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  transition: all 0.15s ease;
 }
 
-.activity-matrix-cell {
-  height: 25px !important;
-  min-height: 25px !important;
-  max-height: 25px !important;
-  border-radius: 4px;
+.small-tt-slot-card:hover {
+  border-color: var(--accent-terracotta);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+}
+
+.small-tt-slot-card.has-class {
+  background: #ffffff;
+  border-left: 3.5px solid var(--accent-terracotta);
+}
+
+.small-tt-slot-card.slot-event.has-class {
+  border-left-color: #9333ea;
+  background: #fdfaf8;
+}
+
+.small-tt-slot-card.is-empty {
+  background: #fafafa;
+  border-style: dashed;
+  opacity: 0.75;
+}
+
+.small-tt-slot-time {
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 6px;
+  font-size: 10.5px;
+}
+
+.small-tt-pid {
+  font-weight: 900;
+  color: var(--text-primary);
+  background: #f1f5f9;
+  padding: 1px 6px;
+  border-radius: 4px;
+}
+
+.small-tt-time-range {
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.small-tt-ev-tag {
+  font-size: 8.5px;
   font-weight: 800;
-  font-size: 9px;
-  padding: 0 1px;
-  cursor: pointer;
-  transition: all 0.12s ease;
-  text-align: center;
-  border: 1px solid transparent;
+  background: #f3e8ff;
+  color: #7e22ce;
+  padding: 1px 5px;
+  border-radius: 3px;
+  letter-spacing: 0.4px;
+}
+
+.small-tt-slot-body {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.small-tt-subject-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 6px;
+}
+
+.small-tt-subject-name {
+  font-size: 13px;
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.25;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-.activity-matrix-cell:hover {
-  transform: scale(1.08);
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
-  z-index: 5;
-}
-
-.cell-lecture {
-  background: #fbf0ea;
-  color: #c54a26;
-  border-color: #f7d5c7;
-}
-
-.cell-lab {
-  background: #fdf5ea;
-  color: #d9822b;
-  border-color: #fce8cc;
-}
-
-.cell-exam {
-  background: #fef2f2;
-  color: #dc2626;
-  border-color: #fecaca;
-}
-
-.cell-event {
-  background: #faf5ff;
-  color: #9333ea;
-  border-color: #e9d5ff;
-}
-
-.cell-busy {
-  background: #fff7ed;
-  color: #ea580c;
-  border-color: #fed7aa;
-}
-
-.cell-free {
-  background: #f8fafc;
-  color: #cbd5e1;
-  border-color: #f1f5f9;
-}
-
-/* ==========================================================================
-   Day Schedule with Interactive Day Picker & Carousel
-   ========================================================================== */
-.day-schedule-card {
-  background: var(--card-bg, #ffffff);
-  border: 1.5px solid var(--border-default);
-  border-radius: var(--radius-xl);
-  padding: 22px;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-}
-
-.day-picker-row {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  flex-wrap: wrap;
-  gap: 12px;
-}
-
-.day-picker-pills {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-wrap: wrap;
-}
-
-.day-picker-btn {
-  padding: 7px 16px;
-  border-radius: 9999px;
-  font-size: 12px;
-  font-weight: 800;
-  border: 1.5px solid #e2e8f0;
-  background: #f8fafc;
-  color: #475569;
-  cursor: pointer;
-  transition: all 0.15s ease;
-}
-
-.day-picker-btn:hover {
-  border-color: #94a3b8;
-  color: #0f172a;
-}
-
-.day-picker-btn.active {
-  background: #c54a26;
-  color: #ffffff;
-  border-color: #c54a26;
-  box-shadow: 0 2px 8px rgba(197, 74, 38, 0.3);
-}
-
-.schedule-slider-viewport {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-  gap: 14px;
-}
-
-.schedule-item-card {
-  background: #fbf9f6;
-  border: 1.5px solid #ebdcd0;
-  border-radius: 14px;
-  padding: 16px;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
-}
-
-.schedule-item-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.06);
-  border-color: var(--accent-terracotta);
-}
-
-.schedule-item-time {
-  font-size: 12px;
-  font-weight: 800;
-  color: #c54a26;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-
-.schedule-item-title {
-  font-size: 14px;
-  font-weight: 800;
-  color: #0f172a;
-  margin: 0;
-}
-
-.schedule-item-meta {
-  font-size: 12px;
-  color: #64748b;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.schedule-item-tag {
-  font-size: 10px;
+.small-tt-type-pill {
+  font-size: 8px;
   font-weight: 800;
   text-transform: uppercase;
-  padding: 2px 7px;
+  padding: 1px 5px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.pill-lecture {
+  background: #e0f2fe;
+  color: #0369a1;
+}
+
+.pill-lab {
+  background: #fef3c7;
+  color: #b45309;
+}
+
+.pill-event {
+  background: #f3e8ff;
+  color: #7e22ce;
+}
+
+.pill-exam {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.small-tt-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  color: var(--text-secondary);
+  font-weight: 600;
+}
+
+.small-tt-code {
+  color: var(--accent-terracotta);
+  font-weight: 700;
+}
+
+.small-tt-dot {
+  opacity: 0.5;
+}
+
+.small-tt-empty-text {
+  font-size: 11px;
+  color: var(--text-muted);
+  font-style: italic;
+  padding: 3px 0;
+}
+
+/* Weekly 6-Day Matrix View */
+.small-tt-matrix-scroll {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.small-tt-matrix-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: separate;
+  border-spacing: 4px;
+  font-size: 11px;
+  min-width: 720px;
+}
+
+.small-tt-matrix-table th {
+  padding: 8px 6px;
+  font-weight: 800;
+  color: var(--text-primary);
+  background: #fbf9f6;
   border-radius: 6px;
-  background: #e2e8f0;
-  color: #334155;
-  width: fit-content;
+  text-align: center;
+  font-size: 11.5px;
+}
+
+.small-tt-matrix-time-col {
+  background: #f8fafc;
+  border-radius: 6px;
+  padding: 4px 8px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.small-tt-matrix-cell-td {
+  padding: 0;
+  vertical-align: top;
+}
+
+.small-tt-matrix-mini-card {
+  padding: 4px 6px;
+  border-radius: 6px;
+  min-height: 38px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  transition: transform 0.12s;
+  cursor: pointer;
+  border: 1px solid transparent;
+}
+
+.small-tt-matrix-mini-card:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+.small-tt-matrix-mini-card.type-lecture {
+  background: #eff6f2;
+  border-color: #c8dfd4;
+  color: #1e4533;
+}
+
+.small-tt-matrix-mini-card.type-lab {
+  background: #fef7ee;
+  border-color: #fae1be;
+  color: #7b4208;
+}
+
+.small-tt-matrix-mini-card.type-event {
+  background: #faf2f4;
+  border-color: #f2d1d9;
+  color: #6d1f30;
+}
+
+.small-tt-matrix-mini-card.type-exam {
+  background: #fdf2ed;
+  border-color: #f7d6c8;
+  color: #822e11;
+}
+
+.small-tt-matrix-subject {
+  font-size: 10.5px;
+  font-weight: 800;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  line-height: 1.2;
+}
+
+.small-tt-matrix-subinfo {
+  display: flex;
+  justify-content: space-between;
+  font-size: 8.5px;
+  font-weight: 700;
+  opacity: 0.85;
+  margin-top: 2px;
+}
+
+.small-tt-matrix-free {
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #cbd5e1;
+  font-size: 11px;
+  border-radius: 6px;
+  background: #f8fafc;
 }
 
 /* ==========================================================================
