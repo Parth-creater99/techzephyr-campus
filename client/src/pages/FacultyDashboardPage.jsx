@@ -700,59 +700,6 @@ export function FacultyDashboardPage({ currentUser, onNavigate }) {
             </div>
           </div>
         </div>
-
-        {/* Department Workload Distribution Bars */}
-        <div className="dept-workload-bars-grid">
-          <div className="dept-bar-card">
-            <div className="dept-bar-header">
-              <span style={{ color: 'var(--text-primary)' }}>Computer Science (CSE)</span>
-              <span style={{ color: '#c54a26' }}>10 Faculty • 62h</span>
-            </div>
-            <div className="dept-progress-track">
-              <div className="dept-progress-fill" style={{ width: '85%', background: '#c54a26' }} />
-            </div>
-          </div>
-
-          <div className="dept-bar-card">
-            <div className="dept-bar-header">
-              <span style={{ color: 'var(--text-primary)' }}>Electronics &amp; Comm (ECE)</span>
-              <span style={{ color: '#db822a' }}>8 Faculty • 54h</span>
-            </div>
-            <div className="dept-progress-track">
-              <div className="dept-progress-fill" style={{ width: '74%', background: '#db822a' }} />
-            </div>
-          </div>
-
-          <div className="dept-bar-card">
-            <div className="dept-bar-header">
-              <span style={{ color: 'var(--text-primary)' }}>Mechanical Eng (ME)</span>
-              <span style={{ color: '#4e7561' }}>7 Faculty • 46h</span>
-            </div>
-            <div className="dept-progress-track">
-              <div className="dept-progress-fill" style={{ width: '63%', background: '#4e7561' }} />
-            </div>
-          </div>
-
-          <div className="dept-bar-card">
-            <div className="dept-bar-header">
-              <span style={{ color: 'var(--text-primary)' }}>Information Tech (IT)</span>
-              <span style={{ color: '#3a2216' }}>8 Faculty • 48h</span>
-            </div>
-            <div className="dept-progress-track">
-              <div className="dept-progress-fill" style={{ width: '66%', background: '#3a2216' }} />
-            </div>
-          </div>
-
-          <div className="dept-bar-card">
-            <div className="dept-bar-header">
-              <span style={{ color: 'var(--text-primary)' }}>General &amp; EE/Civil</span>
-              <span style={{ color: '#834f96' }}>7 Faculty • 33h</span>
-            </div>
-            <div className="dept-progress-track">
-              <div className="dept-progress-fill" style={{ width: '45%', background: '#834f96' }} />
-            </div>
-          </div>
-        </div>
       </div>
 
       {/* ==========================================================================
@@ -762,29 +709,31 @@ export function FacultyDashboardPage({ currentUser, onNavigate }) {
         <div className="weekly-activity-card">
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: 10 }}>
             <div>
-              <h3 style={{ fontSize: 17, fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
-                Weekly Session Activity
-              </h3>
-              <span style={{ fontSize: 12.5, color: 'var(--text-secondary)' }}>
-                Monday to Saturday session distribution across periods P1–P13
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <h3 style={{ fontSize: 16, fontWeight: 800, color: 'var(--text-primary)', margin: 0 }}>
+                  Weekly Session Activity
+                </h3>
+                <span className="mini-p13-badge">
+                  P1 to P13 (09:00 – 22:00)
+                </span>
+              </div>
+              <span style={{ fontSize: 11.5, color: 'var(--text-secondary)', marginTop: 2, display: 'block' }}>
+                All 13 periods visible in one compact view • P10–P13 dedicated evening events
               </span>
             </div>
 
-            <div style={{ display: 'flex', alignItems: 'center', gap: 12, fontSize: 11, fontWeight: 700 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, fontSize: 10.5, fontWeight: 700 }}>
               <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                <span style={{ width: 10, height: 10, borderRadius: 3, background: '#c54a26' }} /> CSE
+                <span style={{ width: 8, height: 8, borderRadius: 2, background: '#c54a26' }} /> Class
               </span>
               <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                <span style={{ width: 10, height: 10, borderRadius: 3, background: '#d9822b' }} /> Lab
+                <span style={{ width: 8, height: 8, borderRadius: 2, background: '#d9822b' }} /> Lab
               </span>
               <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                <span style={{ width: 10, height: 10, borderRadius: 3, background: '#ea580c' }} /> Busy
+                <span style={{ width: 8, height: 8, borderRadius: 2, background: '#9333ea' }} /> Event
               </span>
               <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                <span style={{ width: 10, height: 10, borderRadius: 3, background: '#9333ea' }} /> Event
-              </span>
-              <span style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
-                <span style={{ width: 10, height: 10, borderRadius: 3, background: '#e2e8f0' }} /> Free
+                <span style={{ width: 8, height: 8, borderRadius: 2, background: '#cbd5e1' }} /> Free
               </span>
             </div>
           </div>
@@ -793,13 +742,17 @@ export function FacultyDashboardPage({ currentUser, onNavigate }) {
             <table className="activity-matrix-table">
               <thead>
                 <tr>
-                  <th style={{ textAlign: 'left', paddingLeft: 10 }}>Day</th>
-                  {PERIODS.map((p) => (
-                    <th key={p.id}>
-                      <div>{p.name}</div>
-                      <div style={{ fontSize: 9.5, opacity: 0.75 }}>{p.time.split(' ')[0]}</div>
-                    </th>
-                  ))}
+                  <th className="day-col-header">Day</th>
+                  {PERIODS.map((p) => {
+                    const isEvent = p.type === 'event';
+                    const shortTime = p.time.split(' - ')[0].replace(':00', '');
+                    return (
+                      <th key={p.id} className={isEvent ? 'th-matrix-event' : 'th-matrix-period'}>
+                        <div className="matrix-p-id">{p.id}</div>
+                        <div className="matrix-p-time">{shortTime}</div>
+                      </th>
+                    );
+                  })}
                 </tr>
               </thead>
               <tbody>
@@ -808,32 +761,32 @@ export function FacultyDashboardPage({ currentUser, onNavigate }) {
 
                   return (
                     <tr key={dayKey}>
-                      <td className="day-col">{dayKey.charAt(0).toUpperCase() + dayKey.slice(1)}</td>
+                      <td className="day-col">{dayKey.charAt(0).toUpperCase() + dayKey.slice(1, 3)}</td>
                       {PERIODS.map((p) => {
                         const match = daySessions.find((s) => s.periodId === p.id);
                         const isEventSlot = p.type === 'event' || match?.type === 'event';
 
                         let cellClass = 'cell-free';
-                        let label = 'Free';
+                        let label = '—';
 
                         if (match) {
                           if (match.type === 'lab') {
                             cellClass = 'cell-lab';
-                            label = `${match.code} Lab`;
+                            label = match.code.includes('LAB') ? match.code : `${match.code}`;
                           } else if (isEventSlot) {
                             cellClass = 'cell-event';
                             label = match.code;
-                          } else if (match.group?.includes('CSE') || match.code.startsWith('CS')) {
-                            cellClass = 'cell-cse';
-                            label = 'CSE';
+                          } else if (match.type === 'exam') {
+                            cellClass = 'cell-exam';
+                            label = match.code;
                           } else {
-                            cellClass = 'cell-busy';
-                            label = match.code.substring(0, 5);
+                            cellClass = 'cell-lecture';
+                            label = match.code;
                           }
                         }
 
                         return (
-                          <td key={p.id}>
+                          <td key={p.id} className="activity-matrix-td">
                             <div
                               className={`activity-matrix-cell ${cellClass}`}
                               onClick={() => {
@@ -841,8 +794,8 @@ export function FacultyDashboardPage({ currentUser, onNavigate }) {
                               }}
                               title={
                                 match
-                                  ? `${match.code}: ${match.title}\nFaculty: ${match.faculty}\nRoom: ${match.room} (${p.time})`
-                                  : `${dayKey.toUpperCase()} ${p.name}: Available period`
+                                  ? `${match.code}: ${match.title}\nType: ${match.type.toUpperCase()}\nFaculty: ${match.faculty}\nRoom: ${match.room} (${p.time})`
+                                  : `${dayKey.toUpperCase()} ${p.id} (${p.time}): Available period`
                               }
                             >
                               {label}

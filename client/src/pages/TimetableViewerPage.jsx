@@ -55,6 +55,7 @@ export function TimetableViewerPage({ currentUser, onNavigate, onRequireAdmin })
   // Period view filter: 'all' (P1-P13 default) | 'academic' (P1-P9) | 'events' (P10-P13)
   const [periodFilter, setPeriodFilter] = useState('all');
   const [includeSaturday, setIncludeSaturday] = useState(false);
+  const [isCompactFit, setIsCompactFit] = useState(true); // Default to compact fit so P1 to P13 fit into screen!
 
   const [selectedGroup, setSelectedGroup] = useState('all');
   const [selectedFaculty, setSelectedFaculty] = useState('all');
@@ -607,6 +608,17 @@ export function TimetableViewerPage({ currentUser, onNavigate, onRequireAdmin })
             {includeSaturday ? '✓ Saturday Included (6 Days)' : '+ Include Saturday'}
           </button>
 
+          {/* Size Mode: Compact Fit (See P1-P13) vs Expansive View */}
+          <button
+            type="button"
+            className={`dept-pill-btn ${isCompactFit ? 'active' : ''}`}
+            onClick={() => setIsCompactFit(!isCompactFit)}
+            style={{ fontSize: 12, padding: '6px 14px' }}
+            title="Toggle between Compact Fit (see all P1-P13 on screen) and Expansive scrollable cards"
+          >
+            {isCompactFit ? '✓ Compact Fit (See P1–P13)' : '↔ Expansive View (Scroll)'}
+          </button>
+
           {/* Add New Class Button */}
           <button
             type="button"
@@ -764,75 +776,77 @@ export function TimetableViewerPage({ currentUser, onNavigate, onRequireAdmin })
         </div>
       </div>
 
-      {/* Horizontal Timetable Scroll Navigator Bar */}
-      <div className="timetable-scroll-nav-bar">
-        <div className="scroll-nav-left-meta">
-          <span className="scroll-nav-indicator-pill">
-            <Clock size={13} color="var(--accent-terracotta)" />
-            <span>Master Schedule (P1 → P13 • 09:00 to 22:00)</span>
-          </span>
-          <span className="scroll-nav-hint-text">
-            ↔ Scroll horizontally or use quick jump buttons below to view all 13 periods (P10–P13 are evening events)
-          </span>
+      {/* Horizontal Timetable Scroll Navigator Bar (Shown in Expansive Mode) */}
+      {!isCompactFit && (
+        <div className="timetable-scroll-nav-bar">
+          <div className="scroll-nav-left-meta">
+            <span className="scroll-nav-indicator-pill">
+              <Clock size={13} color="var(--accent-terracotta)" />
+              <span>Master Schedule (P1 → P13 • 09:00 to 22:00)</span>
+            </span>
+            <span className="scroll-nav-hint-text">
+              ↔ Scroll horizontally or use quick jump buttons below to view all 13 periods (P10–P13 are evening events)
+            </span>
+          </div>
+
+          <div className="scroll-nav-buttons-group">
+            <button
+              type="button"
+              className="scroll-nav-arrow-btn"
+              onClick={() => handleScrollStep('left')}
+              title="Scroll timetable left"
+            >
+              ‹
+            </button>
+
+            <button
+              type="button"
+              className="scroll-jump-chip"
+              onClick={() => handleScrollToPeriod('P1')}
+              title="Jump to Period 1 (09:00 AM)"
+            >
+              P1 (09:00)
+            </button>
+            <button
+              type="button"
+              className="scroll-jump-chip"
+              onClick={() => handleScrollToPeriod('P5')}
+              title="Jump to Period 5 Mid-Day (13:00)"
+            >
+              P5 (13:00)
+            </button>
+            <button
+              type="button"
+              className="scroll-jump-chip"
+              onClick={() => handleScrollToPeriod('P9')}
+              title="Jump to Period 9 Late Afternoon (17:00)"
+            >
+              P9 (17:00)
+            </button>
+            <button
+              type="button"
+              className="scroll-jump-chip scroll-jump-events"
+              onClick={() => handleScrollToPeriod('P10')}
+              title="Jump to Evening Events P10–P13 (18:00–22:00)"
+            >
+              ✦ P10–P13 Events (18:00–22:00) ▶
+            </button>
+
+            <button
+              type="button"
+              className="scroll-nav-arrow-btn"
+              onClick={() => handleScrollStep('right')}
+              title="Scroll timetable right"
+            >
+              ›
+            </button>
+          </div>
         </div>
-
-        <div className="scroll-nav-buttons-group">
-          <button
-            type="button"
-            className="scroll-nav-arrow-btn"
-            onClick={() => handleScrollStep('left')}
-            title="Scroll timetable left"
-          >
-            ‹
-          </button>
-
-          <button
-            type="button"
-            className="scroll-jump-chip"
-            onClick={() => handleScrollToPeriod('P1')}
-            title="Jump to Period 1 (09:00 AM)"
-          >
-            P1 (09:00)
-          </button>
-          <button
-            type="button"
-            className="scroll-jump-chip"
-            onClick={() => handleScrollToPeriod('P5')}
-            title="Jump to Period 5 Mid-Day (13:00)"
-          >
-            P5 (13:00)
-          </button>
-          <button
-            type="button"
-            className="scroll-jump-chip"
-            onClick={() => handleScrollToPeriod('P9')}
-            title="Jump to Period 9 Late Afternoon (17:00)"
-          >
-            P9 (17:00)
-          </button>
-          <button
-            type="button"
-            className="scroll-jump-chip scroll-jump-events"
-            onClick={() => handleScrollToPeriod('P10')}
-            title="Jump to Evening Events P10–P13 (18:00–22:00)"
-          >
-            ✦ P10–P13 Events (18:00–22:00) ▶
-          </button>
-
-          <button
-            type="button"
-            className="scroll-nav-arrow-btn"
-            onClick={() => handleScrollStep('right')}
-            title="Scroll timetable right"
-          >
-            ›
-          </button>
-        </div>
-      </div>
+      )}
 
       {/* Main Timetable Grid: Starts from P1 to P13 (09:00 to 22:00, 1hr Each, P10-P13 Events) */}
-      <div className="timetable-scroll-box" ref={timetableScrollRef}>
-        <table className="app-timetable-table">
+      <div className={`timetable-scroll-box ${isCompactFit ? 'compact-fit-mode' : ''}`} ref={timetableScrollRef}>
+        <table className={`app-timetable-table ${isCompactFit ? 'compact-fit-mode' : ''}`}>
           <thead>
             <tr>
               <th className="th-day-corner">Day / Period</th>

@@ -513,69 +513,137 @@
 }
 
 /* ==========================================================================
-   Weekly Session Activity Heatmap (Mon-Sat x P1-P13 Matrix)
+   Weekly Session Activity Heatmap (Mon-Sat x P1-P13 Matrix) - Compact Fit
    ========================================================================== */
 .weekly-activity-card {
   background: var(--card-bg, #ffffff);
   border: 1.5px solid var(--border-default);
   border-radius: var(--radius-xl);
-  padding: 20px;
+  padding: 16px 20px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
 }
 
+.mini-p13-badge {
+  font-size: 10px;
+  font-weight: 800;
+  color: var(--accent-terracotta);
+  background: #fdf2ed;
+  border: 1px solid #f7d6c8;
+  padding: 2px 8px;
+  border-radius: 9999px;
+  letter-spacing: 0.2px;
+}
+
 .activity-matrix-scroll {
-  overflow-x: auto;
+  width: 100%;
   max-width: 100%;
-  margin-top: 14px;
+  overflow-x: auto;
+  margin-top: 10px;
 }
 
 .activity-matrix-table {
   width: 100%;
+  table-layout: fixed !important;
   border-collapse: separate;
-  border-spacing: 5px;
-  font-size: 11.5px;
-  min-width: 900px;
+  border-spacing: 3px;
+  font-size: 9.5px;
+  min-width: 0 !important;
+}
+
+.day-col-header {
+  width: 38px !important;
+  min-width: 38px !important;
+  max-width: 38px !important;
+  padding: 4px 2px !important;
+  font-size: 10px !important;
+  font-weight: 800 !important;
+  color: #475569 !important;
+  text-align: left !important;
 }
 
 .activity-matrix-table th {
-  padding: 6px 4px;
-  font-weight: 700;
-  color: #64748b;
+  padding: 3px 1px;
   text-align: center;
-  font-size: 11px;
+  font-weight: 800;
+  color: #64748b;
+  font-size: 9.5px;
+  white-space: nowrap;
+}
+
+.th-matrix-period {
+  background: #f8fafc;
+  border-radius: 4px;
+}
+
+.th-matrix-event {
+  background: #fdf2ed;
+  border-radius: 4px;
+  border: 1px solid #fed7aa;
+}
+
+.matrix-p-id {
+  font-size: 10px;
+  font-weight: 900;
+  color: #1e293b;
+  line-height: 1.1;
+}
+
+.th-matrix-event .matrix-p-id {
+  color: #c54a26;
+}
+
+.matrix-p-time {
+  font-size: 8px;
+  color: #64748b;
+  font-weight: 600;
+  line-height: 1;
+  margin-top: 1px;
 }
 
 .activity-matrix-table td.day-col {
-  font-weight: 800;
+  font-weight: 900;
   color: #0f172a;
   text-align: left;
-  padding: 6px 10px;
-  font-size: 12px;
-  width: 70px;
+  padding: 2px 2px;
+  font-size: 10px;
+  width: 38px !important;
+  min-width: 38px !important;
+  max-width: 38px !important;
+  white-space: nowrap;
+}
+
+.activity-matrix-td {
+  padding: 0;
+  text-align: center;
 }
 
 .activity-matrix-cell {
-  height: 40px;
-  border-radius: 8px;
+  height: 25px !important;
+  min-height: 25px !important;
+  max-height: 25px !important;
+  border-radius: 4px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-weight: 700;
-  font-size: 11px;
-  padding: 4px;
+  font-weight: 800;
+  font-size: 9px;
+  padding: 0 1px;
   cursor: pointer;
-  transition: all 0.15s ease;
+  transition: all 0.12s ease;
   text-align: center;
   border: 1px solid transparent;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .activity-matrix-cell:hover {
-  transform: scale(1.04);
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
-  z-index: 2;
+  transform: scale(1.08);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 5;
 }
 
-.cell-cse {
+.cell-lecture {
   background: #fbf0ea;
   color: #c54a26;
   border-color: #f7d5c7;
@@ -587,16 +655,10 @@
   border-color: #fce8cc;
 }
 
-.cell-lecture {
-  background: #f0fdf4;
-  color: #15803d;
-  border-color: #bbf7d0;
-}
-
-.cell-busy {
-  background: #fff7ed;
-  color: #ea580c;
-  border-color: #fed7aa;
+.cell-exam {
+  background: #fef2f2;
+  color: #dc2626;
+  border-color: #fecaca;
 }
 
 .cell-event {
@@ -605,10 +667,16 @@
   border-color: #e9d5ff;
 }
 
+.cell-busy {
+  background: #fff7ed;
+  color: #ea580c;
+  border-color: #fed7aa;
+}
+
 .cell-free {
   background: #f8fafc;
-  color: #94a3b8;
-  border-color: #e2e8f0;
+  color: #cbd5e1;
+  border-color: #f1f5f9;
 }
 
 /* ==========================================================================
