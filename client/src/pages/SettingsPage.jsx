@@ -112,7 +112,7 @@ export function SettingsPage({ currentUser, onLogout, onNavigate, onRequireAdmin
                 Daily Operational Class Window
               </span>
               <div style={{ padding: '10px 14px', borderRadius: 10, background: 'var(--bg-card-subtle)', border: '1px solid var(--border-default)', fontSize: 13.5, fontWeight: 600, color: 'var(--text-primary)', marginTop: 4 }}>
-                Teaching: Mon–Fri, P1 to P9 (08:00 – 18:00) • Events: P10 to P13 (18:00 – 22:00)
+                Teaching: Mon–Fri, P1 to P9 (09:00 – 18:00) • Events: P10 to P13 (18:00 – 22:00)
               </div>
             </div>
 
@@ -131,7 +131,7 @@ export function SettingsPage({ currentUser, onLogout, onNavigate, onRequireAdmin
                 if (currentUser?.roleType !== 'admin') {
                   onRequireAdmin?.(
                     'Alter Institutional Parameters & Policy',
-                    'CIT Institutional Parameters (Mandatory Lunch Intermission 13:00–14:00 between P5 & P6, Teaching Week Mon–Fri P1–P9 08:00–18:00, Event Window P10–P13 18:00–22:00) are locked by Academic Senate Statute. These parameters can only be altered by the Institute Administrator / Academic Dean.'
+                    'CIT Institutional Parameters (Teaching Week Mon–Fri P1–P9 09:00–18:00, Event Window P10–P13 18:00–22:00) are locked by Academic Senate Statute. These parameters can only be altered by the Institute Administrator / Academic Dean.'
                   );
                   return;
                 }

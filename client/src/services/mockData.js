@@ -14,19 +14,18 @@
 
 export const IS_LIVE_DATA = true;
 
-// 13 Official Periods: Nine 1-Hour Teaching Periods (P1-P9), Lunch (13:00-14:00), Four Evening Event Periods (P10-P13)
+// 13 Official Periods: Starts from 09:00 AM, All 1-Hour Long (P1-P9 Academic, P10-P13 Events)
 export const PERIODS = [
-  { id: 'P1', name: 'Period 1', time: '08:00 - 09:00', type: 'academic' },
-  { id: 'P2', name: 'Period 2', time: '09:00 - 10:00', type: 'academic' },
-  { id: 'P3', name: 'Period 3', time: '10:00 - 11:00', type: 'academic' },
-  { id: 'P4', name: 'Period 4', time: '11:00 - 12:00', type: 'academic' },
-  { id: 'P5', name: 'Period 5', time: '12:00 - 13:00', type: 'academic' },
-  // Lunch Intermission: 13:00 - 14:00 (between P5 and P6)
+  { id: 'P1', name: 'Period 1', time: '09:00 - 10:00', type: 'academic' },
+  { id: 'P2', name: 'Period 2', time: '10:00 - 11:00', type: 'academic' },
+  { id: 'P3', name: 'Period 3', time: '11:00 - 12:00', type: 'academic' },
+  { id: 'P4', name: 'Period 4', time: '12:00 - 13:00', type: 'academic' },
+  { id: 'P5', name: 'Period 5', time: '13:00 - 14:00', type: 'academic' },
   { id: 'P6', name: 'Period 6', time: '14:00 - 15:00', type: 'academic' },
   { id: 'P7', name: 'Period 7', time: '15:00 - 16:00', type: 'academic' },
   { id: 'P8', name: 'Period 8', time: '16:00 - 17:00', type: 'academic' },
   { id: 'P9', name: 'Period 9', time: '17:00 - 18:00', type: 'academic' },
-  // Dedicated Evening Event Periods: P10 - P13 (18:00 - 22:00, only for events)
+  // Dedicated Evening Event Periods: P10 - P13 (18:00 - 22:00, 1hr each, events only)
   { id: 'P10', name: 'Period 10 (Event)', time: '18:00 - 19:00', type: 'event', label: 'Club & Tech Events' },
   { id: 'P11', name: 'Period 11 (Event)', time: '19:00 - 20:00', type: 'event', label: 'Spectra Rehearsal' },
   { id: 'P12', name: 'Period 12 (Event)', time: '20:00 - 21:00', type: 'event', label: 'Guest Lectures & Cultural' },
@@ -247,6 +246,7 @@ export const INITIAL_TIMETABLE_SESSIONS = [
   { id: 's-102', day: 'mon', periodId: 'P2', code: 'CS302', title: 'Database Management Systems', type: 'lecture', group: 'CSE-3', faculty: 'Dr. R. Verma', room: 'LH-102', capacity: 90, enrolled: 82 },
   { id: 's-103', day: 'mon', periodId: 'P3', code: 'EC204', title: 'Signals & Linear Systems', type: 'lecture', group: 'ECE-2', faculty: 'Prof. K. Patel', room: 'LH-201', capacity: 120, enrolled: 68 },
   { id: 's-104', day: 'mon', periodId: 'P4', code: 'MA101', title: 'Engineering Mathematics I', type: 'tutorial', group: 'Y1-SecA', faculty: 'Dr. S. Radhakrishnan', room: 'CR-101', capacity: 60, enrolled: 58 },
+  { id: 's-105-p5', day: 'mon', periodId: 'P5', code: 'HS201', title: 'Professional Ethics', type: 'lecture', group: 'CSE-3', faculty: 'Prof. David Solomon', room: 'LH-101', capacity: 90, enrolled: 75, notes: 'Engineering ethics and standards.' },
   { id: 's-105', day: 'mon', periodId: 'P6', code: 'CS305L', title: 'OS & Systems Programming Lab', type: 'lab', group: 'CSE-3', faculty: 'Dr. A. Sharma', room: 'Lab-1', capacity: 45, enrolled: 42 },
   { id: 's-106', day: 'mon', periodId: 'P7', code: 'CS305L', title: 'OS & Systems Lab (Contd)', type: 'lab', group: 'CSE-3', faculty: 'Dr. A. Sharma', room: 'Lab-1', capacity: 45, enrolled: 42 },
   { id: 's-107', day: 'mon', periodId: 'P8', code: 'ME201', title: 'Thermodynamics & Heat Engines', type: 'lecture', group: 'ME-2', faculty: 'Prof. S. Sen', room: 'LH-202', capacity: 120, enrolled: 74 },
@@ -263,6 +263,7 @@ export const INITIAL_TIMETABLE_SESSIONS = [
   { id: 's-202', day: 'tue', periodId: 'P2', code: 'ME301', title: 'Heat & Mass Transfer', type: 'lecture', group: 'ME-3', faculty: 'Prof. S. Sen', room: 'LH-201', capacity: 120, enrolled: 92 },
   { id: 's-203', day: 'tue', periodId: 'P3', code: 'IT302', title: 'Big Data Analytics & Hadoop', type: 'lecture', group: 'IT-3', faculty: 'Dr. N. Jena', room: 'LH-102', capacity: 90, enrolled: 76 },
   { id: 's-204', day: 'tue', periodId: 'P4', code: 'CS303', title: 'Computer Networks & Security', type: 'lecture', group: 'CSE-3', faculty: 'Dr. R. Verma', room: 'LH-103', capacity: 90, enrolled: 80 },
+  { id: 's-205-p5', day: 'tue', periodId: 'P5', code: 'CS201', title: 'Data Structures & Algorithms', type: 'lecture', group: 'CSE-2', faculty: 'Dr. Anand Kumar', room: 'LH-102', capacity: 90, enrolled: 82 },
   { id: 's-205', day: 'tue', periodId: 'P6', code: 'EC302', title: 'VLSI Design & Embedded Systems', type: 'lecture', group: 'ECE-3', faculty: 'Prof. K. Patel', room: 'LH-202', capacity: 120, enrolled: 70 },
   { id: 's-206', day: 'tue', periodId: 'P7', code: 'CS-MID1', title: 'Mid-Sem Exam: Operating Systems', type: 'exam', group: 'CSE-3', faculty: 'Dr. A. Sharma', room: 'LH-201', capacity: 120, enrolled: 110, notes: 'Midsem Exam seating arrangement in effect.' },
   { id: 's-207', day: 'tue', periodId: 'P8', code: 'ME203', title: 'Fluid Mechanics', type: 'tutorial', group: 'ME-2', faculty: 'Dr. C. Balakrishnan', room: 'CR-202', capacity: 60, enrolled: 55 },
@@ -279,6 +280,7 @@ export const INITIAL_TIMETABLE_SESSIONS = [
   { id: 's-302', day: 'wed', periodId: 'P2', code: 'CS301', title: 'Operating Systems', type: 'lecture', group: 'CSE-3', faculty: 'Dr. A. Sharma', room: 'LH-101', capacity: 90, enrolled: 78 },
   { id: 's-303', day: 'wed', periodId: 'P3', code: 'EC204', title: 'Signals & Linear Systems', type: 'tutorial', group: 'ECE-2', faculty: 'Prof. K. Patel', room: 'LH-102', capacity: 90, enrolled: 68 },
   { id: 's-304', day: 'wed', periodId: 'P4', code: 'PH101', title: 'Engineering Physics', type: 'lecture', group: 'Y1-SecC', faculty: 'Dr. Maya Nambiar', room: 'LH-201', capacity: 120, enrolled: 88 },
+  { id: 's-305-p5', day: 'wed', periodId: 'P5', code: 'MA102', title: 'Calculus & ODE', type: 'tutorial', group: 'Y1-SecB', faculty: 'Dr. Kavitha Selvan', room: 'CR-102', capacity: 60, enrolled: 58 },
   { id: 's-305', day: 'wed', periodId: 'P6', code: 'NET-LAB', title: 'Network Systems Lab', type: 'lab', group: 'IT-3', faculty: 'Dr. R. Verma', room: 'Lab-3', capacity: 45, enrolled: 40 },
   { id: 's-306', day: 'wed', periodId: 'P7', code: 'NET-LAB', title: 'Network Lab (Contd)', type: 'lab', group: 'IT-3', faculty: 'Dr. R. Verma', room: 'Lab-3', capacity: 45, enrolled: 40 },
   { id: 's-307', day: 'wed', periodId: 'P8', code: 'HS201', title: 'Professional Ethics', type: 'lecture', group: 'CSE-2', faculty: 'Prof. David Solomon', room: 'LH-301', capacity: 100, enrolled: 82 },
@@ -295,6 +297,7 @@ export const INITIAL_TIMETABLE_SESSIONS = [
   { id: 's-402', day: 'thu', periodId: 'P2', code: 'CS304', title: 'Software Engineering', type: 'lecture', group: 'CSE-3', faculty: 'Prof. Meera Nair', room: 'LH-101', capacity: 90, enrolled: 74 },
   { id: 's-403', day: 'thu', periodId: 'P3', code: 'CS302', title: 'Database Management Systems', type: 'tutorial', group: 'CSE-3', faculty: 'Dr. R. Verma', room: 'LH-102', capacity: 90, enrolled: 82 },
   { id: 's-404', day: 'thu', periodId: 'P4', code: 'CH101', title: 'Engineering Chemistry', type: 'lecture', group: 'Y1-SecD', faculty: 'Prof. John Paul', room: 'CR-101', capacity: 60, enrolled: 55 },
+  { id: 's-405-p5', day: 'thu', periodId: 'P5', code: 'EE201', title: 'Electrical Machines', type: 'lecture', group: 'EE-2', faculty: 'Prof. Dinesh Rao', room: 'LH-201', capacity: 120, enrolled: 65 },
   { id: 's-405', day: 'thu', periodId: 'P6', code: 'CAD-LAB', title: 'Mechanical CAD Modeling Lab', type: 'lab', group: 'ME-3', faculty: 'Prof. Rohit Kulkarni', room: 'Lab-6', capacity: 40, enrolled: 38 },
   { id: 's-406', day: 'thu', periodId: 'P7', code: 'EC-MID', title: 'Mid-Sem Exam: Signals & Systems', type: 'exam', group: 'ECE-2', faculty: 'Prof. K. Patel', room: 'Aud-1', capacity: 450, enrolled: 180, notes: 'Combined 2nd Year mid-semester exam.' },
   { id: 's-407', day: 'thu', periodId: 'P8', code: 'IT301', title: 'Mobile App Architecture', type: 'lecture', group: 'IT-3', faculty: 'Prof. Ashwin Thomas', room: 'LH-302', capacity: 100, enrolled: 72 },
@@ -311,6 +314,7 @@ export const INITIAL_TIMETABLE_SESSIONS = [
   { id: 's-502', day: 'fri', periodId: 'P2', code: 'CS301', title: 'Operating Systems', type: 'lecture', group: 'CSE-3', faculty: 'Dr. A. Sharma', room: 'LH-102', capacity: 90, enrolled: 78 },
   { id: 's-503', day: 'fri', periodId: 'P3', code: 'EC301', title: 'Communication Systems', type: 'lecture', group: 'ECE-3', faculty: 'Prof. K. Patel', room: 'LH-201', capacity: 120, enrolled: 72 },
   { id: 's-504', day: 'fri', periodId: 'P4', code: 'CS303', title: 'Computer Networks', type: 'lecture', group: 'CSE-3', faculty: 'Dr. R. Verma', room: 'LH-102', capacity: 90, enrolled: 80 },
+  { id: 's-505-p5', day: 'fri', periodId: 'P5', code: 'IT302', title: 'Big Data Analytics', type: 'lecture', group: 'IT-3', faculty: 'Dr. N. Jena', room: 'LH-103', capacity: 90, enrolled: 70 },
   { id: 's-505', day: 'fri', periodId: 'P6', code: 'PROJ-3', title: 'Capstone Design Workshop', type: 'lab', group: 'CSE-3', faculty: 'Dr. A. Sharma', room: 'Lab-1', capacity: 45, enrolled: 38 },
   { id: 's-506', day: 'fri', periodId: 'P7', code: 'PROJ-3', title: 'Capstone Workshop (Contd)', type: 'lab', group: 'CSE-3', faculty: 'Dr. A. Sharma', room: 'Lab-1', capacity: 45, enrolled: 38 },
   { id: 's-507', day: 'fri', periodId: 'P8', code: 'ME302', title: 'Design of Machine Elements', type: 'lecture', group: 'ME-3', faculty: 'Dr. Madhavan Iyer', room: 'LH-301', capacity: 100, enrolled: 86 },
@@ -338,22 +342,42 @@ export const INITIAL_TIMETABLE_SESSIONS = [
 // Helper to get timetable sessions with localStorage persistence
 export function getStoredTimetableSessions() {
   try {
-    const raw = localStorage.getItem('cit_timetable_sessions_v2');
+    const raw = localStorage.getItem('cit_timetable_sessions_v3');
     if (raw) {
-      return JSON.parse(raw);
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return parsed;
+      }
     }
   } catch (err) {
     console.warn('Failed to parse stored sessions, falling back to initial', err);
+  }
+  // Initialize v3 with new P1-P13 9AM schedule
+  try {
+    localStorage.setItem('cit_timetable_sessions_v3', JSON.stringify(INITIAL_TIMETABLE_SESSIONS));
+  } catch (e) {
+    // ignore
   }
   return INITIAL_TIMETABLE_SESSIONS;
 }
 
 export function saveStoredTimetableSessions(sessions) {
   try {
+    localStorage.setItem('cit_timetable_sessions_v3', JSON.stringify(sessions));
     localStorage.setItem('cit_timetable_sessions_v2', JSON.stringify(sessions));
   } catch (err) {
     console.error('Failed to save sessions to localStorage', err);
   }
+}
+
+export function resetStoredTimetableSessions() {
+  try {
+    localStorage.setItem('cit_timetable_sessions_v3', JSON.stringify(INITIAL_TIMETABLE_SESSIONS));
+    localStorage.setItem('cit_timetable_sessions_v2', JSON.stringify(INITIAL_TIMETABLE_SESSIONS));
+  } catch (err) {
+    console.error('Failed to reset sessions in localStorage', err);
+  }
+  return INITIAL_TIMETABLE_SESSIONS;
 }
 
 // Helper to get faculty with localStorage persistence (allows adding teachers!)

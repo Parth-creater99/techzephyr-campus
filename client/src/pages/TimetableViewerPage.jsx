@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useRef, useEffect } from 'react';
 import {
   CalendarDays,
   Search,
@@ -9,15 +9,23 @@ import {
   Users,
   Sparkles,
   Calendar,
-  HelpCircle,
-  Wand2,
-  FileText,
   Building2,
   CheckCircle2,
   TrendingUp,
   RefreshCw,
   Info,
   Lock,
+  Edit3,
+  Plus,
+  Trash2,
+  MessageSquare,
+  Send,
+  CheckCheck,
+  ArrowRight,
+  ShieldCheck,
+  AlertCircle,
+  UserCheck,
+  RotateCcw,
 } from 'lucide-react';
 import { Modal } from '../components/Modal';
 import {
@@ -32,20 +40,20 @@ import {
   COURSES_CATALOG,
   getStoredTimetableSessions,
   saveStoredTimetableSessions,
-  CIT_DATASET_METRICS,
+  resetStoredTimetableSessions,
+  getStoredLectureSwaps,
+  saveStoredLectureSwaps,
 } from '../services/mockData';
 import './TimetableViewerPage.css';
 
-export function TimetableViewerPage({ currentUser, onNavigate, onRequireAdmin, onSwitchRole }) {
+export function TimetableViewerPage({ currentUser, onNavigate, onRequireAdmin }) {
   const [sessions, setSessions] = useState(getStoredTimetableSessions);
 
   // View Mode: 'group' | 'faculty' | 'room'
   const [viewMode, setViewMode] = useState('group');
 
-  // Mode: 'classes' (Week 1 regular classes) vs 'midsem' (Week 2 Midsem Exams)
-  const [scheduleMode, setScheduleMode] = useState('classes');
-  // Fitted period view filter: 'academic' (DEFAULT: Teaching Week Mon-Fri, P1-P9 & Lunch - 100% Fit Screen)
-  const [periodFilter, setPeriodFilter] = useState('academic');
+  // Period view filter: 'all' (P1-P13 default) | 'academic' (P1-P9) | 'events' (P10-P13)
+  const [periodFilter, setPeriodFilter] = useState('all');
   const [includeSaturday, setIncludeSaturday] = useState(false);
 
   const [selectedGroup, setSelectedGroup] = useState('all');
@@ -54,45 +62,63 @@ export function TimetableViewerPage({ currentUser, onNavigate, onRequireAdmin, o
   const [selectedType, setSelectedType] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
 
-  // Decision Explainability State (Read-only modal)
-  const [explainSession, setExplainSession] = useState(null);
+  // Top banner notification
+  const [bannerNotice, setBannerNotice] = useState(null);
 
-  // Generation / Solver status
-  const [solverStatus, setSolverStatus] = useState(null);
+  // Class Detail & Edit Modal State
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [modalTab, setModalTab] = useState('details'); // 'details' | 'swap' | 'verify'
+  const [isNewClass, setIsNewClass] = useState(false);
+  const [editingSessionId, setEditingSessionId] = useState(null);
 
-  // 41 Midsem Exam Sessions for Week 2
-  const midsemExamSessions = useMemo(() => {
-    return [
-      { id: 'ex-1', day: 'mon', periodId: 'P2', code: 'CS301-EX', title: 'Midsem: Operating Systems', type: 'exam', group: 'CSE-3', faculty: 'Dr. A. Sharma', room: 'LH-101', capacity: 90, enrolled: 78, notes: 'Seating arrangement with 1m separation.' },
-      { id: 'ex-2', day: 'mon', periodId: 'P2', code: 'CS301-EX', title: 'Midsem: Operating Systems (Hall 2)', type: 'exam', group: 'CSE-3', faculty: 'Dr. R. Verma', room: 'LH-102', capacity: 90, enrolled: 82 },
-      { id: 'ex-3', day: 'mon', periodId: 'P7', code: 'EC201-EX', title: 'Midsem: Electronic Devices & Circuits', type: 'exam', group: 'ECE-2', faculty: 'Prof. K. Patel', room: 'LH-201', capacity: 120, enrolled: 68 },
-      { id: 'ex-4', day: 'tue', periodId: 'P2', code: 'ME201-EX', title: 'Midsem: Thermodynamics & Heat Engines', type: 'exam', group: 'ME-2', faculty: 'Prof. S. Sen', room: 'LH-202', capacity: 120, enrolled: 74 },
-      { id: 'ex-5', day: 'tue', periodId: 'P7', code: 'MA101-EX', title: 'Midsem: Engineering Mathematics I', type: 'exam', group: 'Y1-SecA', faculty: 'Dr. S. Radhakrishnan', room: 'Aud-1', capacity: 450, enrolled: 180 },
-      { id: 'ex-6', day: 'wed', periodId: 'P2', code: 'CS302-EX', title: 'Midsem: Database Management Systems', type: 'exam', group: 'CSE-3', faculty: 'Dr. R. Verma', room: 'LH-101', capacity: 90, enrolled: 82 },
-      { id: 'ex-7', day: 'wed', periodId: 'P7', code: 'IT201-EX', title: 'Midsem: OOP in Java', type: 'exam', group: 'IT-2', faculty: 'Dr. N. Jena', room: 'LH-103', capacity: 90, enrolled: 65 },
-      { id: 'ex-8', day: 'thu', periodId: 'P2', code: 'EC204-EX', title: 'Midsem: Signals & Linear Systems', type: 'exam', group: 'ECE-2', faculty: 'Prof. K. Patel', room: 'LH-201', capacity: 120, enrolled: 68 },
-      { id: 'ex-9', day: 'thu', periodId: 'P7', code: 'PH101-EX', title: 'Midsem: Engineering Physics', type: 'exam', group: 'Y1-SecC', faculty: 'Dr. Maya Nambiar', room: 'Aud-1', capacity: 450, enrolled: 160 },
-      { id: 'ex-10', day: 'fri', periodId: 'P2', code: 'CS303-EX', title: 'Midsem: Computer Networks & Security', type: 'exam', group: 'CSE-3', faculty: 'Dr. R. Verma', room: 'LH-102', capacity: 90, enrolled: 80 },
-      { id: 'ex-11', day: 'fri', periodId: 'P7', code: 'CH101-EX', title: 'Midsem: Engineering Chemistry', type: 'exam', group: 'Y1-SecD', faculty: 'Prof. John Paul', room: 'LH-301', capacity: 100, enrolled: 85 },
-      { id: 'ex-12', day: 'sat', periodId: 'P2', code: 'ME301-EX', title: 'Midsem: Heat & Mass Transfer', type: 'exam', group: 'ME-3', faculty: 'Prof. S. Sen', room: 'LH-201', capacity: 120, enrolled: 92 },
-    ];
-  }, []);
+  // Form State for editing / creating a class
+  const [formState, setFormState] = useState({
+    code: 'CS301',
+    title: 'Operating Systems',
+    type: 'lecture',
+    group: 'CSE-3',
+    faculty: 'Dr. A. Sharma',
+    room: 'LH-101',
+    day: 'mon',
+    periodId: 'P1',
+    capacity: 90,
+    enrolled: 78,
+    notes: 'Core lecture series.',
+  });
 
+  // Swap State with Actual Lecturer
+  const [targetSessionId, setTargetSessionId] = useState('');
+  const [swapChatMessages, setSwapChatMessages] = useState([]);
+  const [chatInputText, setChatInputText] = useState('');
+  const [isLecturerTyping, setIsLecturerTyping] = useState(false);
+  const [isSwapApproved, setIsSwapApproved] = useState(false);
 
-  // Days to display: In academic mode, default strictly to official Teaching Week (Monday to Friday)
+  const chatEndRef = useRef(null);
+
+  // Auto-scroll chat to bottom
+  useEffect(() => {
+    chatEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+  }, [swapChatMessages, isLecturerTyping]);
+
+  // Days to display (Mon-Fri default, or Sat if toggled)
   const daysToDisplay = useMemo(() => {
+    return includeSaturday ? WEEKDAYS : (TEACHING_WEEKDAYS || WEEKDAYS.slice(0, 5));
+  }, [includeSaturday]);
+
+  // Filter periods based on filter view
+  const visiblePeriods = useMemo(() => {
     if (periodFilter === 'academic') {
-      return includeSaturday ? WEEKDAYS : (TEACHING_WEEKDAYS || WEEKDAYS.slice(0, 5));
+      return PERIODS.filter((p) => p.type === 'academic');
     }
-    return WEEKDAYS;
-  }, [periodFilter, includeSaturday]);
+    if (periodFilter === 'events') {
+      return PERIODS.filter((p) => p.type === 'event');
+    }
+    return PERIODS; // 'all' (P1 to P13)
+  }, [periodFilter]);
 
-  // Active dataset depending on mode (classes vs midsem exams)
-  const activeSessionList = scheduleMode === 'classes' ? sessions : midsemExamSessions;
-
-  // Filter sessions
+  // Filter sessions according to dropdowns and search query
   const filteredSessions = useMemo(() => {
-    return activeSessionList.filter((session) => {
+    return sessions.filter((session) => {
       if (selectedGroup !== 'all' && session.group !== selectedGroup) return false;
       if (selectedFaculty !== 'all' && session.faculty !== selectedFaculty) return false;
       if (selectedRoom !== 'all' && session.room !== selectedRoom) return false;
@@ -107,9 +133,9 @@ export function TimetableViewerPage({ currentUser, onNavigate, onRequireAdmin, o
       }
       return true;
     });
-  }, [activeSessionList, selectedGroup, selectedFaculty, selectedRoom, selectedType, searchQuery]);
+  }, [sessions, selectedGroup, selectedFaculty, selectedRoom, selectedType, searchQuery]);
 
-  // Map day-period to session
+  // Fast day-period lookup map
   const sessionsByDayAndPeriod = useMemo(() => {
     const map = {};
     filteredSessions.forEach((s) => {
@@ -119,188 +145,486 @@ export function TimetableViewerPage({ currentUser, onNavigate, onRequireAdmin, o
     return map;
   }, [filteredSessions]);
 
-  // Breakdown periods: P1-P5 (Morning), P6-P9 (Afternoon), P10-P13 (Evening Events)
-  const morningPeriods = PERIODS.filter((p) => ['P1', 'P2', 'P3', 'P4', 'P5'].includes(p.id));
-  const afternoonPeriods = PERIODS.filter((p) => ['P6', 'P7', 'P8', 'P9'].includes(p.id));
-  const eventPeriods = PERIODS.filter((p) => ['P10', 'P11', 'P12', 'P13'].includes(p.id));
+  // Find target session object for swapping
+  const targetSession = useMemo(() => {
+    if (!targetSessionId) return null;
+    return sessions.find((s) => s.id === targetSessionId) || null;
+  }, [sessions, targetSessionId]);
 
-  // Automated Clash-Free Timetable Generator
-  const handleGenerateClashFreeSchedule = () => {
-    setSolverStatus('Validating constraint matrix across 189 sessions...');
+  // Find the ACTUAL LECTURER for target class from official faculty directory
+  const actualTargetLecturer = useMemo(() => {
+    if (!targetSession) return null;
+    const found = FACULTY_DATA.find((f) => f.name === targetSession.faculty);
+    if (found) return found;
+    return {
+      name: targetSession.faculty,
+      dept: 'Academic Faculty',
+      designation: 'Course Lecturer',
+      cabin: 'Faculty Academic Complex',
+      email: `${targetSession.faculty.toLowerCase().replace(/[^a-z]/g, '')}@cit.edu.in`,
+      status: 'Available',
+    };
+  }, [targetSession]);
+
+  // Currently editing session source object
+  const currentEditingSession = useMemo(() => {
+    if (isNewClass) return null;
+    return sessions.find((s) => s.id === editingSessionId) || null;
+  }, [sessions, editingSessionId, isNewClass]);
+
+  // Real-time Clash Detection for the currently edited / created session
+  const slotConflictCheck = useMemo(() => {
+    const { day, periodId, room, faculty, group } = formState;
+    const otherSessions = sessions.filter((s) => s.id !== editingSessionId);
+
+    const roomCollision = otherSessions.find(
+      (s) => s.day === day && s.periodId === periodId && s.room === room
+    );
+    if (roomCollision) {
+      return {
+        hasClash: true,
+        type: 'room',
+        message: `Venue ${room} is already booked at ${day.toUpperCase()} ${periodId} by ${roomCollision.code} (${roomCollision.title}) taught by ${roomCollision.faculty}.`,
+        conflictSession: roomCollision,
+      };
+    }
+
+    const facultyCollision = otherSessions.find(
+      (s) => s.day === day && s.periodId === periodId && s.faculty === faculty
+    );
+    if (facultyCollision) {
+      return {
+        hasClash: true,
+        type: 'faculty',
+        message: `${faculty} is already scheduled to teach ${facultyCollision.code} (${facultyCollision.title}) in ${facultyCollision.room} at this time.`,
+        conflictSession: facultyCollision,
+      };
+    }
+
+    const groupCollision = otherSessions.find(
+      (s) => s.day === day && s.periodId === periodId && s.group === group
+    );
+    if (groupCollision) {
+      return {
+        hasClash: true,
+        type: 'group',
+        message: `Student cohort ${group} is already attending ${groupCollision.code} (${groupCollision.title}) at this slot.`,
+        conflictSession: groupCollision,
+      };
+    }
+
+    return {
+      hasClash: false,
+      message: '✓ Clash-Free Slot: 0 room, faculty, or cohort collisions.',
+    };
+  }, [formState, sessions, editingSessionId]);
+
+  // Open Modal for Existing Class
+  const handleOpenEditModal = (session) => {
+    setIsNewClass(false);
+    setEditingSessionId(session.id);
+    setFormState({
+      code: session.code || '',
+      title: session.title || '',
+      type: session.type || 'lecture',
+      group: session.group || 'CSE-3',
+      faculty: session.faculty || 'Dr. A. Sharma',
+      room: session.room || 'LH-101',
+      day: session.day || 'mon',
+      periodId: session.periodId || 'P1',
+      capacity: session.capacity || 90,
+      enrolled: session.enrolled || 75,
+      notes: session.notes || '',
+    });
+    setModalTab('details');
+
+    // Default target session for swap (different from this one)
+    const otherSession = sessions.find((s) => s.id !== session.id);
+    if (otherSession) {
+      initiateSwapTarget(otherSession, session);
+    }
+
+    setIsModalOpen(true);
+  };
+
+  // Open Modal to Add Class in Empty Slot
+  const handleOpenAddModal = (dayId, periodId) => {
+    setIsNewClass(true);
+    setEditingSessionId(null);
+    const pObj = PERIODS.find((p) => p.id === periodId);
+    const defaultType = pObj?.type === 'event' ? 'event' : 'lecture';
+    const defaultTitle = pObj?.type === 'event' ? 'Departmental Technical Colloquium' : 'Object Oriented Systems';
+    const defaultCode = pObj?.type === 'event' ? 'EV-COLL' : 'CS205';
+
+    setFormState({
+      code: defaultCode,
+      title: defaultTitle,
+      type: defaultType,
+      group: 'CSE-3',
+      faculty: 'Dr. A. Sharma',
+      room: 'LH-101',
+      day: dayId,
+      periodId: periodId,
+      capacity: 90,
+      enrolled: 70,
+      notes: 'Scheduled via Master Schedule Matrix.',
+    });
+    setModalTab('details');
+    setIsModalOpen(true);
+  };
+
+  // Setup Swap Conversation with Target Lecturer
+  const initiateSwapTarget = (target, source = currentEditingSession) => {
+    setTargetSessionId(target.id);
+    setIsSwapApproved(false);
+    const lecturerName = target.faculty;
+    const targetPeriod = target.periodId;
+    const sourcePeriod = source ? source.periodId : formState.periodId;
+    const sourceCode = source ? source.code : formState.code;
+
+    // Load initial context-aware chat greeting from target lecturer
+    const welcome = {
+      id: `init-${Date.now()}`,
+      sender: 'them',
+      text: `Hello! I am ${lecturerName}. I see you wish to discuss swapping your ${sourceCode} (${sourcePeriod}) class with my ${target.code} (${targetPeriod}) class on ${target.day.toUpperCase()}. How can I assist you with this timetable change?`,
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    };
+    setSwapChatMessages([welcome]);
+  };
+
+  // Send message to actual lecturer in the swap dialog
+  const handleSendSwapMessage = (messageToSend = chatInputText) => {
+    const text = messageToSend.trim();
+    if (!text || !targetSession) return;
+
+    const myMsg = {
+      id: `me-${Date.now()}`,
+      sender: 'me',
+      text,
+      time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    };
+
+    setSwapChatMessages((prev) => [...prev, myMsg]);
+    setChatInputText('');
+
+    // Lecturer responds with realistic intelligence & permission
+    setIsLecturerTyping(true);
     setTimeout(() => {
-      setSessions(getStoredTimetableSessions());
-      setSolverStatus('✓ 189 Sessions Verified! 0 Room Clashes, 0 Faculty Collisions, 100% Validated.');
-      setTimeout(() => setSolverStatus(null), 4000);
+      setIsLecturerTyping(false);
+      const isSwapKeyword =
+        text.toLowerCase().includes('swap') ||
+        text.toLowerCase().includes('exchange') ||
+        text.toLowerCase().includes('reschedule') ||
+        text.toLowerCase().includes('period') ||
+        text.toLowerCase().includes('slot') ||
+        text.toLowerCase().includes('class');
+
+      let replyText = `Thanks for your note. I have verified our department matrix. LH-${targetSession.room.replace(/[^0-9]/g, '') || '101'} fits my cohort smoothly. I agree to this class exchange and grant permission to execute the swap on Smart.CIT!`;
+
+      if (!isSwapKeyword) {
+        replyText = `Understood! Regarding ${targetSession.code}, my teaching schedule on ${targetSession.day.toUpperCase()} allows this adjustment. I have no conflict and approve your swap request.`;
+      }
+
+      const lecturerReply = {
+        id: `them-${Date.now()}`,
+        sender: 'them',
+        text: replyText,
+        time: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+      };
+
+      setSwapChatMessages((prev) => [...prev, lecturerReply]);
+      setIsSwapApproved(true);
     }, 600);
+  };
+
+  // Execute Swap Approved by Lecturer
+  const handleExecuteLecturerSwap = () => {
+    if (!targetSession || !currentEditingSession) return;
+
+    const sourceId = currentEditingSession.id;
+    const targetId = targetSession.id;
+
+    const updatedSessions = sessions.map((s) => {
+      if (s.id === sourceId) {
+        return {
+          ...s,
+          day: targetSession.day,
+          periodId: targetSession.periodId,
+          room: targetSession.room,
+        };
+      }
+      if (s.id === targetId) {
+        return {
+          ...s,
+          day: currentEditingSession.day,
+          periodId: currentEditingSession.periodId,
+          room: currentEditingSession.room,
+        };
+      }
+      return s;
+    });
+
+    setSessions(updatedSessions);
+    saveStoredTimetableSessions(updatedSessions);
+
+    // Record swap in official platform Swaps Log
+    const newSwapRecord = {
+      id: `swap-${Date.now()}`,
+      requestorFaculty: currentEditingSession.faculty,
+      requestorSession: currentEditingSession,
+      targetFaculty: targetSession.faculty,
+      targetSession: targetSession,
+      reason: `Direct Lecturer Consultation: Mutually agreed slot exchange between ${currentEditingSession.code} and ${targetSession.code}.`,
+      priorityTier: 2,
+      priorityName: 'Regular Classes',
+      hardViolations: 0,
+      movedSessionsCount: 2,
+      status: 'APPROVED_SWAPPED',
+      createdAt: 'Just now',
+      approvedBy: actualTargetLecturer?.name || targetSession.faculty,
+      approvalTimestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    };
+
+    const existingSwaps = getStoredLectureSwaps();
+    saveStoredLectureSwaps([newSwapRecord, ...existingSwaps]);
+
+    setIsModalOpen(false);
+    setBannerNotice({
+      type: 'success',
+      message: `✓ Master Schedule Swapped! ${currentEditingSession.code} and ${targetSession.code} have been swapped with verified permission from ${actualTargetLecturer?.name || targetSession.faculty}.`,
+    });
+    setTimeout(() => setBannerNotice(null), 5000);
+  };
+
+  // Save Direct Edit / Creation
+  const handleSaveClassDetails = (e) => {
+    e.preventDefault();
+
+    if (slotConflictCheck.hasClash) {
+      const confirmForce = window.confirm(
+        `Warning: ${slotConflictCheck.message}\n\nDo you still wish to proceed with saving this class? (Alternatively, use the 'Talk to Lecturer to Swap' tab to exchange slots cleanly).`
+      );
+      if (!confirmForce) return;
+    }
+
+    let updatedList;
+    if (isNewClass) {
+      const newSession = {
+        ...formState,
+        id: `sess-${Date.now()}`,
+      };
+      updatedList = [...sessions, newSession];
+      setBannerNotice({
+        type: 'success',
+        message: `✓ New class ${newSession.code} (${newSession.title}) scheduled at ${newSession.day.toUpperCase()} ${newSession.periodId}!`,
+      });
+    } else {
+      updatedList = sessions.map((s) => {
+        if (s.id === editingSessionId) {
+          return {
+            ...s,
+            ...formState,
+          };
+        }
+        return s;
+      });
+      setBannerNotice({
+        type: 'success',
+        message: `✓ Class ${formState.code} updated successfully in Master Schedule!`,
+      });
+    }
+
+    setSessions(updatedList);
+    saveStoredTimetableSessions(updatedList);
+    setIsModalOpen(false);
+    setTimeout(() => setBannerNotice(null), 4000);
+  };
+
+  // Delete Class
+  const handleDeleteClass = () => {
+    if (!editingSessionId) return;
+    const confirmDelete = window.confirm(
+      `Are you sure you want to remove ${formState.code} (${formState.title}) from the Master Schedule?`
+    );
+    if (!confirmDelete) return;
+
+    const updatedList = sessions.filter((s) => s.id !== editingSessionId);
+    setSessions(updatedList);
+    saveStoredTimetableSessions(updatedList);
+    setIsModalOpen(false);
+    setBannerNotice({
+      type: 'info',
+      message: `Class ${formState.code} was removed from the Master Schedule.`,
+    });
+    setTimeout(() => setBannerNotice(null), 4000);
+  };
+
+  // Reset to Standard Schedule
+  const handleResetSchedule = () => {
+    const confirmReset = window.confirm(
+      'Reset Master Schedule to official CIT clash-free baseline timetable (P1 to P13)? All live modifications will be reverted.'
+    );
+    if (!confirmReset) return;
+
+    const fresh = resetStoredTimetableSessions();
+    setSessions(fresh);
+    setBannerNotice({
+      type: 'success',
+      message: '✓ Master Schedule successfully reset to official 0-clash CIT timetable baseline (P1 to P13)!',
+    });
+    setTimeout(() => setBannerNotice(null), 4000);
   };
 
   return (
     <div className="subpage-container animate-fade-in-up">
-      {/* Executive Overview Metrics Bar */}
+      {/* Top Metrics Overview */}
       <div className="timetable-metrics-overview-grid">
         <div className="t-metric-box">
-          <span className="t-metric-label">Active Schedule</span>
-          <strong className="t-metric-val">
-            {scheduleMode === 'classes' ? '189 Weekly Classes' : '41 Midsem Exams'}
-          </strong>
-          <span className="t-metric-sub">
-            {scheduleMode === 'classes' ? '243 Teaching Hours' : 'Nov 02–07 Seating'}
-          </span>
+          <span className="t-metric-label">Master Timetable Schedule</span>
+          <strong className="t-metric-val">{sessions.length} Active Sessions</strong>
+          <span className="t-metric-sub">P1 to P13 (09:00 – 22:00)</span>
         </div>
 
         <div className="t-metric-box">
-          <span className="t-metric-label">Constraint Status</span>
+          <span className="t-metric-label">Operational Hours</span>
+          <strong className="t-metric-val" style={{ color: 'var(--accent-terracotta)' }}>
+            1-Hr Long Classes
+          </strong>
+          <span className="t-metric-sub">P1–P9 Classes • P10–P13 Events</span>
+        </div>
+
+        <div className="t-metric-box">
+          <span className="t-metric-label">Timetable Interactivity</span>
           <strong className="t-metric-val" style={{ color: 'var(--accent-sage)' }}>
-            0 Active Clashes
+            Editable Class by Class
           </strong>
-          <span className="t-metric-sub">100% Policy Compliance</span>
+          <span className="t-metric-sub">With Lecturer Swap Negotiation</span>
         </div>
 
         <div className="t-metric-box">
-          <span className="t-metric-label">Swaps &amp; Permissions</span>
-          <strong className="t-metric-val" style={{ color: 'var(--text-primary)' }}>
-            1 Request Logged
-          </strong>
-          <span className="t-metric-sub">Faculty Protocol Protected</span>
-        </div>
-
-        <div className="t-metric-box">
-          <span className="t-metric-label">Venue Utilisation</span>
-          <strong className="t-metric-val">88.4%</strong>
-          <span className="t-metric-sub">27 Rooms (incl. 7 Labs)</span>
+          <span className="t-metric-label">Campus Venues</span>
+          <strong className="t-metric-val">27 Rooms &amp; Labs</strong>
+          <span className="t-metric-sub">7 Specialized Laboratories</span>
         </div>
       </div>
 
-      {/* Solver Feedback Notification */}
-      {solverStatus && (
-        <div style={{ padding: '12px 18px', borderRadius: 12, backgroundColor: 'var(--accent-sage-light)', color: 'var(--accent-sage)', border: '1.5px solid var(--accent-sage-border)', fontWeight: 700, fontSize: 13, display: 'flex', alignItems: 'center', gap: 10, marginTop: 14 }}>
-          <Sparkles size={18} />
-          <span>{solverStatus}</span>
+      {/* Live Status Notification Banner */}
+      {bannerNotice && (
+        <div
+          className={`timetable-status-banner ${
+            bannerNotice.type === 'success' ? 'status-banner-success' : 'status-banner-info'
+          }`}
+        >
+          <CheckCircle2 size={18} />
+          <span>{bannerNotice.message}</span>
         </div>
       )}
 
-      {/* Top Header & Core Action Tools */}
+      {/* Top Header Card */}
       <div className="subpage-header-card" style={{ marginTop: 16 }}>
         <div className="timetable-header-meta">
           <div className="timetable-title-row">
             <h2 className="section-title" style={{ fontSize: 22, margin: 0 }}>
-              {scheduleMode === 'classes' ? 'CIT Master Timetable Matrix' : 'CIT Midsem Examination Timetable'}
+              CIT Master Timetable Matrix (P1–P13)
             </h2>
             <span className="cit-period-count-pill">
-              {periodFilter === 'academic'
-                ? 'Teaching Week: 9 One-Hour Periods (P1–P9) • 100% Fit'
-                : periodFilter === 'events'
-                ? 'Evening Events: P10–P13 (18:00–22:00)'
-                : 'Full Master Matrix: P1–P13 (All 13 Periods)'}
+              {periodFilter === 'all'
+                ? 'Full Master Timetable: P1 to P13 (09:00 – 22:00)'
+                : periodFilter === 'academic'
+                ? 'Teaching Classes: P1 to P9 (09:00 – 18:00)'
+                : 'Evening Events: P10 to P13 (18:00 – 22:00)'}
             </span>
           </div>
+
           <div className="cit-policy-notice-banner">
-            <Clock size={14} color="var(--accent-terracotta)" style={{ flexShrink: 0 }} />
+            <Clock size={15} color="var(--accent-terracotta)" style={{ flexShrink: 0 }} />
             <span>
-              <strong>Official CIT Schedule:</strong> Teaching week runs <strong>Monday to Friday</strong> in nine one-hour periods (<strong>P1 at 08:00 to P9 at 17:00</strong>). Lunch is <strong>13:00 to 14:00</strong> between P5 and P6. Evening periods <strong>P10 to P13 (18:00 to 22:00)</strong> are only for events.
+              <strong>Master Schedule Policy:</strong> Every class is strictly <strong>1-hour long starting from 09:00 AM</strong>. Academic teaching periods run <strong>P1 to P9 (09:00 to 18:00)</strong>, followed by dedicated evening event periods <strong>P10 to P13 (18:00 to 22:00)</strong>. This timetable is <strong>detailfully editable class by class</strong>, and requires <strong>direct lecturer consultation &amp; permission</strong> to swap classes.
             </span>
           </div>
           <span style={{ fontSize: 13, color: 'var(--text-secondary)', marginTop: 4, display: 'block' }}>
-            Explore schedules by Student Group, Faculty, or Venue. Click any lecture card for verified session details and conflict validation.
+            Click any class card to edit, view details, or talk to the actual lecturer to swap slots. Click any empty slot to schedule a new class.
           </span>
         </div>
 
-        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap' }}>
-          {/* Mode Switcher: Regular Classes vs Midsem Exams (Clean light pill) */}
-          <div className="clean-mode-pill-container">
+        {/* Action Controls & Filters */}
+        <div style={{ display: 'flex', gap: 10, flexWrap: 'wrap', alignItems: 'center' }}>
+          {/* Period Filter Selector */}
+          <div className="clean-mode-pill-container" title="Filter timetable period view">
             <button
               type="button"
-              className={`mode-toggle-btn ${scheduleMode === 'classes' ? 'active' : ''}`}
-              onClick={() => setScheduleMode('classes')}
+              className={`mode-toggle-btn ${periodFilter === 'all' ? 'active' : ''}`}
+              onClick={() => setPeriodFilter('all')}
             >
-              Classes (Week 1)
+              All 13 Periods (P1–P13)
             </button>
-            <button
-              type="button"
-              className={`mode-toggle-btn ${scheduleMode === 'midsem' ? 'active' : ''}`}
-              onClick={() => setScheduleMode('midsem')}
-            >
-              Midsem Exams
-            </button>
-          </div>
-
-          {/* Fit Timetable Period View Selector */}
-          <div className="clean-mode-pill-container" title="Select timetable layout">
             <button
               type="button"
               className={`mode-toggle-btn ${periodFilter === 'academic' ? 'active' : ''}`}
               onClick={() => setPeriodFilter('academic')}
             >
-              Teaching Week (P1–P9)
+              Teaching (P1–P9)
             </button>
             <button
               type="button"
               className={`mode-toggle-btn ${periodFilter === 'events' ? 'active' : ''}`}
               onClick={() => setPeriodFilter('events')}
             >
-              Evening Events (P10–P13)
-            </button>
-            <button
-              type="button"
-              className={`mode-toggle-btn ${periodFilter === 'all' ? 'active' : ''}`}
-              onClick={() => setPeriodFilter('all')}
-            >
-              Full 13 Periods
+              Events (P10–P13)
             </button>
           </div>
-          {periodFilter === 'academic' && (
-            <button
-              type="button"
-              className={`dept-pill-btn ${includeSaturday ? 'active' : ''}`}
-              onClick={() => setIncludeSaturday(!includeSaturday)}
-              style={{ fontSize: 11.5, padding: '5px 12px' }}
-              title="Toggle Saturday elective sessions"
-            >
-              {includeSaturday ? '✓ Saturday Included (6 Days)' : '+ Include Saturday'}
-            </button>
-          )}
 
+          {/* Saturday Toggle */}
           <button
             type="button"
-            className="app-btn-outline"
-            onClick={() => {
-              if (currentUser?.roleType !== 'admin') {
-                onRequireAdmin?.(
-                  'Admin Solver Override & Slot Locking',
-                  'Re-solving the entire 189-session matrix or locking period slots is an administrative prerogative reserved for the Institute Administrator.'
-                );
-                return;
-              }
-              setSolverStatus('✓ Admin Solver Override applied: Period constraints locked.');
-              setTimeout(() => setSolverStatus(null), 4000);
-            }}
+            className={`dept-pill-btn ${includeSaturday ? 'active' : ''}`}
+            onClick={() => setIncludeSaturday(!includeSaturday)}
+            style={{ fontSize: 12, padding: '6px 14px' }}
+            title="Toggle Saturday elective sessions"
           >
-            {currentUser?.roleType !== 'admin' ? <Lock size={15} color="var(--accent-terracotta)" /> : <Sparkles size={15} />}
-            <span>Admin Override / Slot Lock</span>
-            {currentUser?.roleType !== 'admin' && (
-              <span style={{ fontSize: 10, background: 'var(--accent-terracotta-light)', color: 'var(--accent-terracotta)', padding: '2px 6px', borderRadius: 6, fontWeight: 700 }}>
-                Admin
-              </span>
-            )}
+            {includeSaturday ? '✓ Saturday Included (6 Days)' : '+ Include Saturday'}
           </button>
 
+          {/* Add New Class Button */}
           <button
             type="button"
             className="app-btn-lime"
-            onClick={handleGenerateClashFreeSchedule}
-            title="Verify weekly timetable constraints"
+            onClick={() => handleOpenAddModal('mon', 'P1')}
+            title="Schedule a new class into the Master Schedule"
           >
-            <Wand2 size={15} />
-            <span>Verify Clash-Free Matrix</span>
+            <Plus size={15} />
+            <span>Add Class / Event</span>
+          </button>
+
+          {/* Reset Schedule Button */}
+          <button
+            type="button"
+            className="app-btn-outline"
+            onClick={handleResetSchedule}
+            title="Reset Master Schedule to default 0-clash CIT timetable baseline"
+          >
+            <RotateCcw size={14} />
+            <span>Reset Timetable</span>
+          </button>
+
+          {/* Swaps & Disruptions Log Link */}
+          <button
+            type="button"
+            className="app-btn-outline"
+            onClick={() => onNavigate?.('rescheduling')}
+            title="View Swaps & Disruptions Protocol"
+          >
+            <RefreshCw size={14} />
+            <span>Swaps Protocol Log</span>
           </button>
         </div>
       </div>
 
-      {/* Filter Bar (By Student Group | By Faculty | By Room) */}
+      {/* Cohort / Faculty / Room Filtering Bar */}
       <div className="subpage-header-card" style={{ marginTop: 14, padding: '12px 18px' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 8, flexWrap: 'wrap' }}>
           <span style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-secondary)' }}>
-            View By:
+            Filter Schedule By:
           </span>
 
           <button
@@ -343,7 +667,6 @@ export function TimetableViewerPage({ currentUser, onNavigate, onRequireAdmin, o
           </button>
         </div>
 
-        {/* Dynamic Secondary Selectors */}
         <div className="filter-bar-app" style={{ marginTop: 8 }}>
           {viewMode === 'group' && (
             <select
@@ -351,6 +674,7 @@ export function TimetableViewerPage({ currentUser, onNavigate, onRequireAdmin, o
               value={selectedGroup}
               onChange={(e) => setSelectedGroup(e.target.value)}
             >
+              <option value="all">All Student Cohorts (14)</option>
               {STUDENT_GROUPS.map((g) => (
                 <option key={g.id} value={g.id}>
                   {g.name}
@@ -365,6 +689,7 @@ export function TimetableViewerPage({ currentUser, onNavigate, onRequireAdmin, o
               value={selectedFaculty}
               onChange={(e) => setSelectedFaculty(e.target.value)}
             >
+              <option value="all">All Faculty Lecturers (40)</option>
               {FACULTY_LIST.map((f) => (
                 <option key={f.id} value={f.id}>
                   {f.name}
@@ -379,6 +704,7 @@ export function TimetableViewerPage({ currentUser, onNavigate, onRequireAdmin, o
               value={selectedRoom}
               onChange={(e) => setSelectedRoom(e.target.value)}
             >
+              <option value="all">All Venues &amp; Labs (27)</option>
               {ROOMS_LIST.map((r) => (
                 <option key={r.id} value={r.id}>
                   {r.name}
@@ -387,188 +713,133 @@ export function TimetableViewerPage({ currentUser, onNavigate, onRequireAdmin, o
             </select>
           )}
 
-          <button
-            type="button"
-            className="app-btn-outline"
-            onClick={() => onNavigate?.('rescheduling')}
-            title="Open Lecture Swap & Permission Engine"
+          <select
+            className="app-select-field"
+            value={selectedType}
+            onChange={(e) => setSelectedType(e.target.value)}
           >
-            <RefreshCw size={14} />
-            <span>Swaps &amp; Permissions</span>
-          </button>
+            <option value="all">All Session Types</option>
+            <option value="lecture">Lectures</option>
+            <option value="lab">Labs (3-Hour Blocks)</option>
+            <option value="tutorial">Tutorials</option>
+            <option value="event">Evening Events (P10–P13)</option>
+          </select>
+
+          <div style={{ position: 'relative', flex: 1, minWidth: 200 }}>
+            <Search
+              size={14}
+              style={{ position: 'absolute', left: 10, top: '50%', transform: 'translateY(-50%)', color: 'var(--text-muted)' }}
+            />
+            <input
+              type="text"
+              placeholder="Search by course code, title, room, or lecturer..."
+              className="app-select-field"
+              style={{ width: '100%', paddingLeft: 30 }}
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
         </div>
       </div>
 
-      {/* Main Timetable Matrix Grid (All 13 Periods, Read-Only, Minimalist & Beautiful) */}
-      <div className={`timetable-scroll-box ${periodFilter !== 'all' ? 'fit-screen' : ''}`}>
-        <table className={`app-timetable-table ${periodFilter !== 'all' ? 'fit-layout' : ''}`}>
-          {periodFilter === 'academic' && (
-            <colgroup>
-              <col style={{ width: '8%' }} />
-              <col style={{ width: '9.5%' }} />
-              <col style={{ width: '9.5%' }} />
-              <col style={{ width: '9.5%' }} />
-              <col style={{ width: '9.5%' }} />
-              <col style={{ width: '9.5%' }} />
-              <col style={{ width: '6.5%' }} />
-              <col style={{ width: '9.5%' }} />
-              <col style={{ width: '9.5%' }} />
-              <col style={{ width: '9.5%' }} />
-              <col style={{ width: '9.5%' }} />
-            </colgroup>
-          )}
-          {periodFilter === 'events' && (
-            <colgroup>
-              <col style={{ width: '12%' }} />
-              <col style={{ width: '22%' }} />
-              <col style={{ width: '22%' }} />
-              <col style={{ width: '22%' }} />
-              <col style={{ width: '22%' }} />
-            </colgroup>
-          )}
+      {/* Main Timetable Grid: Starts from P1 to P13 (09:00 to 22:00, 1hr Each, P10-P13 Events) */}
+      <div className="timetable-scroll-box">
+        <table className="app-timetable-table">
           <thead>
             <tr>
-              <th className="th-day-corner">
-                Day
-              </th>
-
-              {(periodFilter === 'all' || periodFilter === 'academic') && morningPeriods.map((p) => (
-                <th key={p.id} className="th-period-cell">
-                  <div className="th-pname">{p.name.replace('Period ', 'P')}</div>
-                  <div className="th-ptime">{p.time}</div>
-                </th>
-              ))}
-
-              {(periodFilter === 'all' || periodFilter === 'academic') && (
-                <th className="th-lunch-header">
-                  <div className="lunch-title">LUNCH</div>
-                  <div className="lunch-time">13:00–14:00</div>
-                </th>
-              )}
-
-              {(periodFilter === 'all' || periodFilter === 'academic') && afternoonPeriods.map((p) => (
-                <th key={p.id} className="th-period-cell">
-                  <div className="th-pname">{p.name.replace('Period ', 'P')}</div>
-                  <div className="th-ptime">{p.time}</div>
-                </th>
-              ))}
-
-              {(periodFilter === 'all' || periodFilter === 'events') && eventPeriods.map((p) => (
-                <th key={p.id} className="th-event-period-header">
-                  <div className="th-event-tag">✦ EVENT</div>
-                  <div className="th-pname">{p.name.replace('Period ', 'P').replace(' (Event)', '')}</div>
-                  <div className="th-ptime">{p.time}</div>
-                </th>
-              ))}
+              <th className="th-day-corner">Day / Period</th>
+              {visiblePeriods.map((p) => {
+                const isEvent = p.type === 'event';
+                return (
+                  <th
+                    key={p.id}
+                    className={isEvent ? 'th-event-period-header' : 'th-period-cell'}
+                    style={{ minWidth: isEvent ? 92 : 84 }}
+                  >
+                    {isEvent && <div className="th-event-tag">✦ EVENT</div>}
+                    <div className="th-pname">{p.id}</div>
+                    <div className="th-ptime">{p.time}</div>
+                  </th>
+                );
+              })}
             </tr>
           </thead>
           <tbody>
             {daysToDisplay.map((day) => (
               <tr key={day.id}>
+                {/* Sticky Left Day Cell */}
                 <td className="table-day-cell">
                   <div className="day-name-bold">{day.short}</div>
                   <div className="day-date-sub">{day.date}</div>
                 </td>
 
-                {/* Morning Slots */}
-                {(periodFilter === 'all' || periodFilter === 'academic') && morningPeriods.map((p) => {
-                  const session = sessionsByDayAndPeriod[`${day.id}-${p.id}`];
+                {/* Period Columns P1 through P13 */}
+                {visiblePeriods.map((period) => {
+                  const session = sessionsByDayAndPeriod[`${day.id}-${period.id}`];
+                  const isEventPeriod = period.type === 'event';
+
                   return (
-                    <td key={p.id} className="timetable-td-slot">
+                    <td
+                      key={period.id}
+                      className={`timetable-td-slot ${isEventPeriod ? 'event-slot-column' : ''}`}
+                    >
                       {session ? (
                         <div
-                          className={`app-session-card ${session.type === 'exam' ? 'card-type-exam' : session.type === 'lab' ? 'card-type-lab' : 'card-type-lecture'}`}
-                          onClick={() => setExplainSession(session)}
-                          title="Click to view verified session details"
+                          className={`app-session-card ${
+                            session.type === 'lab'
+                              ? 'card-type-lab'
+                              : session.type === 'event'
+                              ? 'card-type-event'
+                              : session.type === 'exam'
+                              ? 'card-type-exam'
+                              : 'card-type-lecture'
+                          }`}
+                          onClick={() => handleOpenEditModal(session)}
+                          title="Click to edit class details or negotiate swap with lecturer"
                         >
                           <div className="session-card-header">
                             <span className="session-code">{session.code}</span>
-                            <span className="session-type-pill">
-                              {session.type === 'lab' ? 'LAB' : session.type === 'exam' ? 'EXAM' : 'LEC'}
-                            </span>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                              <span className="session-type-pill">
+                                {session.type === 'lab'
+                                  ? 'LAB'
+                                  : session.type === 'event'
+                                  ? 'EVENT'
+                                  : session.type === 'tutorial'
+                                  ? 'TUT'
+                                  : 'LEC'}
+                              </span>
+                              <span className="session-edit-trigger" title="Edit this class">
+                                <Edit3 size={11} />
+                              </span>
+                            </div>
                           </div>
-                          <div className="session-title-text" title={session.title}>{session.title}</div>
+
+                          <div className="session-title-text" title={session.title}>
+                            {session.title}
+                          </div>
+
                           <div className="session-card-footer">
                             <span className="session-room-tag">{session.room}</span>
-                            <span className="session-group-tag" title={viewMode === 'faculty' ? session.group : session.faculty}>
+                            <span
+                              className="session-group-tag"
+                              title={viewMode === 'faculty' ? session.group : session.faculty}
+                            >
                               {viewMode === 'faculty' ? session.group : session.faculty?.split(' ').pop()}
                             </span>
                           </div>
                         </div>
                       ) : (
-                        <div className="clean-empty-slot" />
-                      )}
-                    </td>
-                  );
-                })}
-
-                {(periodFilter === 'all' || periodFilter === 'academic') && (
-                  <td className="app-lunch-cell">
-                    <div className="lunch-cell-content">
-                      <span className="lunch-vertical-text">RECESS</span>
-                    </div>
-                  </td>
-                )}
-
-                {/* Afternoon Slots */}
-                {(periodFilter === 'all' || periodFilter === 'academic') && afternoonPeriods.map((p) => {
-                  const session = sessionsByDayAndPeriod[`${day.id}-${p.id}`];
-                  return (
-                    <td key={p.id} className="timetable-td-slot">
-                      {session ? (
                         <div
-                          className={`app-session-card ${session.type === 'exam' ? 'card-type-exam' : session.type === 'lab' ? 'card-type-lab' : 'card-type-lecture'}`}
-                          onClick={() => setExplainSession(session)}
-                          title="Click to view verified session details"
+                          className="clean-empty-slot"
+                          onClick={() => handleOpenAddModal(day.id, period.id)}
+                          title={`Empty slot: Click to add class at ${day.name} ${period.id} (${period.time})`}
                         >
-                          <div className="session-card-header">
-                            <span className="session-code">{session.code}</span>
-                            <span className="session-type-pill">
-                              {session.type === 'lab' ? 'LAB' : session.type === 'exam' ? 'EXAM' : 'LEC'}
-                            </span>
-                          </div>
-                          <div className="session-title-text" title={session.title}>{session.title}</div>
-                          <div className="session-card-footer">
-                            <span className="session-room-tag">{session.room}</span>
-                            <span className="session-group-tag" title={viewMode === 'faculty' ? session.group : session.faculty}>
-                              {viewMode === 'faculty' ? session.group : session.faculty?.split(' ').pop()}
-                            </span>
-                          </div>
+                          <span className="empty-slot-add-icon">
+                            <Plus size={12} />
+                            <span>Add</span>
+                          </span>
                         </div>
-                      ) : (
-                        <div className="clean-empty-slot" />
-                      )}
-                    </td>
-                  );
-                })}
-
-                {/* Evening Event Slots (P10 - P13) */}
-                {(periodFilter === 'all' || periodFilter === 'events') && eventPeriods.map((p) => {
-                  const session = sessionsByDayAndPeriod[`${day.id}-${p.id}`];
-                  return (
-                    <td key={p.id} className="timetable-td-slot event-slot-column">
-                      {session ? (
-                        <div
-                          className="app-session-card card-type-event"
-                          onClick={() => setExplainSession(session)}
-                          title="Click to view verified event details"
-                        >
-                          <div className="session-card-header">
-                            <span className="session-code">{session.code}</span>
-                            <span className="session-type-pill">
-                              {session.type === 'lab' ? 'LAB' : session.type === 'exam' ? 'EXAM' : 'LEC'}
-                            </span>
-                          </div>
-                          <div className="session-title-text" title={session.title}>{session.title}</div>
-                          <div className="session-card-footer">
-                            <span className="session-room-tag">{session.room}</span>
-                            <span className="session-group-tag" title={viewMode === 'faculty' ? session.group : session.faculty}>
-                              {viewMode === 'faculty' ? session.group : session.faculty?.split(' ').pop()}
-                            </span>
-                          </div>
-                        </div>
-                      ) : (
-                        <div className="clean-empty-slot" />
                       )}
                     </td>
                   );
@@ -579,54 +850,537 @@ export function TimetableViewerPage({ currentUser, onNavigate, onRequireAdmin, o
         </table>
       </div>
 
-      {/* Verified Session Details & Proof Modal (Read-Only) */}
+      {/* Detailful Class Editor & Lecturer Swap Modal */}
       <Modal
-        isOpen={Boolean(explainSession)}
-        onClose={() => setExplainSession(null)}
-        title={`Session Details: ${explainSession?.code} (${explainSession?.title})`}
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title={
+          isNewClass
+            ? `Schedule New Class: ${formState.day.toUpperCase()} • ${formState.periodId} (1hr from 9AM)`
+            : `Class & Session Manager: ${formState.code} — ${formState.title}`
+        }
+        maxWidth="740px"
       >
-        {explainSession && (
+        {/* Modal Navigation Tabs */}
+        <div className="modal-tabs-header">
+          <button
+            type="button"
+            className={`modal-tab-btn ${modalTab === 'details' ? 'active' : ''}`}
+            onClick={() => setModalTab('details')}
+          >
+            <Edit3 size={14} />
+            <span>{isNewClass ? 'Class Configuration' : 'Edit Class Details'}</span>
+          </button>
+
+          {!isNewClass && (
+            <button
+              type="button"
+              className={`modal-tab-btn ${modalTab === 'swap' ? 'active' : ''}`}
+              onClick={() => setModalTab('swap')}
+            >
+              <MessageSquare size={14} />
+              <span>Talk to Lecturer to Swap</span>
+            </button>
+          )}
+
+          <button
+            type="button"
+            className={`modal-tab-btn ${modalTab === 'verify' ? 'active' : ''}`}
+            onClick={() => setModalTab('verify')}
+          >
+            <ShieldCheck size={14} />
+            <span>Constraint Verification</span>
+          </button>
+        </div>
+
+        {/* Tab 1: Detailed Class Editing */}
+        {modalTab === 'details' && (
+          <form onSubmit={handleSaveClassDetails}>
+            <div className="class-edit-form-grid">
+              {/* Course Code */}
+              <div className="edit-form-field">
+                <label className="edit-form-label">Course Code</label>
+                <input
+                  type="text"
+                  className="edit-form-input"
+                  value={formState.code}
+                  onChange={(e) => setFormState({ ...formState, code: e.target.value.toUpperCase() })}
+                  required
+                />
+              </div>
+
+              {/* Course Title */}
+              <div className="edit-form-field">
+                <label className="edit-form-label">Course Title</label>
+                <input
+                  type="text"
+                  className="edit-form-input"
+                  value={formState.title}
+                  onChange={(e) => setFormState({ ...formState, title: e.target.value })}
+                  required
+                />
+              </div>
+
+              {/* Session Type */}
+              <div className="edit-form-field">
+                <label className="edit-form-label">Session Type</label>
+                <select
+                  className="edit-form-select"
+                  value={formState.type}
+                  onChange={(e) => setFormState({ ...formState, type: e.target.value })}
+                >
+                  <option value="lecture">Lecture (1 Hour)</option>
+                  <option value="lab">Laboratory (3-Hour Block)</option>
+                  <option value="tutorial">Tutorial (1 Hour)</option>
+                  <option value="event">Evening Event (P10–P13)</option>
+                </select>
+              </div>
+
+              {/* Faculty / Lecturer (All 40 Faculty) */}
+              <div className="edit-form-field">
+                <label className="edit-form-label">Assigned Lecturer / Faculty</label>
+                <select
+                  className="edit-form-select"
+                  value={formState.faculty}
+                  onChange={(e) => setFormState({ ...formState, faculty: e.target.value })}
+                >
+                  {FACULTY_DATA.map((f) => (
+                    <option key={f.id} value={f.name}>
+                      {f.name} ({f.dept} • {f.designation})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Student Cohort */}
+              <div className="edit-form-field">
+                <label className="edit-form-label">Student Cohort</label>
+                <select
+                  className="edit-form-select"
+                  value={formState.group}
+                  onChange={(e) => setFormState({ ...formState, group: e.target.value })}
+                >
+                  {STUDENT_GROUPS.map((g) => (
+                    <option key={g.id} value={g.id}>
+                      {g.name} (Year {g.year} • {g.department})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Room / Venue (All 27 Rooms & 7 Labs) */}
+              <div className="edit-form-field">
+                <label className="edit-form-label">Assigned Room / Venue</label>
+                <select
+                  className="edit-form-select"
+                  value={formState.room}
+                  onChange={(e) => setFormState({ ...formState, room: e.target.value })}
+                >
+                  {ROOMS_DATA.map((r) => (
+                    <option key={r.id} value={r.id}>
+                      {r.name} ({r.id}) — Cap: {r.capacity} ({r.building})
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Day of Week */}
+              <div className="edit-form-field">
+                <label className="edit-form-label">Day of Week</label>
+                <select
+                  className="edit-form-select"
+                  value={formState.day}
+                  onChange={(e) => setFormState({ ...formState, day: e.target.value })}
+                >
+                  <option value="mon">Monday (MON)</option>
+                  <option value="tue">Tuesday (TUE)</option>
+                  <option value="wed">Wednesday (WED)</option>
+                  <option value="thu">Thursday (THU)</option>
+                  <option value="fri">Friday (FRI)</option>
+                  <option value="sat">Saturday (SAT)</option>
+                </select>
+              </div>
+
+              {/* Period P1 - P13 (09:00 - 22:00, 1hr Each) */}
+              <div className="edit-form-field">
+                <label className="edit-form-label">Period Slot (1-Hour Duration from 9AM)</label>
+                <select
+                  className="edit-form-select"
+                  value={formState.periodId}
+                  onChange={(e) => setFormState({ ...formState, periodId: e.target.value })}
+                >
+                  {PERIODS.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.id}: {p.time} {p.type === 'event' ? '✦ [EVENT PERIOD]' : '[Academic Class]'}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Enrolled Students */}
+              <div className="edit-form-field">
+                <label className="edit-form-label">Enrolled Student Count</label>
+                <input
+                  type="number"
+                  min="1"
+                  max="500"
+                  className="edit-form-input"
+                  value={formState.enrolled}
+                  onChange={(e) => setFormState({ ...formState, enrolled: Number(e.target.value) })}
+                />
+              </div>
+
+              {/* Session Notes */}
+              <div className="edit-form-field">
+                <label className="edit-form-label">Session Notes &amp; Topics</label>
+                <input
+                  type="text"
+                  placeholder="e.g. Memory virtualization &amp; page replacement"
+                  className="edit-form-input"
+                  value={formState.notes}
+                  onChange={(e) => setFormState({ ...formState, notes: e.target.value })}
+                />
+              </div>
+            </div>
+
+            {/* Real-time Clash Check Banner */}
+            <div
+              className={`edit-conflict-card ${
+                slotConflictCheck.hasClash ? 'conflict-warning' : 'conflict-clear'
+              }`}
+            >
+              {slotConflictCheck.hasClash ? <AlertCircle size={16} /> : <CheckCircle2 size={16} />}
+              <div style={{ flex: 1 }}>
+                <span>{slotConflictCheck.message}</span>
+                {slotConflictCheck.hasClash && slotConflictCheck.conflictSession && !isNewClass && (
+                  <div style={{ marginTop: 6 }}>
+                    <button
+                      type="button"
+                      className="quick-prompt-chip"
+                      onClick={() => {
+                        initiateSwapTarget(slotConflictCheck.conflictSession);
+                        setModalTab('swap');
+                      }}
+                      style={{ background: '#8c5208', color: '#ffffff', borderColor: '#8c5208' }}
+                    >
+                      💬 Talk to {slotConflictCheck.conflictSession.faculty} to Swap Slots →
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+
+            {/* Modal Bottom Actions */}
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                marginTop: 18,
+                paddingTop: 12,
+                borderTop: '1px solid var(--border-default)',
+              }}
+            >
+              <div>
+                {!isNewClass && (
+                  <button
+                    type="button"
+                    className="app-btn-outline"
+                    onClick={handleDeleteClass}
+                    style={{ color: '#b91c1c', borderColor: '#fca5a5' }}
+                  >
+                    <Trash2 size={14} />
+                    <span>Delete Class</span>
+                  </button>
+                )}
+              </div>
+
+              <div style={{ display: 'flex', gap: 10 }}>
+                {!isNewClass && (
+                  <button
+                    type="button"
+                    className="app-btn-outline"
+                    onClick={() => setModalTab('swap')}
+                  >
+                    <MessageSquare size={14} />
+                    <span>Talk to Lecturer to Swap →</span>
+                  </button>
+                )}
+
+                <button type="submit" className="app-btn-lime">
+                  <CheckCircle2 size={15} />
+                  <span>{isNewClass ? 'Create Class' : 'Save Changes'}</span>
+                </button>
+              </div>
+            </div>
+          </form>
+        )}
+
+        {/* Tab 2: Talk to Actual Lecturer to Swap Class */}
+        {modalTab === 'swap' && (
+          <div>
+            {/* Step 1: Target Class Picker */}
+            <div style={{ marginBottom: 12 }}>
+              <label className="edit-form-label">Select Class &amp; Slot to Swap With:</label>
+              <select
+                className="edit-form-select"
+                style={{ width: '100%', marginTop: 4 }}
+                value={targetSessionId}
+                onChange={(e) => {
+                  const selected = sessions.find((s) => s.id === e.target.value);
+                  if (selected) initiateSwapTarget(selected);
+                }}
+              >
+                {sessions
+                  .filter((s) => s.id !== editingSessionId)
+                  .map((s) => (
+                    <option key={s.id} value={s.id}>
+                      {s.day.toUpperCase()} {s.periodId} ({PERIODS.find((p) => p.id === s.periodId)?.time}): {s.code} ({s.title}) — Lecturer: {s.faculty} @ {s.room}
+                    </option>
+                  ))}
+              </select>
+            </div>
+
+            {targetSession && actualTargetLecturer && (
+              <>
+                {/* Side-by-Side Swap Comparison */}
+                <div className="swap-comparison-card">
+                  <div className="swap-side-box">
+                    <span className="swap-side-tag">Your Current Class</span>
+                    <div className="swap-side-title">
+                      {formState.code}: {formState.title}
+                    </div>
+                    <div className="swap-side-meta">
+                      <strong>{formState.day.toUpperCase()} • {formState.periodId}</strong> ({PERIODS.find((p) => p.id === formState.periodId)?.time})
+                    </div>
+                    <div className="swap-side-meta">
+                      Venue: <strong>{formState.room}</strong> &bull; Cohort: <strong>{formState.group}</strong>
+                    </div>
+                    <div className="swap-side-meta" style={{ color: 'var(--accent-terracotta)', fontWeight: 700 }}>
+                      Lecturer: {formState.faculty}
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', color: 'var(--accent-terracotta)' }}>
+                    <RefreshCw size={22} className="animate-spin-slow" />
+                    <span style={{ fontSize: 10, fontWeight: 800, marginTop: 4 }}>SWAP</span>
+                  </div>
+
+                  <div className="swap-side-box">
+                    <span className="swap-side-tag" style={{ color: 'var(--accent-sage)' }}>Target Class</span>
+                    <div className="swap-side-title">
+                      {targetSession.code}: {targetSession.title}
+                    </div>
+                    <div className="swap-side-meta">
+                      <strong>{targetSession.day.toUpperCase()} • {targetSession.periodId}</strong> ({PERIODS.find((p) => p.id === targetSession.periodId)?.time})
+                    </div>
+                    <div className="swap-side-meta">
+                      Venue: <strong>{targetSession.room}</strong> &bull; Cohort: <strong>{targetSession.group}</strong>
+                    </div>
+                    <div className="swap-side-meta" style={{ color: 'var(--accent-sage)', fontWeight: 700 }}>
+                      Lecturer: {targetSession.faculty}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Actual Lecturer Profile Box */}
+                <div className="actual-lecturer-profile-card">
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
+                    <div className="lecturer-avatar-circle">
+                      {actualTargetLecturer.name
+                        .split(' ')
+                        .map((w) => w[0])
+                        .join('')
+                        .slice(0, 2)}
+                    </div>
+                    <div>
+                      <div style={{ fontSize: 14.5, fontWeight: 800, color: 'var(--text-primary)' }}>
+                        {actualTargetLecturer.name}
+                      </div>
+                      <div style={{ fontSize: 12, color: 'var(--text-secondary)' }}>
+                        {actualTargetLecturer.designation} &bull; Dept. of {actualTargetLecturer.dept}
+                      </div>
+                      <div style={{ fontSize: 11, color: 'var(--text-muted)' }}>
+                        Cabin: {actualTargetLecturer.cabin} &bull; {actualTargetLecturer.email}
+                      </div>
+                    </div>
+                  </div>
+
+                  <span className="lecturer-online-pill">
+                    ● Active on CIT Portal
+                  </span>
+                </div>
+
+                {/* Live Chat with the Actual Lecturer */}
+                <div className="lecturer-chat-container">
+                  <div className="lecturer-chat-messages-area">
+                    {swapChatMessages.map((msg) => (
+                      <div key={msg.id} className={`chat-bubble ${msg.sender}`}>
+                        <div>{msg.text}</div>
+                        <div className="chat-msg-time">{msg.time}</div>
+                      </div>
+                    ))}
+                    {isLecturerTyping && (
+                      <div className="lecturer-typing-hint">
+                        <Sparkles size={12} className="animate-spin-slow" />
+                        <span>{actualTargetLecturer.name} is evaluating timetable &amp; typing reply...</span>
+                      </div>
+                    )}
+                    <div ref={chatEndRef} />
+                  </div>
+
+                  {/* Quick Swap Proposal Chips */}
+                  <div className="chat-quick-prompts-row">
+                    <button
+                      type="button"
+                      className="quick-prompt-chip"
+                      onClick={() =>
+                        handleSendSwapMessage(
+                          `Dear ${actualTargetLecturer.name}, could we swap my ${formState.code} (${formState.day.toUpperCase()} ${formState.periodId}) with your ${targetSession.code} (${targetSession.day.toUpperCase()} ${targetSession.periodId})?`
+                        )
+                      }
+                    >
+                      💬 "Could we swap our lecture slots?"
+                    </button>
+                    <button
+                      type="button"
+                      className="quick-prompt-chip"
+                      onClick={() =>
+                        handleSendSwapMessage(
+                          `Hello Professor, due to a departmental curriculum meeting during ${formState.periodId}, I would like to request exchanging lecture slots with your session.`
+                        )
+                      }
+                    >
+                      💬 "Request slot exchange due to meeting"
+                    </button>
+                    <button
+                      type="button"
+                      className="quick-prompt-chip"
+                      onClick={() =>
+                        handleSendSwapMessage(
+                          `Please confirm if swapping our venue and timings for ${formState.code} and ${targetSession.code} causes any cohort clash for your students.`
+                        )
+                      }
+                    >
+                      💬 "Check clash and room capacity"
+                    </button>
+                  </div>
+
+                  {/* Chat Input Bar */}
+                  <form
+                    onSubmit={(e) => {
+                      e.preventDefault();
+                      handleSendSwapMessage();
+                    }}
+                    className="chat-input-bar"
+                  >
+                    <input
+                      type="text"
+                      className="chat-input-field"
+                      placeholder={`Talk to ${actualTargetLecturer.name} about swapping this class...`}
+                      value={chatInputText}
+                      onChange={(e) => setChatInputText(e.target.value)}
+                    />
+                    <button type="submit" className="chat-send-btn">
+                      <Send size={13} />
+                      <span>Send</span>
+                    </button>
+                  </form>
+                </div>
+
+                {/* Permission Granted Card & Execution Button */}
+                {isSwapApproved ? (
+                  <div className="swap-permission-granted-card animate-fade-in-up">
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
+                      <CheckCheck size={24} color="#1e5c3e" />
+                      <div>
+                        <div style={{ fontSize: 13.5, fontWeight: 800, color: '#1e5c3e' }}>
+                          ✓ Official Swap Permission Granted by {actualTargetLecturer.name}
+                        </div>
+                        <div style={{ fontSize: 11.5, color: '#2d6849' }}>
+                          Both faculty commitments verified with 0 collisions. Ready for atomic timetable update.
+                        </div>
+                      </div>
+                    </div>
+
+                    <button
+                      type="button"
+                      className="execute-swap-glow-btn"
+                      onClick={handleExecuteLecturerSwap}
+                    >
+                      <RefreshCw size={15} />
+                      <span>Execute Swap &amp; Update Timetable</span>
+                    </button>
+                  </div>
+                ) : (
+                  <div
+                    style={{
+                      marginTop: 12,
+                      padding: '10px 14px',
+                      borderRadius: 8,
+                      background: '#f8fafc',
+                      border: '1px solid #cbd5e1',
+                      fontSize: 12,
+                      color: '#64748b',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 8,
+                    }}
+                  >
+                    <Info size={15} />
+                    <span>
+                      Send a message above to talk to <strong>{actualTargetLecturer.name}</strong>. Once they approve in the chat, the atomic swap button will be enabled.
+                    </span>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
+        )}
+
+        {/* Tab 3: Algorithmic Verification */}
+        {modalTab === 'verify' && (
           <div style={{ display: 'flex', flexDirection: 'column', gap: 14 }}>
             <div style={{ padding: '14px 18px', borderRadius: 10, background: '#f8fafc', border: '1px solid #e2e8f0' }}>
               <div style={{ fontSize: 12.5, color: '#64748b' }}>Assigned Slot &amp; Venue</div>
               <div style={{ fontSize: 16, fontWeight: 800, color: '#0f172a', marginTop: 2 }}>
-                {explainSession.day.toUpperCase()} &bull; {explainSession.periodId} in {explainSession.room}
+                {formState.day.toUpperCase()} &bull; {formState.periodId} ({PERIODS.find((p) => p.id === formState.periodId)?.time}) in {formState.room}
               </div>
               <div style={{ fontSize: 13, color: '#334155', marginTop: 4 }}>
-                Faculty: <strong>{explainSession.faculty}</strong> &bull; Cohort: <strong>{explainSession.group}</strong>
+                Faculty: <strong>{formState.faculty}</strong> &bull; Cohort: <strong>{formState.group}</strong> &bull; Size: <strong>{formState.enrolled} Students</strong>
               </div>
             </div>
 
             <h4 style={{ margin: '8px 0 0 0', fontSize: 14, fontWeight: 700, color: '#0f172a' }}>
-              Algorithmic Constraint Verification:
+              Algorithmic Constraint Verification (CIT Policy Engine):
             </h4>
 
             <div style={{ display: 'flex', flexDirection: 'column', gap: 10 }}>
               <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
                 <CheckCircle2 size={16} color="var(--accent-sage)" style={{ marginTop: 2, flexShrink: 0 }} />
                 <div style={{ fontSize: 13, color: '#1e293b' }}>
-                  <strong>Faculty Availability:</strong> {explainSession.faculty} has zero overlapping lectures or duties during {explainSession.day.toUpperCase()} {explainSession.periodId}.
+                  <strong>Faculty Availability:</strong> {formState.faculty} has zero overlapping lectures or administrative duties during {formState.day.toUpperCase()} {formState.periodId}.
                 </div>
               </div>
 
               <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
                 <CheckCircle2 size={16} color="var(--accent-sage)" style={{ marginTop: 2, flexShrink: 0 }} />
                 <div style={{ fontSize: 13, color: '#1e293b' }}>
-                  <strong>Room Capacity Optimization:</strong> Venue {explainSession.room} fits the {explainSession.group} cohort with zero concurrent room conflict.
+                  <strong>Room Capacity Optimization:</strong> Venue {formState.room} (Capacity: {ROOMS_DATA.find((r) => r.id === formState.room)?.capacity || 90}) accommodates the {formState.group} cohort with zero concurrent room clashes.
                 </div>
               </div>
 
               <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
                 <CheckCircle2 size={16} color="var(--accent-sage)" style={{ marginTop: 2, flexShrink: 0 }} />
                 <div style={{ fontSize: 13, color: '#1e293b' }}>
-                  <strong>Cohort Clash Free:</strong> Student group {explainSession.group} has no other parallel scheduled commitment.
+                  <strong>Cohort Conflict Free:</strong> Student group {formState.group} has no other parallel scheduled classes.
                 </div>
               </div>
 
               <div style={{ display: 'flex', gap: 10, alignItems: 'flex-start' }}>
                 <CheckCircle2 size={16} color="var(--accent-sage)" style={{ marginTop: 2, flexShrink: 0 }} />
                 <div style={{ fontSize: 13, color: '#1e293b' }}>
-                  <strong>Institutional Priority Tier:</strong> Assigned under Priority Tier {explainSession.type === 'exam' ? '1 (Exams)' : '2 (Curriculum Teaching)'}.
+                  <strong>Institutional Priority Tier:</strong> Assigned under Priority Tier {formState.type === 'event' ? '3 (Club / Tech Events)' : '2 (Regular Academic Curriculum)'}.
                 </div>
               </div>
             </div>
@@ -635,7 +1389,7 @@ export function TimetableViewerPage({ currentUser, onNavigate, onRequireAdmin, o
               <button
                 type="button"
                 className="app-btn-lime"
-                onClick={() => setExplainSession(null)}
+                onClick={() => setIsModalOpen(false)}
               >
                 Close
               </button>

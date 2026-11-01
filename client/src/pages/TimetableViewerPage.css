@@ -465,3 +465,434 @@
   background: rgba(132, 40, 60, 0.12);
   color: #6d1f30;
 }
+
+/* Edit & Swap Action Hint on Card */
+.app-session-card {
+  position: relative;
+}
+
+.session-edit-trigger {
+  opacity: 0;
+  transition: opacity 0.15s ease;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.app-session-card:hover .session-edit-trigger {
+  opacity: 1;
+}
+
+/* Clickable Empty Slot with Add hint */
+.clean-empty-slot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  border: 1px dashed #d5cdbf;
+  border-radius: 6px;
+  min-height: 58px;
+  transition: all 0.2s ease;
+}
+
+.clean-empty-slot:hover {
+  background: #fbf5ee;
+  border-color: var(--accent-terracotta);
+}
+
+.empty-slot-add-icon {
+  opacity: 0;
+  color: var(--accent-terracotta);
+  font-size: 11px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  transition: opacity 0.15s;
+}
+
+.clean-empty-slot:hover .empty-slot-add-icon {
+  opacity: 1;
+}
+
+/* Master Schedule Live Notification Alert */
+.timetable-status-banner {
+  padding: 12px 18px;
+  border-radius: 10px;
+  font-size: 13.5px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-top: 14px;
+  animation: fadeIn 0.25s ease-out;
+}
+
+.status-banner-success {
+  background: #eef7f2;
+  color: #1e5c3e;
+  border: 1.5px solid #b7dfc8;
+}
+
+.status-banner-info {
+  background: #f0f4f8;
+  color: #1e3a5f;
+  border: 1.5px solid #c2d5eb;
+}
+
+/* Class Editor & Lecturer Swap Modal Styles */
+.modal-tabs-header {
+  display: flex;
+  gap: 6px;
+  border-bottom: 2px solid var(--border-default);
+  margin-bottom: 18px;
+  padding-bottom: 6px;
+}
+
+.modal-tab-btn {
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  border-radius: 8px;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.modal-tab-btn:hover {
+  background: var(--bg-card-subtle);
+  color: var(--text-primary);
+}
+
+.modal-tab-btn.active {
+  background: var(--accent-terracotta);
+  color: #ffffff;
+  box-shadow: 0 2px 6px rgba(194, 84, 45, 0.25);
+}
+
+/* Form Grid for Class Editing */
+.class-edit-form-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+@media (max-width: 640px) {
+  .class-edit-form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.edit-form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.edit-form-label {
+  font-size: 11.5px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+}
+
+.edit-form-input,
+.edit-form-select {
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1.5px solid var(--border-default);
+  background: #ffffff;
+  font-size: 13px;
+  color: var(--text-primary);
+  font-weight: 500;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+
+.edit-form-input:focus,
+.edit-form-select:focus {
+  border-color: var(--accent-terracotta);
+}
+
+/* Conflict Notification in Edit Modal */
+.edit-conflict-card {
+  padding: 10px 14px;
+  border-radius: 8px;
+  font-size: 12.5px;
+  font-weight: 600;
+  margin-top: 12px;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.conflict-warning {
+  background: #fdf5e8;
+  border: 1.5px solid #f2ce8a;
+  color: #8c5208;
+}
+
+.conflict-clear {
+  background: #eef7f2;
+  border: 1.5px solid #b7dfc8;
+  color: #1e5c3e;
+}
+
+/* Lecturer Consultation & Swap Engine */
+.swap-comparison-card {
+  background: #faf6f0;
+  border: 1.5px solid #ebd9c8;
+  border-radius: 10px;
+  padding: 14px;
+  margin-bottom: 14px;
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 12px;
+}
+
+@media (max-width: 600px) {
+  .swap-comparison-card {
+    grid-template-columns: 1fr;
+  }
+}
+
+.swap-side-box {
+  background: #ffffff;
+  border: 1px solid var(--border-default);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+.swap-side-tag {
+  font-size: 10px;
+  font-weight: 800;
+  text-transform: uppercase;
+  color: var(--accent-terracotta);
+  letter-spacing: 0.4px;
+}
+
+.swap-side-title {
+  font-size: 13.5px;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-top: 2px;
+}
+
+.swap-side-meta {
+  font-size: 11.5px;
+  color: var(--text-secondary);
+  margin-top: 3px;
+}
+
+/* Actual Lecturer Profile Box */
+.actual-lecturer-profile-card {
+  background: #ffffff;
+  border: 1.5px solid #d5dfd9;
+  border-radius: 10px;
+  padding: 12px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.lecturer-avatar-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #e1ede6;
+  color: #276147;
+  font-weight: 800;
+  font-size: 15px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  border: 2px solid #b6dac7;
+}
+
+.lecturer-online-pill {
+  font-size: 10.5px;
+  font-weight: 700;
+  background: #eef7f2;
+  color: #1e5c3e;
+  padding: 3px 8px;
+  border-radius: 9999px;
+  border: 1px solid #b7dfc8;
+}
+
+/* Live Chat Conversation Box */
+.lecturer-chat-container {
+  background: #fbf9f6;
+  border: 1.5px solid var(--border-default);
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.lecturer-chat-messages-area {
+  max-height: 220px;
+  min-height: 140px;
+  overflow-y: auto;
+  padding: 12px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.chat-bubble {
+  max-width: 82%;
+  padding: 8px 12px;
+  border-radius: 10px;
+  font-size: 12.5px;
+  line-height: 1.4;
+  position: relative;
+}
+
+.chat-bubble.them {
+  align-self: flex-start;
+  background: #ffffff;
+  color: #1f1c1a;
+  border: 1px solid #e0d8cc;
+  border-bottom-left-radius: 2px;
+}
+
+.chat-bubble.me {
+  align-self: flex-end;
+  background: var(--accent-terracotta);
+  color: #ffffff;
+  border-bottom-right-radius: 2px;
+}
+
+.chat-msg-time {
+  font-size: 9.5px;
+  opacity: 0.75;
+  margin-top: 3px;
+  text-align: right;
+}
+
+/* Typing Indicator */
+.lecturer-typing-hint {
+  font-size: 11.5px;
+  color: var(--text-muted);
+  font-style: italic;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 16px;
+}
+
+/* Quick Proposal Prompt Buttons */
+.chat-quick-prompts-row {
+  display: flex;
+  gap: 6px;
+  padding: 8px 12px;
+  overflow-x: auto;
+  border-top: 1px solid var(--border-subtle);
+  background: #faf6f0;
+}
+
+.quick-prompt-chip {
+  white-space: nowrap;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  background: #ffffff;
+  color: var(--text-primary);
+  border: 1px solid var(--border-default);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.quick-prompt-chip:hover {
+  background: var(--accent-terracotta);
+  color: #ffffff;
+  border-color: var(--accent-terracotta);
+}
+
+/* Chat Input Bar */
+.chat-input-bar {
+  display: flex;
+  gap: 8px;
+  padding: 10px 12px;
+  background: #ffffff;
+  border-top: 1.5px solid var(--border-default);
+}
+
+.chat-input-field {
+  flex: 1;
+  border: 1px solid var(--border-default);
+  border-radius: 8px;
+  padding: 7px 12px;
+  font-size: 12.5px;
+  outline: none;
+}
+
+.chat-input-field:focus {
+  border-color: var(--accent-terracotta);
+}
+
+.chat-send-btn {
+  background: var(--accent-terracotta);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  padding: 7px 14px;
+  font-size: 12.5px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  transition: opacity 0.2s;
+}
+
+.chat-send-btn:hover {
+  opacity: 0.9;
+}
+
+/* Swap Permission Granted Certificate */
+.swap-permission-granted-card {
+  margin-top: 14px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: #eef7f2;
+  border: 1.5px solid #5aa77b;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.execute-swap-glow-btn {
+  background: #1e5c3e;
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 13.5px;
+  padding: 10px 20px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 14px rgba(30, 92, 62, 0.25);
+  transition: all 0.2s ease;
+}
+
+.execute-swap-glow-btn:hover {
+  background: #15452d;
+  transform: translateY(-1px);
+}
+
