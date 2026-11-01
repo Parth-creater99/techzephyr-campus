@@ -1407,3 +1407,100 @@ button:active,
   animation: barGrow 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
   transform-origin: bottom;
 }
+
+/* ==========================================================================
+   Additional Smooth Motion Animations & Mobile Responsiveness Enhancements
+   ========================================================================== */
+
+@keyframes subtleFloat {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-4px); }
+  100% { transform: translateY(0px); }
+}
+
+@keyframes pulseSoftGlow {
+  0%, 100% {
+    box-shadow: 0 0 0 0 rgba(197, 74, 38, 0.25);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(197, 74, 38, 0);
+  }
+}
+
+@keyframes staggerFadeUp {
+  0% {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-stagger-1 { animation: staggerFadeUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) 0.05s both; }
+.animate-stagger-2 { animation: staggerFadeUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) 0.12s both; }
+.animate-stagger-3 { animation: staggerFadeUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) 0.18s both; }
+.animate-stagger-4 { animation: staggerFadeUp 0.35s cubic-bezier(0.16, 1, 0.3, 1) 0.24s both; }
+
+/* Mobile Viewport Optimizations (Phone Screen Fit) */
+@media (max-width: 768px) {
+  .app-main-viewport {
+    width: 100%;
+    overflow-x: hidden;
+  }
+
+  .app-content-inner {
+    padding: 14px 10px !important;
+  }
+
+  .dashboard-stats-strip {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 10px !important;
+  }
+
+  .dashboard-charts-row {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+
+  .subpage-header-card {
+    padding: 16px 14px !important;
+  }
+
+  .subpage-container {
+    padding: 0 !important;
+  }
+
+  .white-app-card {
+    padding: 14px 14px !important;
+  }
+
+  .swap-matrix-comparison {
+    flex-direction: column !important;
+    gap: 14px !important;
+  }
+
+  .swap-matrix-divider {
+    transform: rotate(90deg) !important;
+    margin: 8px 0 !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .dashboard-stats-strip {
+    grid-template-columns: 1fr !important;
+  }
+
+  .app-topbar {
+    padding: 10px 12px !important;
+  }
+
+  .welcome-heading {
+    font-size: 15px !important;
+  }
+
+  .search-pill-container {
+    display: none;
+  }
+}

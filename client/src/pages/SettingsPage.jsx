@@ -21,18 +21,7 @@ export function SettingsPage({ currentUser, onLogout, onNavigate, onRequireAdmin
           </span>
         </div>
 
-        <div style={{ display: 'flex', gap: 10, alignItems: 'center' }}>
-          {/* Clear Logout Button */}
-          <button
-            type="button"
-            className="settings-logout-btn"
-            onClick={handleLogoutClick}
-            title="Log out of the platform"
-          >
-            <LogOut size={15} />
-            <span>Log Out</span>
-          </button>
-        </div>
+        
       </div>
 
       <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', gap: 20 }}>
@@ -173,22 +162,39 @@ export function SettingsPage({ currentUser, onLogout, onNavigate, onRequireAdmin
       </div>
 
       {/* Session Account Bar */}
-      <div className="white-app-card" style={{ marginTop: 20, display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 16 }}>
+      <div className="white-app-card" style={{ marginTop: 24, padding: '24px 28px', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: 18, border: '1.5px solid var(--border-default)', background: 'var(--bg-card)' }}>
         <div>
-          <h4 style={{ fontSize: 15, fontWeight: 700, margin: 0 }}>Active Account Session</h4>
-          <p style={{ fontSize: 12.5, color: 'var(--text-secondary)', margin: '4px 0 0 0' }}>
-            Signed in as <strong>{currentUser?.name || 'Faculty Member'}</strong> ({currentUser?.email || 'a.sharma@cit.edu.in'})
+          <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+            <LogOut size={18} color="var(--accent-terracotta)" />
+            <h4 style={{ fontSize: 16, fontWeight: 800, margin: 0, color: 'var(--text-primary)' }}>Sign Out of CIT Campus Portal</h4>
+          </div>
+          <p style={{ fontSize: 13, color: 'var(--text-secondary)', margin: '6px 0 0 0' }}>
+            Currently active session: <strong>{currentUser?.name || 'Faculty Member'}</strong> &bull; {currentUser?.role || 'Lecturer'} ({currentUser?.email || 'a.sharma@cit.edu.in'})
           </p>
         </div>
 
         <button
           type="button"
           className="settings-logout-btn"
-          style={{ padding: '10px 22px' }}
+          style={{
+            padding: '12px 28px',
+            fontSize: 14,
+            fontWeight: 800,
+            background: 'var(--accent-terracotta)',
+            color: '#ffffff',
+            border: 'none',
+            borderRadius: 12,
+            boxShadow: '0 4px 14px rgba(197, 74, 38, 0.3)',
+            cursor: 'pointer',
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: 8,
+          }}
           onClick={handleLogoutClick}
+          title="Sign out of your CIT session and return to landing page"
         >
-          <LogOut size={16} />
-          <span>Sign Out / Log Out</span>
+          <LogOut size={17} />
+          <span>Log Out of CIT Portal</span>
         </button>
       </div>
     </div>

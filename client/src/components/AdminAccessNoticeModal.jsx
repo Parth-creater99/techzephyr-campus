@@ -107,20 +107,9 @@ export function AdminAccessNoticeModal({
             type="button"
             className="admin-dismiss-btn"
             onClick={onClose}
+            style={{ width: '100%', justifyContent: 'center' }}
           >
-            Dismiss Notice
-          </button>
-
-          <button
-            type="button"
-            className="admin-switch-btn"
-            onClick={() => {
-              onSwitchToAdmin?.();
-              onClose?.();
-            }}
-          >
-            <Key size={15} />
-            <span>Switch to Administrator Mode (Dean)</span>
+            Understood &bull; Close Notice
           </button>
         </div>
       </div>

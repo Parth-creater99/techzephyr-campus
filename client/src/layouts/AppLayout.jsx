@@ -23,9 +23,9 @@ import { CitLogo } from '../components/CitLogo';
 export const FACULTY_NAV_ITEMS = [
   { id: 'dashboard', label: 'Faculty Dashboard', icon: LayoutDashboard },
   { id: 'timetable', label: 'Master Schedule (P1–P13)', icon: Clock },
-  { id: 'ai-assistant', label: 'AI Assistant', icon: Bot, badge: 'AI' },
+  { id: 'ai-assistant', label: 'AI Assistant', icon: Bot },
   { id: 'rescheduling', label: 'Swaps & Disruptions', icon: RefreshCw },
-  { id: 'venues', label: 'Venues & 7 Labs (27)', icon: Building2 },
+  { id: 'venues', label: 'Venues (27, incl. 7 Labs)', icon: Building2 },
   { id: 'spectra', label: 'Spectra Events (25)', icon: Sparkles },
   { id: 'faculty-network', label: 'Faculty Network', icon: Users },
   { id: 'courses', label: 'Courses (62)', icon: BookOpen },
@@ -132,56 +132,35 @@ export function AppLayout({
           </div>
 
           {/* Sidebar Bottom Role Card with 1-Click Role Switcher */}
-          <div style={{ padding: '16px 14px', borderTop: '1px solid var(--border-default)', margin: '0 8px 12px 8px' }}>
+          <div style={{ padding: '14px 14px', borderTop: '1px solid var(--border-default)', margin: '0 8px 12px 8px' }}>
             <div
               style={{
-                background: isAdmin ? 'rgba(78, 117, 97, 0.1)' : 'rgba(197, 74, 38, 0.08)',
-                border: `1px solid ${isAdmin ? 'var(--accent-sage)' : 'var(--accent-terracotta)'}`,
+                background: isAdmin ? 'rgba(78, 117, 97, 0.08)' : 'rgba(197, 74, 38, 0.06)',
+                border: `1px solid ${isAdmin ? 'var(--accent-sage-border)' : 'var(--accent-terracotta-border)'}`,
                 borderRadius: 12,
                 padding: '10px 12px',
                 display: 'flex',
                 flexDirection: 'column',
-                gap: 8,
+                gap: 4,
               }}
             >
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
                 <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                   {isAdmin ? <Shield size={14} color="var(--accent-sage)" /> : <User size={14} color="var(--accent-terracotta)" />}
                   <span style={{ fontSize: 11, fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.04em', color: isAdmin ? 'var(--accent-sage)' : 'var(--accent-terracotta)' }}>
-                    {isAdmin ? 'Dean / Admin Mode' : 'Lecturer Mode'}
+                    {isAdmin ? 'Administrator' : 'Lecturer'}
                   </span>
                 </div>
-                <span style={{ fontSize: 10, fontWeight: 700, opacity: 0.75 }}>
+                <span style={{ fontSize: 10, fontWeight: 700, opacity: 0.65 }}>
                   {isAdmin ? 'Level 4' : 'Level 2'}
                 </span>
               </div>
-
-              <div style={{ fontSize: 12, fontWeight: 700, color: 'var(--text-primary)' }}>
+              <div style={{ fontSize: 12.5, fontWeight: 700, color: 'var(--text-primary)' }}>
                 {currentUser?.name || 'Dr. A. Sharma'}
               </div>
-
-              <button
-                type="button"
-                onClick={() => onSwitchRole?.(isAdmin ? 'faculty' : 'admin')}
-                style={{
-                  background: isAdmin ? 'var(--accent-sage)' : 'var(--accent-terracotta)',
-                  color: '#ffffff',
-                  border: 'none',
-                  borderRadius: 8,
-                  padding: '6px 10px',
-                  fontSize: 11,
-                  fontWeight: 700,
-                  cursor: 'pointer',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: 5,
-                  transition: 'opacity 0.15s',
-                }}
-              >
-                <Key size={11} />
-                <span>{isAdmin ? 'Switch to Lecturer Mode' : 'Switch to Admin Mode'}</span>
-              </button>
+              <div style={{ fontSize: 11, color: 'var(--text-secondary)' }}>
+                {currentUser?.role || 'Lecturer • Dept. of CSE'}
+              </div>
             </div>
           </div>
         </div>
@@ -209,79 +188,24 @@ export function AppLayout({
           </div>
 
           <div className="topbar-right">
-            {/* Highly Visible Institutional Role Switcher Pill in Topbar */}
-            {isAdmin ? (
-              <div
-                className="topbar-role-pill admin-active"
-                onClick={() => onSwitchRole?.('faculty')}
-                title="Signed in as Institute Administrator / Dean. Click to switch to Lecturer Mode."
-                style={{
-                  cursor: 'pointer',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: 7,
-                  background: 'rgba(78, 117, 97, 0.12)',
-                  border: '1.5px solid var(--accent-sage)',
-                  borderRadius: 9999,
-                  padding: '5px 12px',
-                  fontSize: 12,
-                  fontWeight: 700,
-                  color: 'var(--accent-sage)',
-                }}
-              >
-                <Shield size={14} />
-                <span>Admin Mode (Dean)</span>
-                <span
-                  style={{
-                    fontSize: 10,
-                    padding: '2px 8px',
-                    borderRadius: 9999,
-                    background: 'var(--accent-sage)',
-                    color: '#ffffff',
-                    fontWeight: 700,
-                  }}
-                >
-                  Switch to Lecturer
-                </span>
-              </div>
-            ) : (
-              <div
-                className="topbar-role-pill lecturer-active"
-                onClick={() => onSwitchRole?.('admin')}
-                title="Signed in as Lecturer. Click to switch to Administrator Mode."
-                style={{
-                  cursor: 'pointer',
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: 7,
-                  background: 'rgba(197, 74, 38, 0.1)',
-                  border: '1.5px solid var(--accent-terracotta)',
-                  borderRadius: 9999,
-                  padding: '5px 12px',
-                  fontSize: 12,
-                  fontWeight: 700,
-                  color: 'var(--accent-terracotta)',
-                }}
-              >
-                <User size={14} />
-                <span>Lecturer Mode (Dr. Sharma)</span>
-                <span
-                  style={{
-                    fontSize: 10,
-                    padding: '2px 8px',
-                    borderRadius: 9999,
-                    background: 'var(--accent-terracotta)',
-                    color: '#ffffff',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: 3,
-                    fontWeight: 700,
-                  }}
-                >
-                  <Key size={10} /> Switch to Admin
-                </span>
-              </div>
-            )}
+            {/* Clean Institutional Role Badge (Read-Only) */}
+            <div
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: 6,
+                background: isAdmin ? 'rgba(78, 117, 97, 0.12)' : 'rgba(197, 74, 38, 0.1)',
+                border: `1.5px solid ${isAdmin ? 'var(--accent-sage)' : 'var(--accent-terracotta)'}`,
+                borderRadius: 9999,
+                padding: '5px 14px',
+                fontSize: 12,
+                fontWeight: 700,
+                color: isAdmin ? 'var(--accent-sage)' : 'var(--accent-terracotta)',
+              }}
+            >
+              {isAdmin ? <Shield size={14} /> : <User size={14} />}
+              <span>{isAdmin ? 'Dean / Admin Mode' : 'Lecturer Mode'}</span>
+            </div>
 
             {/* Pill Search Input */}
             <div className="search-pill-container">

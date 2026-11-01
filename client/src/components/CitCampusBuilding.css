@@ -1,0 +1,76 @@
+.cit-real-building-wrapper {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  z-index: 1;
+}
+
+.cit-photo-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.cit-real-photo {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 38%;
+  display: block;
+  transform: scale(1.02);
+  transition: transform 8s cubic-bezier(0.25, 1, 0.5, 1);
+  animation: photoSlowPan 18s ease-in-out infinite alternate;
+  filter: contrast(1.04) brightness(0.96) saturate(1.08);
+}
+
+@keyframes photoSlowPan {
+  0% {
+    transform: scale(1.02) translate(0, 0);
+  }
+  100% {
+    transform: scale(1.06) translate(-1%, -1%);
+  }
+}
+
+/* Warm Booklet Color Palette Gradient Overlay */
+.cit-photo-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    180deg,
+    rgba(250, 246, 239, 0.42) 0%,
+    rgba(250, 246, 239, 0.25) 35%,
+    rgba(250, 246, 239, 0.65) 75%,
+    rgba(250, 246, 239, 0.95) 100%
+  );
+  pointer-events: none;
+}
+
+.cit-photo-glow {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at 50% 25%,
+    rgba(219, 130, 42, 0.15) 0%,
+    rgba(197, 74, 38, 0.08) 50%,
+    transparent 80%
+  );
+  mix-blend-mode: multiply;
+  pointer-events: none;
+}
+
+.cit-photo-fallback {
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(135deg, #f4eee2 0%, #ede3d2 100%);
+}
+
+@media (max-width: 768px) {
+  .cit-real-photo {
+    object-position: center 25%;
+    transform: scale(1.05);
+  }
+}

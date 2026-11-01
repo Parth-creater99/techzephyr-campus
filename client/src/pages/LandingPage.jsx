@@ -292,7 +292,7 @@ export function LandingPage({ currentUser, onEnterPortal, onNavigate }) {
             <p className="cit-hero-lead">
               A premier autonomous engineering and technical research institute on the shores of Chilika Lake.
               Governed by an automated, conflict-free academic orchestration matrix coordinating 189 weekly
-              sessions, 41 midsem examination slots, 27 smart lecture halls, and 7 advanced research laboratories.
+              sessions, 41 midsem examination slots, 27 academic venues (including 7 specialized research laboratories).
             </p>
 
             {/* Institutional Stats Counters */}
@@ -476,47 +476,7 @@ export function LandingPage({ currentUser, onEnterPortal, onNavigate }) {
                 </button>
               </form>
 
-              {/* Quick 1-Click Role Presets */}
-              <div className="cit-quick-presets">
-                <div className="cit-presets-title">Quick 1-Click Access:</div>
-                <div className="cit-presets-row">
-                  <button
-                    type="button"
-                    className="cit-preset-btn"
-                    onClick={() => {
-                      handleRoleSelect('faculty');
-                      onEnterPortal?.(ROLE_PROFILES.faculty);
-                      onNavigate?.('dashboard');
-                    }}
-                  >
-                    Dr. A. Sharma (Lecturer)
-                  </button>
-                  <button
-                    type="button"
-                    className="cit-preset-btn"
-                    onClick={() => {
-                      handleRoleSelect('admin');
-                      onEnterPortal?.(ROLE_PROFILES.admin);
-                      onNavigate?.('dashboard');
-                    }}
-                  >
-                    Dean Patnaik (Admin)
-                  </button>
-                  <button
-                    type="button"
-                    className="cit-preset-btn"
-                    onClick={() => {
-                      handleRoleSelect('student');
-                      onEnterPortal?.(ROLE_PROFILES.student);
-                      onNavigate?.('dashboard');
-                    }}
-                  >
-                    Student Portal
-                  </button>
-                </div>
-              </div>
-
-              <div className="cit-login-footer">
+              <div className="cit-login-footer" style={{ marginTop: 16 }}>
                 <Shield size={12} style={{ color: '#4e7561', marginRight: 4 }} />
                 <span>Protected by CIT Central Authentication &bull; IT Support ext: 404</span>
               </div>
@@ -829,7 +789,7 @@ export function LandingPage({ currentUser, onEnterPortal, onNavigate }) {
                 Smart Academic Matrix &amp; Infrastructure
               </h2>
               <p className="cit-features-desc">
-                From our heritage central block to our 27 air-conditioned lecture theatres and 7 research laboratories,
+                From our heritage central block to our 27 academic venues (including 20 smart lecture halls and 7 specialized research laboratories),
                 every venue at CIT is mapped into an autonomous schedule solver that eliminates double-bookings.
               </p>
               <div className="cit-features-bullets">

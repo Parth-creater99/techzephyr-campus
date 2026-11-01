@@ -154,7 +154,7 @@ export function TimetableViewerPage({ currentUser, onNavigate, onRequireAdmin, o
         <div className="t-metric-box">
           <span className="t-metric-label">Venue Utilisation</span>
           <strong className="t-metric-val">88.4%</strong>
-          <span className="t-metric-sub">27 Rooms &amp; 7 Labs Operating</span>
+          <span className="t-metric-sub">27 Rooms (incl. 7 Labs)</span>
         </div>
       </div>
 

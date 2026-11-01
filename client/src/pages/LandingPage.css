@@ -1383,3 +1383,82 @@
   text-transform: uppercase;
   box-shadow: 0 4px 12px rgba(58, 34, 22, 0.08);
 }
+
+/* ==========================================================================
+   Mobile Phone Polish & Animations for Landing Page
+   ========================================================================== */
+
+.cit-landing-root {
+  overflow-x: hidden;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .cit-hero-section {
+    padding: 24px 14px 36px 14px !important;
+    min-height: auto !important;
+  }
+
+  .cit-hero-container {
+    gap: 24px !important;
+  }
+
+  .cit-hero-left {
+    padding: 20px 16px !important;
+  }
+
+  .cit-stats-row {
+    grid-template-columns: repeat(2, 1fr) !important;
+    gap: 8px !important;
+  }
+
+  .cit-hero-actions {
+    flex-direction: column !important;
+    width: 100% !important;
+  }
+
+  .cit-btn-primary,
+  .cit-btn-secondary {
+    width: 100% !important;
+    justify-content: center !important;
+  }
+
+  .cit-login-card {
+    padding: 22px 16px !important;
+  }
+
+  .cit-notices-grid,
+  .cit-departments-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .cit-top-bar {
+    display: none;
+  }
+
+  .cit-main-header {
+    padding: 12px 14px !important;
+  }
+
+  .cit-brand-title {
+    font-size: 13.5px !important;
+  }
+
+  .cit-brand-sub {
+    font-size: 10px !important;
+  }
+}
+
+@media (max-width: 480px) {
+  .cit-stats-row {
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  .cit-stat-num {
+    font-size: 20px !important;
+  }
+
+  .cit-stat-label {
+    font-size: 10.5px !important;
+  }
+}

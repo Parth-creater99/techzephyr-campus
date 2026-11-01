@@ -55,9 +55,66 @@ export function ReschedulingPage({ currentUser, onNavigate, onRequireAdmin, onSw
   const [judgesJsonText, setJudgesJsonText] = useState('');
   const [judgesParseStatus, setJudgesParseStatus] = useState(null);
 
+  const dayNamesMap = {
+    mon: 'Monday',
+    tue: 'Tuesday',
+    wed: 'Wednesday',
+    thu: 'Thursday',
+    fri: 'Friday',
+    sat: 'Saturday',
+  };
+
   // Determine selected sessions for swap preview
   const mySelectedSession = sessions.find((s) => s.id === mySessionId) || sessions[0];
   const targetSelectedSession = sessions.find((s) => s.id === targetSessionId) || sessions[1];
+
+  const handleLoadSampleSwap = () => {
+    const sample = {
+      id: `swap-${Date.now()}`,
+      requestorFaculty: 'Dr. A. Sharma',
+      requestorSession: {
+        id: 's-101',
+        code: 'CS301',
+        title: 'Operating Systems',
+        faculty: 'Dr. A. Sharma',
+        day: 'mon',
+        dayName: 'Monday',
+        periodId: 'P1',
+        room: 'LH-101',
+        group: 'CSE-3',
+      },
+      targetFaculty: 'Dr. R. Verma',
+      targetSession: {
+        id: 's-102',
+        code: 'CS302',
+        title: 'Database Management Systems',
+        faculty: 'Dr. R. Verma',
+        day: 'mon',
+        dayName: 'Monday',
+        periodId: 'P2',
+        room: 'LH-102',
+        group: 'CSE-3',
+      },
+      reason: 'Special departmental faculty committee meeting scheduled during Monday P1.',
+      priorityTier: 2,
+      priorityName: 'Regular classes',
+      hardViolations: 0,
+      movedSessionsCount: 2,
+      status: 'PENDING_FACULTY_PERMISSION',
+      createdAt: 'Just now',
+      approvedBy: null,
+      approvalTimestamp: null,
+    };
+    const updated = [sample, ...swaps.filter((s) => s.id !== sample.id)];
+    setSwaps(updated);
+    saveStoredLectureSwaps(updated);
+    setActiveTab('pending');
+    setBannerMessage({
+      type: 'info',
+      text: 'Test swap request loaded! Click "Grant Permission & Swap Lectures" to simulate.',
+    });
+    setTimeout(() => setBannerMessage(null), 4000);
+  };
 
   // Grant Permission & Execute Atomic Swap
   const handleGrantPermission = (swap) => {

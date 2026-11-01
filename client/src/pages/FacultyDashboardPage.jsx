@@ -160,7 +160,7 @@ export function FacultyDashboardPage({ currentUser, onNavigate }) {
           </div>
           <div>
             <div className="stat-clean-val">27 Venues</div>
-            <div className="stat-clean-label">15 Lecture Halls &amp; 7 Labs</div>
+            <div className="stat-clean-label">27 Rooms (incl. 7 Labs)</div>
           </div>
         </div>
 
