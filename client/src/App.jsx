@@ -66,15 +66,17 @@ export function App() {
     handleNavigate('landing');
   };
 
-  const handleEnterPortal = () => {
-    const activeProfile = {
-      name: 'Dr. A. Sharma',
-      email: 'a.sharma@cit.edu.in',
-      dept: 'CSE',
-      role: 'Faculty Member',
-      avatarInitials: 'AS',
-      isLoggedIn: true,
-    };
+  const handleEnterPortal = (customProfile) => {
+    const activeProfile = (customProfile && customProfile.name)
+      ? { ...customProfile, isLoggedIn: true }
+      : {
+          name: 'Dr. A. Sharma',
+          email: 'a.sharma@cit.edu.in',
+          dept: 'CSE',
+          role: 'Professor & Head • Dept. of CSE',
+          avatarInitials: 'AS',
+          isLoggedIn: true,
+        };
     setCurrentUser(activeProfile);
     saveStoredUserProfile(activeProfile);
     handleNavigate('dashboard');

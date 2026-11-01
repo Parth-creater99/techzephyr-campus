@@ -1,10 +1,105 @@
 import React, { useState } from 'react';
-import { Menu, X, Clock, Calendar, ArrowRight, ArrowLeft } from 'lucide-react';
+import {
+  Shield,
+  Lock,
+  User,
+  Eye,
+  EyeOff,
+  ArrowRight,
+  ArrowLeft,
+  Calendar,
+  Clock,
+  BookOpen,
+  Building,
+  Award,
+  CheckCircle2,
+  FileText,
+  MapPin,
+  Compass,
+  GraduationCap,
+  Sparkles,
+  ChevronRight,
+  Menu,
+  X,
+} from 'lucide-react';
 import { CitLogo } from '../components/CitLogo';
+import { CitCampusBuilding } from '../components/CitCampusBuilding';
 import './LandingPage.css';
 
+// Preset Institutional Credentials for 1-Click Role Login
+const ROLE_PROFILES = {
+  faculty: {
+    id: 'faculty',
+    label: 'Faculty Portal',
+    name: 'Dr. A. Sharma',
+    email: 'a.sharma@cit.edu.in',
+    dept: 'CSE',
+    role: 'Professor & Head • Dept. of CSE',
+    avatarInitials: 'AS',
+    cabin: 'Faculty Block B • Cabin 204',
+    badge: 'HOD CSE',
+  },
+  student: {
+    id: 'student',
+    label: 'Student Portal',
+    name: 'Ananya Verma',
+    email: 'ananya.v@cit.edu.in',
+    dept: 'CSE',
+    role: 'Student • B.Tech CSE (6th Sem)',
+    avatarInitials: 'AV',
+    cabin: 'Hostel Block C • Room 312',
+    badge: 'Roll: CIT/23/CS-084',
+  },
+  admin: {
+    id: 'admin',
+    label: 'Dean / Admin Desk',
+    name: 'Prof. M. R. Patnaik',
+    email: 'dean.academics@cit.edu.in',
+    dept: 'Admin',
+    role: 'Dean of Academic Affairs',
+    avatarInitials: 'MP',
+    cabin: 'Administrative Block • Room 101',
+    badge: 'Dean Academics',
+  },
+};
+
 export function LandingPage({ currentUser, onEnterPortal, onNavigate }) {
+  const [selectedRole, setSelectedRole] = useState('faculty');
+  const [emailInput, setEmailInput] = useState(ROLE_PROFILES.faculty.email);
+  const [passwordInput, setPasswordInput] = useState('••••••••••••');
+  const [showPassword, setShowPassword] = useState(false);
+  const [rememberMe, setRememberMe] = useState(true);
+  const [isLoggingIn, setIsLoggingIn] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+
+  // Switch role tab and pre-fill credentials
+  const handleRoleSelect = (roleKey) => {
+    setSelectedRole(roleKey);
+    const profile = ROLE_PROFILES[roleKey];
+    setEmailInput(profile.email);
+    setPasswordInput('••••••••••••');
+  };
+
+  // Submit login form
+  const handleLoginSubmit = (e) => {
+    e?.preventDefault();
+    setIsLoggingIn(true);
+    const activeProfile = ROLE_PROFILES[selectedRole];
+    const userToLogin = {
+      ...activeProfile,
+      email: emailInput || activeProfile.email,
+      isLoggedIn: true,
+    };
+
+    setTimeout(() => {
+      setIsLoggingIn(false);
+      if (onEnterPortal) {
+        onEnterPortal(userToLogin);
+      } else {
+        onNavigate?.('dashboard');
+      }
+    }, 350);
+  };
 
   const scrollToSection = (id) => {
     setMobileMenuOpen(false);
@@ -22,93 +117,109 @@ export function LandingPage({ currentUser, onEnterPortal, onNavigate }) {
     }
   };
 
-  const handleEnter = (targetPage = 'dashboard') => {
-    onEnterPortal?.();
-    onNavigate?.(targetPage);
-  };
+  const currentProfile = ROLE_PROFILES[selectedRole];
 
   return (
-    <div className="landing-root animate-fade-in">
-      {/* Background wave contours with warm palette */}
-      <div className="landing-bg-waves" aria-hidden="true">
-        <svg
-          viewBox="0 0 1440 900"
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          preserveAspectRatio="none"
-          className="waves-svg"
-        >
-          <path
-            d="M-50,150 C250,120 380,320 620,280 C860,240 1020,400 1280,360 C1400,340 1480,420 1520,460"
-            stroke="rgba(197, 74, 38, 0.22)"
-            strokeWidth="1.2"
-          />
-          <path
-            d="M-50,180 C260,150 390,350 630,310 C870,270 1030,430 1290,390 C1410,370 1490,450 1520,490"
-            stroke="rgba(219, 130, 42, 0.2)"
-            strokeWidth="1.2"
-          />
-          <path
-            d="M-50,210 C270,180 400,380 640,340 C880,300 1040,460 1300,420 C1420,400 1500,480 1520,520"
-            stroke="rgba(78, 117, 97, 0.2)"
-            strokeWidth="1.2"
-          />
-          <path
-            d="M-20,400 C300,360 450,560 700,520 C950,480 1100,640 1350,600 C1450,580 1500,620 1520,650"
-            stroke="rgba(58, 34, 22, 0.12)"
-            strokeWidth="1.2"
-          />
-        </svg>
+    <div className="cit-landing-root animate-fade-in">
+      {/* ========================================================
+          TOP INSTITUTIONAL ANNOUNCEMENT BAR
+          ======================================================== */}
+      <div className="cit-top-bar">
+        <div className="cit-top-bar-inner">
+          <div className="cit-top-bar-left">
+            <span className="cit-top-tag">
+              <Award size={12} style={{ marginRight: 4 }} /> NAAC A++ (CGPA 3.82)
+            </span>
+            <span className="cit-top-divider">•</span>
+            <span className="cit-top-tag">NIRF Top 50 Engineering</span>
+            <span className="cit-top-divider">•</span>
+            <span className="cit-top-text">
+              <MapPin size={11} style={{ marginRight: 3, verticalAlign: 'middle' }} />
+              Chilika Lake Campus, Khordha, Odisha
+            </span>
+          </div>
+
+          <div className="cit-top-bar-right">
+            <span className="cit-top-notice">
+              <strong>Circular:</strong> AY 2026–27 Odd Semester Timetable &amp; Midsem Matrix Live
+            </span>
+            <div className="cit-top-quick-links">
+              <button type="button" onClick={() => scrollToSection('notices')}>
+                Notices
+              </button>
+              <button type="button" onClick={() => scrollToSection('departments')}>
+                Departments
+              </button>
+              <button type="button" onClick={() => scrollToSection('login-box')}>
+                Portal SSO
+              </button>
+            </div>
+          </div>
+        </div>
       </div>
 
-      {/* Top Navigation */}
-      <header className="landing-header">
-        <div className="landing-nav-inner">
-          {/* Logo - CHILIKA INSTITUTE OF TECHNOLOGY */}
+      {/* ========================================================
+          MAIN INSTITUTIONAL HEADER & NAVIGATION
+          ======================================================== */}
+      <header className="cit-main-header">
+        <div className="cit-header-inner">
+          {/* Logo & Institute Name */}
           <div
-            className="landing-logo"
+            className="cit-brand"
             onClick={handleCitBackClick}
-            title="Click to go back"
-            style={{ cursor: 'pointer', display: 'flex', alignItems: 'center', gap: 12 }}
+            title="Chilika Institute of Technology - Click to go back"
+            role="button"
+            tabIndex={0}
           >
-            <CitLogo size={40} />
-            <div style={{ display: 'flex', flexDirection: 'column' }}>
-              <span style={{ fontSize: 15, fontWeight: 900, color: '#1c1815', letterSpacing: '0.04em', lineHeight: 1.15, textTransform: 'uppercase' }}>
-                Chilika Institute
-              </span>
-              <span style={{ fontSize: 10.5, fontWeight: 800, color: 'var(--accent-terracotta)', letterSpacing: '0.06em', lineHeight: 1.15, textTransform: 'uppercase' }}>
-                of Technology
-              </span>
+            <CitLogo size={46} />
+            <div className="cit-brand-text">
+              <div className="cit-brand-title">CHILIKA INSTITUTE OF TECHNOLOGY</div>
+              <div className="cit-brand-sub">
+                Autonomous Institution &bull; Estd. 1988 &bull; Govt. of Odisha Approved
+              </div>
             </div>
-            <span className="landing-back-pill">
+            <span className="cit-back-badge">
               <ArrowLeft size={12} /> Back
             </span>
           </div>
 
-          {/* Clean Desktop Navigation Links */}
-          <nav className="landing-nav-menu">
-            <button type="button" className="landing-nav-link" onClick={() => scrollToSection('home')}>
-              Home
+          {/* Desktop Navigation Links */}
+          <nav className="cit-nav">
+            <button type="button" className="cit-nav-link" onClick={() => scrollToSection('overview')}>
+              About CIT
             </button>
-            <button type="button" className="landing-nav-link" onClick={() => scrollToSection('features')}>
-              Core Capabilities
+            <button type="button" className="cit-nav-link" onClick={() => scrollToSection('departments')}>
+              Schools &amp; Depts
             </button>
-
-            {/* Direct Portal Entrance Button */}
+            <button type="button" className="cit-nav-link" onClick={() => scrollToSection('notices')}>
+              Academic Notices
+            </button>
             <button
               type="button"
-              className="landing-login-btn"
-              onClick={() => handleEnter('dashboard')}
+              className="cit-nav-link"
+              onClick={() => {
+                onEnterPortal?.(ROLE_PROFILES.faculty);
+                onNavigate?.('timetable');
+              }}
             >
-              <span>Enter Campus Portal</span>
-              <ArrowRight size={14} style={{ marginLeft: 6 }} />
+              Master Timetable
+            </button>
+
+            {/* Quick jump to Login Card */}
+            <button
+              type="button"
+              className="cit-header-login-btn"
+              onClick={() => scrollToSection('login-box')}
+            >
+              <Lock size={13} style={{ marginRight: 6 }} />
+              <span>Campus Portal Login</span>
             </button>
           </nav>
 
-          {/* Mobile Menu Toggle */}
+          {/* Mobile Menu Button */}
           <button
             type="button"
-            className="landing-mobile-toggle"
+            className="cit-mobile-toggle"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             aria-label="Toggle navigation menu"
           >
@@ -118,168 +229,765 @@ export function LandingPage({ currentUser, onEnterPortal, onNavigate }) {
 
         {/* Mobile Dropdown */}
         {mobileMenuOpen && (
-          <div className="landing-mobile-menu">
-            <button type="button" className="mobile-nav-link" onClick={() => scrollToSection('home')}>
-              Home
+          <div className="cit-mobile-menu">
+            <button type="button" className="cit-mobile-nav-item" onClick={() => scrollToSection('overview')}>
+              About CIT
             </button>
-            <button type="button" className="mobile-nav-link" onClick={() => scrollToSection('features')}>
-              Core Capabilities
+            <button type="button" className="cit-mobile-nav-item" onClick={() => scrollToSection('departments')}>
+              Schools &amp; Depts
             </button>
-            <div className="mobile-action-wrap">
-              <button
-                type="button"
-                className="landing-login-btn w-full"
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  handleEnter('dashboard');
-                }}
-              >
-                <span>Enter Campus Portal</span>
-                <ArrowRight size={14} style={{ marginLeft: 6 }} />
-              </button>
-            </div>
+            <button type="button" className="cit-mobile-nav-item" onClick={() => scrollToSection('notices')}>
+              Academic Notices
+            </button>
+            <button
+              type="button"
+              className="cit-mobile-nav-item"
+              onClick={() => {
+                setMobileMenuOpen(false);
+                onEnterPortal?.(ROLE_PROFILES.faculty);
+                onNavigate?.('timetable');
+              }}
+            >
+              Master Timetable
+            </button>
+            <button
+              type="button"
+              className="cit-header-login-btn w-full"
+              onClick={() => scrollToSection('login-box')}
+            >
+              <Lock size={14} style={{ marginRight: 6 }} />
+              <span>Campus Portal Login</span>
+            </button>
           </div>
         )}
       </header>
 
-      {/* Main Hero Section */}
-      <main id="home" className="landing-hero-section">
-        <div className="landing-hero-content">
-          <div className="hero-kicker">Chilika Institute of Technology &bull; Academic Portal</div>
+      {/* ========================================================
+          HERO SECTION WITH THE CIT HERITAGE COLLEGE BUILDING
+          IN THE BACKGROUND AND THE INTEGRATED LOGIN BOX
+          ======================================================== */}
+      <section id="overview" className="cit-hero-section">
+        {/* The Grand Architectural College Building in Background */}
+        <CitCampusBuilding />
 
-          <h1 className="hero-heading">
-            <span className="hero-line-terracotta">Chilika Institute</span>
-            <span className="hero-line-dark">of Technology</span>
-          </h1>
+        <div className="cit-hero-container">
+          {/* Left Column: Institutional Prestige & Academic Overview */}
+          <div className="cit-hero-left">
+            <div className="cit-prestige-ribbon">
+              <span className="cit-prestige-badge">
+                <Sparkles size={13} style={{ marginRight: 5, color: '#db822a' }} />
+                Autonomous Academic Governance &bull; AY 2026–27
+              </span>
+            </div>
 
-          <p className="hero-description">
-            Next-generation academic orchestration engine for Chilika Institute of Technology.
-            Governing automated clash-free timetable generation, midsem exam allocations, leave rescheduling,
-            and natural language venue booking with strict faculty permission safeguards.
-          </p>
+            <h1 className="cit-hero-title">
+              <span className="cit-hero-title-main">CHILIKA INSTITUTE</span>
+              <span className="cit-hero-title-sub">OF TECHNOLOGY</span>
+            </h1>
 
-          {/* Direct Buttons for Entering */}
-          <div className="hero-cta-group" style={{ display: 'flex', gap: 14, flexWrap: 'wrap', marginTop: 10 }}>
-            <button
-              type="button"
-              className="hero-btn-solid"
-              onClick={() => handleEnter('dashboard')}
-            >
-              <span>Enter Campus Portal</span>
-              <ArrowRight size={16} style={{ marginLeft: 8 }} />
-            </button>
+            <p className="cit-hero-lead">
+              A premier autonomous engineering and technical research institute on the shores of Chilika Lake.
+              Governed by an automated, conflict-free academic orchestration matrix coordinating 189 weekly
+              sessions, 41 midsem examination slots, 27 smart lecture halls, and 7 advanced research laboratories.
+            </p>
 
-            <button
-              type="button"
-              className="hero-btn-outline"
-              onClick={() => handleEnter('timetable')}
-            >
-              <Clock size={16} style={{ marginRight: 8 }} />
-              <span>View Master Timetable</span>
-            </button>
-          </div>
-        </div>
-
-        {/* CIT Campus Architectural Mosaic Hero Card */}
-        <div className="landing-hero-pattern-card" aria-hidden="true">
-          <div className="pattern-card-header">
-            <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-              <CitLogo size={32} />
-              <div>
-                <div className="pattern-tag">CIT Campus Mosaic</div>
-                <div className="pattern-sub">Chilika Institute of Technology</div>
+            {/* Institutional Stats Counters */}
+            <div className="cit-stats-row">
+              <div className="cit-stat-badge">
+                <div className="cit-stat-num">189</div>
+                <div className="cit-stat-label">Weekly Sessions</div>
+              </div>
+              <div className="cit-stat-badge">
+                <div className="cit-stat-num">27 + 7</div>
+                <div className="cit-stat-label">Venues &amp; Labs</div>
+              </div>
+              <div className="cit-stat-badge">
+                <div className="cit-stat-num">40+</div>
+                <div className="cit-stat-label">Senior Faculty</div>
+              </div>
+              <div className="cit-stat-badge highlight">
+                <div className="cit-stat-num">0</div>
+                <div className="cit-stat-label">Hard Clashes</div>
               </div>
             </div>
-          </div>
 
-          {/* Interlocking Brick Pattern Matching Booklet Cover */}
-          <div className="booklet-brick-grid">
-            <div className="brick-item brick-chocolate"></div>
-            <div className="brick-item brick-terracotta tall"></div>
-            <div className="brick-item brick-ochre"></div>
-            <div className="brick-item brick-sage tall"></div>
-            <div className="brick-item brick-peach wide"></div>
-            <div className="brick-item brick-terracotta"></div>
-            <div className="brick-item brick-chocolate tall"></div>
-            <div className="brick-item brick-ochre wide"></div>
-            <div className="brick-item brick-sage"></div>
-            <div className="brick-item brick-terracotta wide"></div>
-            <div className="brick-item brick-peach"></div>
-            <div className="brick-item brick-chocolate"></div>
-          </div>
+            {/* Quick Action Navigation Buttons */}
+            <div className="cit-hero-actions">
+              <button
+                type="button"
+                className="cit-btn-primary"
+                onClick={() => {
+                  onEnterPortal?.(ROLE_PROFILES.faculty);
+                  onNavigate?.('dashboard');
+                }}
+              >
+                <span>Enter Academic Dashboard</span>
+                <ArrowRight size={16} style={{ marginLeft: 8 }} />
+              </button>
 
-          <div className="pattern-metrics-bar">
-            <div className="p-stat"><strong>189</strong> Sessions</div>
-            <div className="p-stat"><strong>27</strong> Venues</div>
-            <div className="p-stat"><strong>0</strong> Clashes</div>
-          </div>
-        </div>
-      </main>
-
-      {/* High-Level Feature Pillars */}
-      <section id="features" className="landing-section">
-        <div className="section-container">
-          <span className="section-label">Core Capabilities</span>
-          <h2 className="section-title">Built for Real Academic Governance</h2>
-          <p className="section-lead">
-            Engineered to fulfill all platform evaluation criteria with zero hard constraint violations.
-          </p>
-
-          <div className="unboxed-grid">
-            <div className="unboxed-stat-item">
-              <span className="stat-large-num">01</span>
-              <h4 className="service-name">Clash-Free Timetable &amp; Midsem Exams</h4>
-              <p className="service-desc">
-                Automated solver for 189 weekly sessions and 41 midsem exams across 27 rooms and 13 periods (P1–P13)
-                ensuring zero professor or room conflicts.
-              </p>
-            </div>
-
-            <div className="unboxed-stat-item">
-              <span className="stat-large-num">02</span>
-              <h4 className="service-name">Faculty Permission &amp; Minimal Swaps</h4>
-              <p className="service-desc">
-                Strict permission protocol: no lecture is altered without target faculty consent. Solves emergency leaves
-                and room closures moving the fewest sessions possible.
-              </p>
-            </div>
-
-            <div className="unboxed-stat-item">
-              <span className="stat-large-num">03</span>
-              <h4 className="service-name">Plain English &amp; Hinglish AI Booking</h4>
-              <p className="service-desc">
-                Accepts conversational booking requests in English or Hinglish, generates a structured card for review,
-                and validates hard constraints before commit.
-              </p>
+              <button
+                type="button"
+                className="cit-btn-secondary"
+                onClick={() => {
+                  onEnterPortal?.(ROLE_PROFILES.faculty);
+                  onNavigate?.('timetable');
+                }}
+              >
+                <Clock size={16} style={{ marginRight: 8 }} />
+                <span>Master Timetable (P1–P13)</span>
+              </button>
             </div>
           </div>
 
-          <div style={{ marginTop: 44, textAlign: 'center' }}>
-            <button
-              type="button"
-              className="hero-btn-solid"
-              onClick={() => handleEnter('dashboard')}
-            >
-              <span>Enter Campus Portal</span>
-              <ArrowRight size={16} style={{ marginLeft: 8 }} />
-            </button>
+          {/* Right Column: Embedded CIT Collegiate Portal Login Box */}
+          <div id="login-box" className="cit-hero-right">
+            <div className="cit-login-card">
+              {/* Card Institutional Top Banner */}
+              <div className="cit-login-header">
+                <div className="cit-login-brand">
+                  <CitLogo size={36} />
+                  <div>
+                    <h3 className="cit-login-title">CIT Campus Portal</h3>
+                    <p className="cit-login-sub">Single Sign-On (SSO) &bull; Academic Year 2026–27</p>
+                  </div>
+                </div>
+                <div className="cit-login-shield">
+                  <Shield size={14} style={{ color: '#4e7561' }} />
+                  <span>Secure 256-bit</span>
+                </div>
+              </div>
+
+              {/* Role Switcher Tabs */}
+              <div className="cit-role-tabs">
+                <button
+                  type="button"
+                  className={`cit-role-tab ${selectedRole === 'faculty' ? 'active' : ''}`}
+                  onClick={() => handleRoleSelect('faculty')}
+                >
+                  <User size={13} style={{ marginRight: 5 }} />
+                  Faculty
+                </button>
+                <button
+                  type="button"
+                  className={`cit-role-tab ${selectedRole === 'student' ? 'active' : ''}`}
+                  onClick={() => handleRoleSelect('student')}
+                >
+                  <GraduationCap size={13} style={{ marginRight: 5 }} />
+                  Student
+                </button>
+                <button
+                  type="button"
+                  className={`cit-role-tab ${selectedRole === 'admin' ? 'active' : ''}`}
+                  onClick={() => handleRoleSelect('admin')}
+                >
+                  <Building size={13} style={{ marginRight: 5 }} />
+                  Dean / Admin
+                </button>
+              </div>
+
+              {/* Active Profile Info Banner */}
+              <div className="cit-active-profile-pill">
+                <div className="cit-profile-avatar">{currentProfile.avatarInitials}</div>
+                <div className="cit-profile-details">
+                  <div className="cit-profile-name">{currentProfile.name}</div>
+                  <div className="cit-profile-role">{currentProfile.role}</div>
+                </div>
+                <span className="cit-profile-badge">{currentProfile.badge}</span>
+              </div>
+
+              {/* Login Form */}
+              <form onSubmit={handleLoginSubmit} className="cit-login-form">
+                <div className="cit-form-group">
+                  <label htmlFor="cit-email" className="cit-form-label">
+                    Institutional Email / ID
+                  </label>
+                  <div className="cit-input-wrapper">
+                    <User size={16} className="cit-input-icon" />
+                    <input
+                      id="cit-email"
+                      type="email"
+                      className="cit-form-input"
+                      value={emailInput}
+                      onChange={(e) => setEmailInput(e.target.value)}
+                      placeholder="e.g. yourname@cit.edu.in"
+                      required
+                    />
+                  </div>
+                </div>
+
+                <div className="cit-form-group">
+                  <div className="cit-label-row">
+                    <label htmlFor="cit-password" className="cit-form-label">
+                      Password
+                    </label>
+                    <span className="cit-forgot-link">Forgot password?</span>
+                  </div>
+                  <div className="cit-input-wrapper">
+                    <Lock size={16} className="cit-input-icon" />
+                    <input
+                      id="cit-password"
+                      type={showPassword ? 'text' : 'password'}
+                      className="cit-form-input"
+                      value={passwordInput}
+                      onChange={(e) => setPasswordInput(e.target.value)}
+                      placeholder="Enter institutional password"
+                      required
+                    />
+                    <button
+                      type="button"
+                      className="cit-password-toggle"
+                      onClick={() => setShowPassword(!showPassword)}
+                      aria-label="Toggle password visibility"
+                    >
+                      {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
+                    </button>
+                  </div>
+                </div>
+
+                <div className="cit-form-options">
+                  <label className="cit-checkbox-label">
+                    <input
+                      type="checkbox"
+                      checked={rememberMe}
+                      onChange={(e) => setRememberMe(e.target.checked)}
+                    />
+                    <span>Remember institutional session</span>
+                  </label>
+                </div>
+
+                {/* Primary Login Button */}
+                <button
+                  type="submit"
+                  className="cit-login-submit-btn"
+                  disabled={isLoggingIn}
+                >
+                  {isLoggingIn ? (
+                    <span>Authenticating CIT Credentials...</span>
+                  ) : (
+                    <>
+                      <span>Log In to Campus Portal</span>
+                      <ArrowRight size={16} style={{ marginLeft: 8 }} />
+                    </>
+                  )}
+                </button>
+              </form>
+
+              {/* Quick 1-Click Role Presets */}
+              <div className="cit-quick-presets">
+                <div className="cit-presets-title">Quick 1-Click Access:</div>
+                <div className="cit-presets-row">
+                  <button
+                    type="button"
+                    className="cit-preset-btn"
+                    onClick={() => {
+                      handleRoleSelect('faculty');
+                      onEnterPortal?.(ROLE_PROFILES.faculty);
+                      onNavigate?.('dashboard');
+                    }}
+                  >
+                    Dr. A. Sharma (HOD CSE)
+                  </button>
+                  <button
+                    type="button"
+                    className="cit-preset-btn"
+                    onClick={() => {
+                      handleRoleSelect('admin');
+                      onEnterPortal?.(ROLE_PROFILES.admin);
+                      onNavigate?.('dashboard');
+                    }}
+                  >
+                    Dean Patnaik
+                  </button>
+                  <button
+                    type="button"
+                    className="cit-preset-btn"
+                    onClick={() => {
+                      handleRoleSelect('student');
+                      onEnterPortal?.(ROLE_PROFILES.student);
+                      onNavigate?.('dashboard');
+                    }}
+                  >
+                    Student Portal
+                  </button>
+                </div>
+              </div>
+
+              <div className="cit-login-footer">
+                <Shield size={12} style={{ color: '#4e7561', marginRight: 4 }} />
+                <span>Protected by CIT Central Authentication &bull; IT Support ext: 404</span>
+              </div>
+            </div>
           </div>
         </div>
       </section>
 
-      {/* Minimal Footer */}
-      <footer className="landing-footer">
-        <div className="footer-inner">
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <CitLogo size={28} />
-            <span className="footer-brand">CHILIKA INSTITUTE OF TECHNOLOGY</span>
+      {/* ========================================================
+          ACADEMIC CIRCULARS & NOTICES TICKER
+          ======================================================== */}
+      <section id="notices" className="cit-notices-section">
+        <div className="cit-section-container">
+          <div className="cit-section-header-row">
+            <div>
+              <span className="cit-section-pill">Official Notices</span>
+              <h2 className="cit-section-title">Academic Circulars &amp; Schedules</h2>
+            </div>
+            <button
+              type="button"
+              className="cit-link-btn"
+              onClick={() => {
+                onEnterPortal?.(ROLE_PROFILES.faculty);
+                onNavigate?.('rescheduling');
+              }}
+            >
+              <span>View Approvals &amp; Notifications</span>
+              <ChevronRight size={15} />
+            </button>
           </div>
-          <span className="footer-copy">
-            Chilika Institute of Technology &bull; Smart Scheduling Matrix
-          </span>
-          <button type="button" className="footer-top-btn" onClick={() => scrollToSection('home')}>
-            Back to Top &uarr;
-          </button>
+
+          <div className="cit-notices-grid">
+            <div className="cit-notice-card">
+              <div className="cit-notice-top">
+                <span className="cit-notice-tag cit-tag-terracotta">AY 2026–27</span>
+                <span className="cit-notice-date">October 28, 2026</span>
+              </div>
+              <h4 className="cit-notice-heading">
+                Odd Semester Master Timetable Published (P1–P13)
+              </h4>
+              <p className="cit-notice-excerpt">
+                Full clash-free curriculum allocation for 14 student cohorts across CSE, ECE, ME, IT, and EE.
+                Faculty may view daily slot occupancy in the timetable viewer.
+              </p>
+              <button
+                type="button"
+                className="cit-notice-action"
+                onClick={() => {
+                  onEnterPortal?.(ROLE_PROFILES.faculty);
+                  onNavigate?.('timetable');
+                }}
+              >
+                <span>Check Class Schedule</span> &rarr;
+              </button>
+            </div>
+
+            <div className="cit-notice-card">
+              <div className="cit-notice-top">
+                <span className="cit-notice-tag cit-tag-ochre">Examinations</span>
+                <span className="cit-notice-date">October 30, 2026</span>
+              </div>
+              <h4 className="cit-notice-heading">
+                Midsem Examination Hall Allocation &amp; Invigilation Matrix
+              </h4>
+              <p className="cit-notice-excerpt">
+                41 midsem exams scheduled with 0 room conflicts across 27 lecture halls.
+                Mandatory lunch intermission (12:55–13:45) strictly locked institute-wide.
+              </p>
+              <button
+                type="button"
+                className="cit-notice-action"
+                onClick={() => {
+                  onEnterPortal?.(ROLE_PROFILES.faculty);
+                  onNavigate?.('dashboard');
+                }}
+              >
+                <span>View Exam Slots</span> &rarr;
+              </button>
+            </div>
+
+            <div className="cit-notice-card">
+              <div className="cit-notice-top">
+                <span className="cit-notice-tag cit-tag-sage">Spectra Fest</span>
+                <span className="cit-notice-date">November 01, 2026</span>
+              </div>
+              <h4 className="cit-notice-heading">
+                Spectra 2026 Technical Fest: Central Auditorium Bookings
+              </h4>
+              <p className="cit-notice-excerpt">
+                25 flagship events registered. Faculty permission safeguards active for all venue adjustments
+                in Auditorium, OAT, and Seminar Halls.
+              </p>
+              <button
+                type="button"
+                className="cit-notice-action"
+                onClick={() => {
+                  onEnterPortal?.(ROLE_PROFILES.faculty);
+                  onNavigate?.('spectra');
+                }}
+              >
+                <span>Spectra Event Desk</span> &rarr;
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================
+          CORE ACADEMIC SCHOOLS & DEPARTMENTS
+          ======================================================== */}
+      <section id="departments" className="cit-departments-section">
+        <div className="cit-section-container">
+          <div className="cit-section-header-center">
+            <span className="cit-section-pill">Academics</span>
+            <h2 className="cit-section-title">Academic Schools &amp; Departments</h2>
+            <p className="cit-section-desc">
+              Empowering students through accredited engineering programs, state-of-the-art computational centers,
+              and dedicated faculty guidance.
+            </p>
+          </div>
+
+          <div className="cit-depts-grid">
+            <div className="cit-dept-card">
+              <div className="cit-dept-header">
+                <div className="cit-dept-icon-box terracotta">
+                  <GraduationCap size={22} />
+                </div>
+                <div className="cit-dept-meta">
+                  <span className="cit-dept-code">DEPT OF CSE</span>
+                  <h4 className="cit-dept-name">Computer Science &amp; Engineering</h4>
+                </div>
+              </div>
+              <p className="cit-dept-info">
+                B.Tech, M.Tech, and Ph.D. programs focusing on Artificial Intelligence, Distributed Systems,
+                Cybersecurity, and Algorithm Engineering.
+              </p>
+              <div className="cit-dept-stats">
+                <span><strong>48</strong> Weekly Slots</span>
+                <span><strong>4</strong> Advanced Labs</span>
+              </div>
+              <button
+                type="button"
+                className="cit-dept-link"
+                onClick={() => {
+                  onEnterPortal?.(ROLE_PROFILES.faculty);
+                  onNavigate?.('courses');
+                }}
+              >
+                Browse CSE Courses &rarr;
+              </button>
+            </div>
+
+            <div className="cit-dept-card">
+              <div className="cit-dept-header">
+                <div className="cit-dept-icon-box ochre">
+                  <Sparkles size={22} />
+                </div>
+                <div className="cit-dept-meta">
+                  <span className="cit-dept-code">DEPT OF ECE</span>
+                  <h4 className="cit-dept-name">Electronics &amp; Communication</h4>
+                </div>
+              </div>
+              <p className="cit-dept-info">
+                VLSI design, embedded IoT architectures, semiconductor technologies, and microwave satellite communication labs.
+              </p>
+              <div className="cit-dept-stats">
+                <span><strong>42</strong> Weekly Slots</span>
+                <span><strong>3</strong> Specialized Labs</span>
+              </div>
+              <button
+                type="button"
+                className="cit-dept-link"
+                onClick={() => {
+                  onEnterPortal?.(ROLE_PROFILES.faculty);
+                  onNavigate?.('courses');
+                }}
+              >
+                Browse ECE Courses &rarr;
+              </button>
+            </div>
+
+            <div className="cit-dept-card">
+              <div className="cit-dept-header">
+                <div className="cit-dept-icon-box sage">
+                  <Building size={22} />
+                </div>
+                <div className="cit-dept-meta">
+                  <span className="cit-dept-code">DEPT OF ME</span>
+                  <h4 className="cit-dept-name">Mechanical Engineering</h4>
+                </div>
+              </div>
+              <p className="cit-dept-info">
+                Robotics, thermal and fluids analysis, computational fluid dynamics (CFD), and automated additive manufacturing.
+              </p>
+              <div className="cit-dept-stats">
+                <span><strong>36</strong> Weekly Slots</span>
+                <span><strong>4</strong> Heavy Machine Labs</span>
+              </div>
+              <button
+                type="button"
+                className="cit-dept-link"
+                onClick={() => {
+                  onEnterPortal?.(ROLE_PROFILES.faculty);
+                  onNavigate?.('courses');
+                }}
+              >
+                Browse ME Courses &rarr;
+              </button>
+            </div>
+
+            <div className="cit-dept-card">
+              <div className="cit-dept-header">
+                <div className="cit-dept-icon-box terracotta">
+                  <FileText size={22} />
+                </div>
+                <div className="cit-dept-meta">
+                  <span className="cit-dept-code">DEPT OF IT</span>
+                  <h4 className="cit-dept-name">Information Technology</h4>
+                </div>
+              </div>
+              <p className="cit-dept-info">
+                Cloud computing platforms, full-stack software development, data science, and secure enterprise networking.
+              </p>
+              <div className="cit-dept-stats">
+                <span><strong>35</strong> Weekly Slots</span>
+                <span><strong>2</strong> Cloud Labs</span>
+              </div>
+              <button
+                type="button"
+                className="cit-dept-link"
+                onClick={() => {
+                  onEnterPortal?.(ROLE_PROFILES.faculty);
+                  onNavigate?.('courses');
+                }}
+              >
+                Browse IT Courses &rarr;
+              </button>
+            </div>
+
+            <div className="cit-dept-card">
+              <div className="cit-dept-header">
+                <div className="cit-dept-icon-box ochre">
+                  <Compass size={22} />
+                </div>
+                <div className="cit-dept-meta">
+                  <span className="cit-dept-code">DEPT OF EE</span>
+                  <h4 className="cit-dept-name">Electrical Engineering</h4>
+                </div>
+              </div>
+              <p className="cit-dept-info">
+                Power systems, renewable microgrids, high-voltage test engineering, and electric vehicle drive systems.
+              </p>
+              <div className="cit-dept-stats">
+                <span><strong>28</strong> Weekly Slots</span>
+                <span><strong>3</strong> Power Systems Labs</span>
+              </div>
+              <button
+                type="button"
+                className="cit-dept-link"
+                onClick={() => {
+                  onEnterPortal?.(ROLE_PROFILES.faculty);
+                  onNavigate?.('courses');
+                }}
+              >
+                Browse EE Courses &rarr;
+              </button>
+            </div>
+
+            <div className="cit-dept-card">
+              <div className="cit-dept-header">
+                <div className="cit-dept-icon-box sage">
+                  <BookOpen size={22} />
+                </div>
+                <div className="cit-dept-meta">
+                  <span className="cit-dept-code">RESEARCH &amp; BS</span>
+                  <h4 className="cit-dept-name">Basic Sciences &amp; Research</h4>
+                </div>
+              </div>
+              <p className="cit-dept-info">
+                Applied Mathematics, Quantum Physics, Material Sciences, and environmental lake hydrology research initiatives.
+              </p>
+              <div className="cit-dept-stats">
+                <span><strong>Interdisciplinary</strong></span>
+                <span><strong>Central Library</strong></span>
+              </div>
+              <button
+                type="button"
+                className="cit-dept-link"
+                onClick={() => {
+                  onEnterPortal?.(ROLE_PROFILES.faculty);
+                  onNavigate?.('faculty-network');
+                }}
+              >
+                View Faculty Directory &rarr;
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================
+          CAMPUS INFRASTRUCTURE & SMART ORCHESTRATION
+          ======================================================== */}
+      <section className="cit-features-section">
+        <div className="cit-section-container">
+          <div className="cit-features-banner">
+            <div className="cit-features-copy">
+              <span className="cit-features-tag">Campus Facilities &amp; Technology</span>
+              <h2 className="cit-features-heading">
+                Smart Academic Matrix &amp; Infrastructure
+              </h2>
+              <p className="cit-features-desc">
+                From our heritage central block to our 27 air-conditioned lecture theatres and 7 research laboratories,
+                every venue at CIT is mapped into an autonomous schedule solver that eliminates double-bookings.
+              </p>
+              <div className="cit-features-bullets">
+                <div className="cit-feature-bullet">
+                  <CheckCircle2 size={16} className="bullet-icon" />
+                  <span>Central Auditorium (1,200 seats) with Open Air Theatre</span>
+                </div>
+                <div className="cit-feature-bullet">
+                  <CheckCircle2 size={16} className="bullet-icon" />
+                  <span>Strict faculty permission consent required for any lecture alteration</span>
+                </div>
+                <div className="cit-feature-bullet">
+                  <CheckCircle2 size={16} className="bullet-icon" />
+                  <span>Natural language AI reservation assistant in English &amp; Hinglish</span>
+                </div>
+              </div>
+            </div>
+
+            <div className="cit-features-cta-box">
+              <CitLogo size={52} />
+              <h3 className="cit-cta-title">Ready to Enter CIT Campus Portal?</h3>
+              <p className="cit-cta-text">
+                Access your personalized timetable, manage department sessions, approve room swaps, and query the campus AI assistant.
+              </p>
+              <button
+                type="button"
+                className="cit-btn-primary w-full"
+                onClick={() => {
+                  onEnterPortal?.(ROLE_PROFILES.faculty);
+                  onNavigate?.('dashboard');
+                }}
+              >
+                <span>Enter Campus Portal as Dr. A. Sharma</span>
+                <ArrowRight size={16} style={{ marginLeft: 8 }} />
+              </button>
+              <button
+                type="button"
+                className="cit-btn-text"
+                onClick={() => scrollToSection('login-box')}
+              >
+                Switch Role / Use Custom Credentials &uarr;
+              </button>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ========================================================
+          INSTITUTIONAL FOOTER
+          ======================================================== */}
+      <footer className="cit-footer">
+        <div className="cit-footer-container">
+          <div className="cit-footer-main">
+            <div className="cit-footer-col brand-col">
+              <div className="cit-footer-brand-row">
+                <CitLogo size={40} />
+                <div>
+                  <div className="cit-footer-name">CHILIKA INSTITUTE OF TECHNOLOGY</div>
+                  <div className="cit-footer-tag">Autonomous &bull; Estd. 1988</div>
+                </div>
+              </div>
+              <p className="cit-footer-desc">
+                Chilika Knowledge Park, Lake View Campus, Khordha, Odisha &bull; PIN 752030, India.
+                Recognized by UGC under Section 2(f) and 12(B), AICTE Approved, NAAC &lsquo;A++&rsquo; Accredited.
+              </p>
+              <div className="cit-footer-contact">
+                <div>Tel: +91 (0674) 289-4000</div>
+                <div>Registrar: registrar@cit.edu.in</div>
+              </div>
+            </div>
+
+            <div className="cit-footer-col">
+              <h5 className="cit-footer-heading">Academic Portals</h5>
+              <ul className="cit-footer-links">
+                <li>
+                  <button type="button" onClick={() => scrollToSection('login-box')}>
+                    Faculty Portal
+                  </button>
+                </li>
+                <li>
+                  <button type="button" onClick={() => scrollToSection('login-box')}>
+                    Student ERP
+                  </button>
+                </li>
+                <li>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onEnterPortal?.(ROLE_PROFILES.faculty);
+                      onNavigate?.('timetable');
+                    }}
+                  >
+                    Master Timetable Viewer
+                  </button>
+                </li>
+                <li>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onEnterPortal?.(ROLE_PROFILES.faculty);
+                      onNavigate?.('venues');
+                    }}
+                  >
+                    Venue Booking Status
+                  </button>
+                </li>
+              </ul>
+            </div>
+
+            <div className="cit-footer-col">
+              <h5 className="cit-footer-heading">Administration</h5>
+              <ul className="cit-footer-links">
+                <li><span>Academic Council</span></li>
+                <li><span>Controller of Examinations</span></li>
+                <li><span>Internal Quality Assurance (IQAC)</span></li>
+                <li><span>NIRF Institutional Disclosures</span></li>
+                <li><span>Student Grievance Redressal</span></li>
+              </ul>
+            </div>
+
+            <div className="cit-footer-col">
+              <h5 className="cit-footer-heading">Campus Life</h5>
+              <ul className="cit-footer-links">
+                <li>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      onEnterPortal?.(ROLE_PROFILES.faculty);
+                      onNavigate?.('spectra');
+                    }}
+                  >
+                    Spectra Technical Fest
+                  </button>
+                </li>
+                <li><span>Central Library &amp; Repositories</span></li>
+                <li><span>Hostels &amp; Dining Halls</span></li>
+                <li><span>Sports Complex &amp; OAT</span></li>
+                <li><span>Anti-Ragging Compliance Cell</span></li>
+              </ul>
+            </div>
+          </div>
+
+          <div className="cit-footer-bottom">
+            <div className="cit-footer-copy">
+              &copy; {new Date().getFullYear()} Chilika Institute of Technology (CIT). All Rights Reserved.
+            </div>
+            <div className="cit-footer-bottom-links">
+              <span>Privacy Policy</span>
+              <span>&bull;</span>
+              <span>Terms of Access</span>
+              <span>&bull;</span>
+              <span>RTI</span>
+              <span>&bull;</span>
+              <button
+                type="button"
+                className="cit-back-to-top"
+                onClick={() => scrollToSection('overview')}
+              >
+                Top &uarr;
+              </button>
+            </div>
+          </div>
         </div>
       </footer>
     </div>

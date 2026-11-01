@@ -15,3 +15,5 @@ export { Modal } from './Modal';
 export { LoadingSpinner, LoadingOverlay, Skeleton } from './LoadingIndicator';
 export { EmptyState } from './EmptyState';
 export { PageHeading } from './PageHeading';
+export { CitLogo } from './CitLogo';
+export { CitCampusBuilding } from './CitCampusBuilding';
