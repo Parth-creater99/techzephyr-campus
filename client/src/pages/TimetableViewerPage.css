@@ -84,22 +84,154 @@
   color: var(--text-muted);
 }
 
-/* Scroll Box & Table Container */
-.timetable-scroll-box {
-  width: 100%;
-  overflow-x: auto;
+/* Horizontal Scroll Navigator Bar */
+.timetable-scroll-nav-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
   background: #ffffff;
-  border-radius: var(--radius-xl);
   border: 1px solid var(--border-default);
-  box-shadow: 0 2px 12px rgba(31, 28, 26, 0.04);
-  margin-top: 18px;
+  border-radius: var(--radius-lg);
+  padding: 10px 16px;
+  margin-top: 14px;
+  box-shadow: 0 1px 4px rgba(31, 28, 26, 0.03);
 }
 
+.scroll-nav-left-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.scroll-nav-indicator-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  font-weight: 800;
+  color: var(--accent-terracotta);
+  background: #fdf2ed;
+  border: 1px solid #f7d6c8;
+  padding: 4px 10px;
+  border-radius: 9999px;
+  letter-spacing: 0.2px;
+}
+
+.scroll-nav-hint-text {
+  font-size: 12px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.scroll-nav-buttons-group {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.scroll-nav-arrow-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  border: 1.5px solid var(--border-default);
+  background: #ffffff;
+  color: var(--text-primary);
+  font-size: 18px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  line-height: 1;
+}
+
+.scroll-nav-arrow-btn:hover {
+  background: var(--bg-card-subtle);
+  border-color: var(--accent-terracotta);
+  color: var(--accent-terracotta);
+}
+
+.scroll-jump-chip {
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 700;
+  border-radius: 8px;
+  border: 1.5px solid var(--border-default);
+  background: #ffffff;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  white-space: nowrap;
+}
+
+.scroll-jump-chip:hover {
+  border-color: var(--accent-terracotta);
+  color: var(--accent-terracotta);
+  background: #fdfaf8;
+}
+
+.scroll-jump-chip.scroll-jump-events {
+  background: #fdf2ed;
+  color: #a23b18;
+  border-color: #f7d6c8;
+  font-weight: 800;
+}
+
+.scroll-jump-chip.scroll-jump-events:hover {
+  background: #c54a26;
+  color: #ffffff;
+  border-color: #c54a26;
+}
+
+/* Scroll Box & Horizontal Scrolling */
+.timetable-scroll-box {
+  width: 100%;
+  max-width: 100%;
+  overflow-x: auto !important;
+  overflow-y: visible;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  background: #ffffff;
+  border-radius: var(--radius-xl);
+  border: 1.5px solid var(--border-default);
+  box-shadow: 0 4px 20px rgba(31, 28, 26, 0.05);
+  margin-top: 14px;
+  position: relative;
+}
+
+/* Styled horizontal scrollbar for easy horizontal scrolling */
+.timetable-scroll-box::-webkit-scrollbar {
+  height: 12px;
+}
+
+.timetable-scroll-box::-webkit-scrollbar-track {
+  background: #f7f3ee;
+  border-radius: 6px;
+  margin: 0 10px;
+}
+
+.timetable-scroll-box::-webkit-scrollbar-thumb {
+  background: #c54a26;
+  border-radius: 6px;
+  border: 2px solid #f7f3ee;
+}
+
+.timetable-scroll-box::-webkit-scrollbar-thumb:hover {
+  background: #a93a19;
+}
+
+/* Master Timetable Table - Full width to P13 */
 .app-timetable-table {
-  width: 100%;
-  width: 100%;
+  min-width: 2150px !important;
+  width: max-content !important;
   border-collapse: separate;
   border-spacing: 0;
+  table-layout: fixed;
 }
 
 /* Clean Warm Table Headers */
@@ -115,32 +247,45 @@
   white-space: nowrap;
 }
 
+/* Sticky Left Day Corner Header */
 .th-day-corner {
-  width: 76px;
-  min-width: 76px;
-  position: sticky;
-  left: 0;
-  z-index: 3;
+  width: 110px !important;
+  min-width: 110px !important;
+  max-width: 110px !important;
+  position: sticky !important;
+  left: 0 !important;
+  z-index: 25 !important;
   background: #fbf9f6 !important;
   color: var(--text-primary) !important;
   border-right: 2px solid var(--border-default) !important;
+  border-bottom: 2px solid var(--border-default) !important;
+  box-shadow: 4px 0 10px rgba(0, 0, 0, 0.06);
+  padding: 12px 10px !important;
+  text-align: center;
 }
 
+/* Period Header Cells (P1–P9) */
 .th-period-cell {
-  min-width: 76px;
-  padding: 8px 4px !important;
+  width: 155px !important;
+  min-width: 155px !important;
+  max-width: 155px !important;
+  padding: 10px 8px !important;
+  text-align: center;
+  background: #fbf9f6;
+  border-bottom: 2px solid var(--border-default);
+  border-right: 1px solid var(--border-default);
 }
 
 .th-pname {
-  font-size: 11px;
-  font-weight: 700;
+  font-size: 13px;
+  font-weight: 800;
   color: var(--text-primary);
 }
 
 .th-ptime {
-  font-size: 9.5px;
+  font-size: 11px;
   color: var(--text-secondary);
-  font-weight: 500;
+  font-weight: 600;
   margin-top: 2px;
 }
 
@@ -153,67 +298,95 @@
 
 /* Distinct Warm Event Header (P10 - P13) */
 .th-event-period-header {
-  min-width: 80px;
-  padding: 8px 4px !important;
+  width: 165px !important;
+  min-width: 165px !important;
+  max-width: 165px !important;
+  padding: 8px 8px !important;
   background: #fdf2ed !important;
   color: #a23b18 !important;
   border-bottom: 2px solid #f7d6c8 !important;
+  border-right: 1px solid #f7d6c8 !important;
+  text-align: center;
 }
 
 .th-event-tag {
-  font-size: 9.5px;
-  font-weight: 800;
-  color: var(--accent-terracotta);
-  letter-spacing: 0.5px;
-  margin-bottom: 2px;
+  font-size: 10px;
+  font-weight: 900;
+  color: #c54a26;
+  letter-spacing: 0.6px;
+  background: #ffffff;
+  display: inline-block;
+  padding: 2px 7px;
+  border-radius: 9999px;
+  border: 1px solid #f7d6c8;
+  margin-bottom: 3px;
 }
 
-/* Day Column (Sticky Left) */
+/* Sticky Day Column (Left) */
 .table-day-cell {
-  background: #ffffff;
-  border-bottom: 1px solid var(--border-default);
-  border-right: 2px solid var(--border-default);
-  padding: 12px;
+  width: 110px !important;
+  min-width: 110px !important;
+  max-width: 110px !important;
+  position: sticky !important;
+  left: 0 !important;
+  z-index: 20 !important;
+  background: #ffffff !important;
+  border-bottom: 1px solid var(--border-default) !important;
+  border-right: 2px solid var(--border-default) !important;
+  box-shadow: 4px 0 10px rgba(0, 0, 0, 0.06);
+  padding: 14px 10px !important;
   text-align: center;
-  position: sticky;
-  left: 0;
-  z-index: 2;
+  vertical-align: middle;
 }
 
 .day-name-bold {
-  font-size: 12.5px;
-  font-weight: 800;
+  font-size: 14px;
+  font-weight: 900;
   color: var(--text-primary);
+  letter-spacing: 0.5px;
 }
 
 .day-date-sub {
-  font-size: 9.5px;
+  font-size: 11px;
   color: var(--text-muted);
-  margin-top: 2px;
+  font-weight: 600;
+  margin-top: 3px;
 }
 
 /* Table Slot Cells */
 .timetable-td-slot {
-  padding: 6px;
+  width: 155px !important;
+  min-width: 155px !important;
+  max-width: 155px !important;
+  height: 98px !important;
+  min-height: 98px !important;
+  padding: 6px !important;
   border-bottom: 1px solid var(--border-subtle);
   border-right: 1px solid var(--border-subtle);
   vertical-align: top;
-  height: 64px;
-  min-height: 64px;
-  padding: 3px !important;
+  box-sizing: border-box;
+}
+
+.timetable-td-slot.event-slot-column {
+  width: 165px !important;
+  min-width: 165px !important;
+  max-width: 165px !important;
+  background: #fdfaf8;
 }
 
 /* Session Cards - Techzephyr Booklet Palette (Terracotta, Ochre, Sage, Brick) */
 .app-session-card {
   height: 100%;
-  border-radius: 6px;
-  padding: 4px 6px;
+  min-height: 86px;
+  border-radius: 8px;
+  padding: 8px 9px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 0 1px 3px rgba(31, 28, 26, 0.04);
+  box-shadow: 0 1px 3px rgba(31, 28, 26, 0.05);
+  box-sizing: border-box;
 }
 
 .app-session-card:hover {
@@ -377,29 +550,6 @@
   color: var(--text-primary);
   margin-top: 10px;
   line-height: 1.45;
-}
-
-/* 100% Fit Screen Layout */
-.timetable-scroll-box.fit-screen {
-  overflow-x: hidden;
-}
-
-@media (max-width: 768px) {
-  .timetable-scroll-box.fit-screen {
-    overflow-x: auto;
-  }
-}
-
-.app-timetable-table.fit-layout {
-  width: 100%;
-  min-width: 0;
-  table-layout: fixed;
-}
-
-@media (max-width: 768px) {
-  .app-timetable-table.fit-layout {
-    min-width: 780px;
-  }
 }
 
 /* Lunch Header & Body Styles */

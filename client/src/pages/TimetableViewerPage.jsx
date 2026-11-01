@@ -94,6 +94,28 @@ export function TimetableViewerPage({ currentUser, onNavigate, onRequireAdmin })
   const [isSwapApproved, setIsSwapApproved] = useState(false);
 
   const chatEndRef = useRef(null);
+  const timetableScrollRef = useRef(null);
+
+  const handleScrollToPeriod = (periodId) => {
+    if (!timetableScrollRef.current) return;
+    const periodIndex = visiblePeriods.findIndex((p) => p.id === periodId);
+    if (periodIndex === -1) return;
+    // Day column is 110px, each period is 155px
+    const targetScroll = periodIndex * 155;
+    timetableScrollRef.current.scrollTo({
+      left: targetScroll,
+      behavior: 'smooth',
+    });
+  };
+
+  const handleScrollStep = (direction) => {
+    if (!timetableScrollRef.current) return;
+    const delta = direction === 'left' ? -340 : 340;
+    timetableScrollRef.current.scrollBy({
+      left: delta,
+      behavior: 'smooth',
+    });
+  };
 
   // Auto-scroll chat to bottom
   useEffect(() => {
@@ -742,8 +764,74 @@ export function TimetableViewerPage({ currentUser, onNavigate, onRequireAdmin })
         </div>
       </div>
 
+      {/* Horizontal Timetable Scroll Navigator Bar */}
+      <div className="timetable-scroll-nav-bar">
+        <div className="scroll-nav-left-meta">
+          <span className="scroll-nav-indicator-pill">
+            <Clock size={13} color="var(--accent-terracotta)" />
+            <span>Master Schedule (P1 → P13 • 09:00 to 22:00)</span>
+          </span>
+          <span className="scroll-nav-hint-text">
+            ↔ Scroll horizontally or use quick jump buttons below to view all 13 periods (P10–P13 are evening events)
+          </span>
+        </div>
+
+        <div className="scroll-nav-buttons-group">
+          <button
+            type="button"
+            className="scroll-nav-arrow-btn"
+            onClick={() => handleScrollStep('left')}
+            title="Scroll timetable left"
+          >
+            ‹
+          </button>
+
+          <button
+            type="button"
+            className="scroll-jump-chip"
+            onClick={() => handleScrollToPeriod('P1')}
+            title="Jump to Period 1 (09:00 AM)"
+          >
+            P1 (09:00)
+          </button>
+          <button
+            type="button"
+            className="scroll-jump-chip"
+            onClick={() => handleScrollToPeriod('P5')}
+            title="Jump to Period 5 Mid-Day (13:00)"
+          >
+            P5 (13:00)
+          </button>
+          <button
+            type="button"
+            className="scroll-jump-chip"
+            onClick={() => handleScrollToPeriod('P9')}
+            title="Jump to Period 9 Late Afternoon (17:00)"
+          >
+            P9 (17:00)
+          </button>
+          <button
+            type="button"
+            className="scroll-jump-chip scroll-jump-events"
+            onClick={() => handleScrollToPeriod('P10')}
+            title="Jump to Evening Events P10–P13 (18:00–22:00)"
+          >
+            ✦ P10–P13 Events (18:00–22:00) ▶
+          </button>
+
+          <button
+            type="button"
+            className="scroll-nav-arrow-btn"
+            onClick={() => handleScrollStep('right')}
+            title="Scroll timetable right"
+          >
+            ›
+          </button>
+        </div>
+      </div>
+
       {/* Main Timetable Grid: Starts from P1 to P13 (09:00 to 22:00, 1hr Each, P10-P13 Events) */}
-      <div className="timetable-scroll-box">
+      <div className="timetable-scroll-box" ref={timetableScrollRef}>
         <table className="app-timetable-table">
           <thead>
             <tr>
@@ -754,7 +842,6 @@ export function TimetableViewerPage({ currentUser, onNavigate, onRequireAdmin })
                   <th
                     key={p.id}
                     className={isEvent ? 'th-event-period-header' : 'th-period-cell'}
-                    style={{ minWidth: isEvent ? 92 : 84 }}
                   >
                     {isEvent && <div className="th-event-tag">✦ EVENT</div>}
                     <div className="th-pname">{p.id}</div>
